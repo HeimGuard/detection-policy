@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.1",
+  "version": "2026.10.2",
   "files": {
     "parsers/linux/org.linux-sudo-auth-failure.json": "4b725b12c90ef8209c4c2004f7cbddf69731458b6e61479f20c14b4e374770d4",
     "parsers/windows/org.sigma-service-installed-from-suspicious-path-log.json": "b81f043bb615f4144bd4638c26c15c609798c4f9176b1c43051987027051e861",
