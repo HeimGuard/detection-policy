@@ -1,0 +1,14 @@
+{
+  "key": "org.events-sudo-auth-failure",
+  "name": "Repeated wrong sudo password",
+  "description": "Several wrong sudo passwords of one user since the last collection (each one counts, even when a later attempt succeeded).",
+  "severity": "medium",
+  "platform": "linux",
+  "source": "events",
+  "when": {"all": [
+    {"field": "Type", "op": "eq", "value": "sudo_auth_failure"},
+    {"field": "Count", "op": "gte", "value": 3}
+  ]},
+  "message": "{Count} wrong sudo passwords of {User}",
+  "remediation": "Check with the user; repeated failures may mean a password guess by someone with a session on the device."
+}

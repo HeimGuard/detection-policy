@@ -1,0 +1,19 @@
+{
+  "key": "org.linux-sudo-auth-failure",
+  "positive": [
+    {
+      "Identifier": "sudo",
+      "Message": "pam_unix(sudo:auth): authentication failure; logname=jonatanrek uid=1000 euid=0 tty=/dev/pts/1 ruser=jonatanrek rhost=  user=jonatanrek"
+    }
+  ],
+  "negative": [
+    {
+      "Identifier": "sudo",
+      "Message": "jonatanrek : TTY=pts/1 ; PWD=/home ; USER=root ; COMMAND=/usr/bin/apt update"
+    },
+    {
+      "Identifier": "sshd",
+      "Message": "pam_unix(sudo:auth): authentication failure; logname=jonatanrek uid=1000 euid=0 tty=/dev/pts/1 ruser=jonatanrek rhost=  user=jonatanrek"
+    }
+  ]
+}
