@@ -1,0 +1,19 @@
+{
+  "key": "org.events-account-locked-repeated",
+  "positive": [
+    {
+      "Type": "account_locked",
+      "Count": 5
+    }
+  ],
+  "negative": [
+    {
+      "Type": "account_locked",
+      "Count": 1
+    },
+    {
+      "Type": "failed_logon",
+      "Count": 9
+    }
+  ]
+}

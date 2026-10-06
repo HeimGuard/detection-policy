@@ -1,0 +1,13 @@
+{
+  "key": "org.posture-auto-updates-off",
+  "positive": [
+    {
+      "AutomaticUpdates": false
+    }
+  ],
+  "negative": [
+    {
+      "AutomaticUpdates": true
+    }
+  ]
+}

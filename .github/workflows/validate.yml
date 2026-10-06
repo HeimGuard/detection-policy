@@ -6,23 +6,12 @@ on:
     branches: [main]
 
 jobs:
-  yaml-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Lint YAML
-        run: |
-          pip install yamllint
-          yamllint -d "{extends: relaxed, rules: {line-length: disable}}" detections policies
-
-  rule-validation:
+  validate-feed:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate rules and fixtures
-        run: |
-          pip install pyyaml
-          python scripts/validate.py
+      - name: Validate rules, parsers, fixtures and manifest
+        run: python scripts/feed.py check

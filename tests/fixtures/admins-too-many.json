@@ -1,0 +1,15 @@
+{
+  "key": "org.admins-too-many",
+  "positive": [
+    {
+      "Name": "a",
+      "Enabled": true
+    }
+  ],
+  "negative": [
+    {
+      "Name": "b",
+      "Enabled": false
+    }
+  ]
+}

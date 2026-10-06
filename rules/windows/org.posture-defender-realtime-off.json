@@ -1,0 +1,14 @@
+{
+  "key": "org.posture-defender-realtime-off",
+  "name": "Microsoft Defender real-time protection off",
+  "description": "Real-time protection is disabled on a managed device; it may have been switched off to run malware.",
+  "severity": "high",
+  "platform": "windows",
+  "source": "posture",
+  "when": {"all": [
+    {"field": "AntivirusName", "op": "contains", "value": "defender"},
+    {"field": "RealTimeProtection", "op": "false"}
+  ]},
+  "message": "{AntivirusName} real-time protection is off",
+  "remediation": "Turn real-time protection back on and find out who disabled it."
+}

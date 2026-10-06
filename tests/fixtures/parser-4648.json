@@ -1,0 +1,16 @@
+{
+  "key": "org.windows-4648-explicit-credentials",
+  "positive": [
+    {
+      "Id": 4648,
+      "Data": {
+        "TargetUserName": "admin"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "Id": 4624
+    }
+  ]
+}

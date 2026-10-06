@@ -1,9 +1,0 @@
-{
-  "rule": "detections/sigma/macos/mdm-profile-removal.yml",
-  "positive": [
-    {"Image": "/usr/bin/profiles", "CommandLine": "profiles remove -identifier com.example.mdm"}
-  ],
-  "negative": [
-    {"Image": "/usr/bin/profiles", "CommandLine": "profiles list"}
-  ]
-}

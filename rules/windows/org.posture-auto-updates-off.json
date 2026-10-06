@@ -1,0 +1,11 @@
+{
+  "key": "org.posture-auto-updates-off",
+  "name": "Automatic updates disabled",
+  "description": "Managed devices must install OS updates automatically.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "posture",
+  "when": {"field": "AutomaticUpdates", "op": "false"},
+  "message": "Automatic updates are disabled",
+  "remediation": "Enable automatic updates (Windows Update policy / unattended-upgrades)."
+}
