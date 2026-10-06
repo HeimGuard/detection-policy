@@ -1,0 +1,14 @@
+{
+  "key": "org.events-account-locked-repeated",
+  "name": "Repeated account lockouts",
+  "description": "Several lockouts of the same account since the last collection: password guessing or a misconfigured client.",
+  "severity": "medium",
+  "platform": "windows",
+  "source": "events",
+  "when": {"all": [
+    {"field": "Type", "op": "eq", "value": "account_locked"},
+    {"field": "Count", "op": "gte", "value": 3}
+  ]},
+  "message": "{User} was locked out {Count} times",
+  "remediation": "Check the source of the failed sign-ins."
+}

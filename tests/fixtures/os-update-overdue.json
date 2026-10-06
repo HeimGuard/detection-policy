@@ -1,0 +1,13 @@
+{
+  "key": "org.posture-os-update-overdue",
+  "positive": [
+    {
+      "DaysSinceUpdate": 45
+    }
+  ],
+  "negative": [
+    {
+      "DaysSinceUpdate": 10
+    }
+  ]
+}

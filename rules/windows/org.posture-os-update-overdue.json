@@ -1,0 +1,11 @@
+{
+  "key": "org.posture-os-update-overdue",
+  "name": "No update installed for 30 days",
+  "description": "Compliance baseline: the device must be at most 30 days behind on updates.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "posture",
+  "when": {"field": "DaysSinceUpdate", "op": "gt", "value": 30},
+  "message": "Last update was {DaysSinceUpdate} days ago",
+  "remediation": "Install pending updates from the portal."
+}

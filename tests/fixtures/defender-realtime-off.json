@@ -1,0 +1,19 @@
+{
+  "key": "org.posture-defender-realtime-off",
+  "positive": [
+    {
+      "AntivirusName": "Windows Defender",
+      "RealTimeProtection": false
+    }
+  ],
+  "negative": [
+    {
+      "AntivirusName": "Windows Defender",
+      "RealTimeProtection": true
+    },
+    {
+      "AntivirusName": "Sophos",
+      "RealTimeProtection": false
+    }
+  ]
+}

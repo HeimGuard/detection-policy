@@ -1,0 +1,14 @@
+{
+  "key": "org.process-mdm-unenroll",
+  "name": "Process unenrolling the device from management",
+  "description": "A running process that leaves Azure AD / MDM management or deletes enrollment keys.",
+  "severity": "high",
+  "platform": "windows",
+  "source": "processes",
+  "when": {"any": [
+    {"field": "CommandLine", "op": "matches", "value": "dsregcmd(\\.exe)?\\s+/leave"},
+    {"field": "CommandLine", "op": "matches", "value": "reg(\\.exe)?\\s+delete.*\\\\microsoft\\\\enrollments"}
+  ]},
+  "message": "{Name} is unenrolling the device: {CommandLine}",
+  "remediation": "Find out who started it; re-enroll the device if it was not authorized."
+}

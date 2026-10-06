@@ -1,0 +1,15 @@
+{
+  "key": "org.process-mdm-unenroll",
+  "positive": [
+    {
+      "Name": "dsregcmd.exe",
+      "CommandLine": "dsregcmd.exe /leave"
+    }
+  ],
+  "negative": [
+    {
+      "Name": "dsregcmd.exe",
+      "CommandLine": "dsregcmd.exe /status"
+    }
+  ]
+}

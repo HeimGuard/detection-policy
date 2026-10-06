@@ -1,0 +1,21 @@
+{
+  "key": "org.listening-telnet",
+  "positive": [
+    {
+      "Protocol": "tcp",
+      "Port": 23,
+      "Address": "0.0.0.0",
+      "Process": "telnetd"
+    }
+  ],
+  "negative": [
+    {
+      "Protocol": "tcp",
+      "Port": 22
+    },
+    {
+      "Protocol": "udp",
+      "Port": 23
+    }
+  ]
+}

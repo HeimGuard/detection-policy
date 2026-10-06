@@ -1,0 +1,14 @@
+{
+  "key": "org.listening-telnet",
+  "name": "Telnet listening",
+  "description": "Telnet is clear-text and has no place on a managed device.",
+  "severity": "high",
+  "platform": "any",
+  "source": "listening",
+  "when": {"all": [
+    {"field": "Protocol", "op": "eq", "value": "tcp"},
+    {"field": "Port", "op": "eq", "value": 23}
+  ]},
+  "message": "{Process} listens on {Address}:{Port}",
+  "remediation": "Disable telnet and use SSH."
+}

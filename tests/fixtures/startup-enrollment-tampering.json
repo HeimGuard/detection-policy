@@ -1,0 +1,19 @@
+{
+  "key": "org.startup-mdm-enrollment-tampering",
+  "positive": [
+    {
+      "Name": "x",
+      "Command": "reg.exe delete HKLM\\SOFTWARE\\Microsoft\\Enrollments\\1234 /f"
+    },
+    {
+      "Name": "y",
+      "Command": "dsregcmd /leave"
+    }
+  ],
+  "negative": [
+    {
+      "Name": "OneDrive",
+      "Command": "C:\\Program Files\\OneDrive\\OneDrive.exe /background"
+    }
+  ]
+}

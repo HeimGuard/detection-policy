@@ -1,0 +1,12 @@
+{
+  "key": "org.admins-too-many",
+  "name": "More than 2 local administrators",
+  "description": "Least privilege: managed devices should have at most two enabled local administrators.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "admins",
+  "when": {"field": "Enabled", "op": "ne", "value": false},
+  "threshold": 3,
+  "message": "{count} enabled administrators: {items}",
+  "remediation": "Remove administrators that are not needed."
+}

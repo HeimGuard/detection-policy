@@ -1,0 +1,15 @@
+{
+  "key": "org.startup-mdm-enrollment-tampering",
+  "name": "Scheduled task or startup item touching MDM enrollment",
+  "description": "A startup item that manipulates MDM enrollment (dmclient, Enrollments registry) may be an attempt to unenroll the device.",
+  "severity": "high",
+  "platform": "windows",
+  "source": "startup",
+  "when": {"any": [
+    {"field": "Command", "op": "matches", "value": "reg(\\.exe)?\\s+delete.*\\\\microsoft\\\\enrollments"},
+    {"field": "Command", "op": "matches", "value": "dsregcmd(\\.exe)?\\s+/leave"},
+    {"field": "Command", "op": "matches", "value": "remove-item.*\\\\microsoft\\\\enrollments"}
+  ]},
+  "message": "{Name} ({Location}) manipulates MDM enrollment: {Command}",
+  "remediation": "Remove the item and verify the device is still enrolled."
+}
