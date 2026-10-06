@@ -10,6 +10,7 @@
     "rules/windows/org.posture-defender-realtime-off.json": "1d9554407e2fbcee2720b3ed8ec77a6a92999ea3413823a7bf08e30098b5a4a1",
     "rules/windows/org.posture-os-update-overdue.json": "329c817c755b06813a18609bd40c288fe641755d9a16e55ea5da217cf3390966",
     "rules/windows/org.process-mdm-unenroll.json": "75ea5523a8094e82362752da8e30fc90340e151e8e92186e0acc1d2e0dbd0e79",
+    "rules/windows/org.sigma-certutil-download-of-remote-file.json": "1446c0cf6d662321ee62dd86079e79b6a7272e7b83e442ec2794d6822f5cb48b",
     "rules/windows/org.startup-mdm-enrollment-tampering.json": "849dc8fb840cbfb554cc1013187e46b47c8ed2f6898d6b412efed6a1937f4d3b"
   }
 }

@@ -1,0 +1,22 @@
+title: Certutil Download Of Remote File
+id: 19b08b1c-861d-4e75-a1ef-ea0c1baf202b
+status: test
+description: Detects certutil used to download a file from a URL.
+author: PanoptiPulse
+date: 2026-10-06
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_img:
+    Image|endswith: '\certutil.exe'
+  selection_cli:
+    CommandLine|contains|all:
+      - 'urlcache'
+      - 'http'
+  filter:
+    CommandLine|contains: 'internal.example'
+  condition: selection_img and selection_cli and not filter
+falsepositives:
+  - Administrators fetching certificates
+level: high
