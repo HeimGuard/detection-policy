@@ -17,6 +17,6 @@ jobs:
         run: |
           pip install pyyaml
           python scripts/sigma2feed.py sigma/*.yml
-          git diff --exit-code -- rules
+          git diff --exit-code -- rules parsers
       - name: Validate rules, parsers, fixtures and manifest
         run: python scripts/feed.py check

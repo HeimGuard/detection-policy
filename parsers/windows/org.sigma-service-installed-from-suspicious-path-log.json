@@ -1,0 +1,45 @@
+{
+  "key": "org.sigma-service-installed-from-suspicious-path-log",
+  "name": "Service Installed From Suspicious Path",
+  "description": "Detects a service installed (event 4697) whose binary runs from a temporary folder or through a script interpreter. Converted from Sigma rule 5af99b0e-0fe7-41c3-bcce-d63a9a2545be.",
+  "source": "windows.security",
+  "when": {
+    "all": [
+      {
+        "field": "Id",
+        "op": "eq",
+        "value": 4697
+      },
+      {
+        "any": [
+          {
+            "field": "Data.ServiceFileName",
+            "op": "contains",
+            "value": "\\Temp\\"
+          },
+          {
+            "field": "Data.ServiceFileName",
+            "op": "contains",
+            "value": "\\Users\\Public\\"
+          },
+          {
+            "field": "Data.ServiceFileName",
+            "op": "contains",
+            "value": "powershell"
+          },
+          {
+            "field": "Data.ServiceFileName",
+            "op": "contains",
+            "value": "cmd.exe /c"
+          }
+        ]
+      }
+    ]
+  },
+  "event": {
+    "type": "sg_service_installed_from_suspi",
+    "user": "{Data.TargetUserName|Data.SubjectUserName}",
+    "source": "{Data.IpAddress|Data.WorkstationName}",
+    "message": "Service Installed From Suspicious Path"
+  }
+}

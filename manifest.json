@@ -1,6 +1,7 @@
 {
   "version": "2026.10.1",
   "files": {
+    "parsers/windows/org.sigma-service-installed-from-suspicious-path-log.json": "b81f043bb615f4144bd4638c26c15c609798c4f9176b1c43051987027051e861",
     "parsers/windows/org.windows-4648-explicit-credentials.json": "9948675c411452af8e37f8949241723ff2b271682a84454db7165c2d9356343c",
     "rules/linux/org.listening-telnet.json": "b08d147fe9f6e8147ddb71f434b6e616cd29b68c6663f25d3cee001fc391107c",
     "rules/windows/org.admins-too-many.json": "0bc741c9c4999ec5ebde026ca536024c9aaea6bef0d117dbde08997e018814eb",
@@ -11,6 +12,7 @@
     "rules/windows/org.posture-os-update-overdue.json": "329c817c755b06813a18609bd40c288fe641755d9a16e55ea5da217cf3390966",
     "rules/windows/org.process-mdm-unenroll.json": "75ea5523a8094e82362752da8e30fc90340e151e8e92186e0acc1d2e0dbd0e79",
     "rules/windows/org.sigma-certutil-download-of-remote-file.json": "637cd972b301e5bb36e58d0f82f2856409064f5a18e02441928824f98cb70957",
+    "rules/windows/org.sigma-service-installed-from-suspicious-path.json": "95bb058fd60b67a8fb6afcb42202ad6a9a6b093758753beea9a44036be11de21",
     "rules/windows/org.startup-mdm-enrollment-tampering.json": "849dc8fb840cbfb554cc1013187e46b47c8ed2f6898d6b412efed6a1937f4d3b"
   }
 }

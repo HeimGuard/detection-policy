@@ -1,0 +1,22 @@
+title: Service Installed From Suspicious Path
+id: 5af99b0e-0fe7-41c3-bcce-d63a9a2545be
+status: test
+description: Detects a service installed (event 4697) whose binary runs from a temporary folder or through a script interpreter.
+author: PanoptiPulse
+date: 2026-10-06
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4697
+  suspicious:
+    ServiceFileName|contains:
+      - '\Temp\'
+      - '\Users\Public\'
+      - 'powershell'
+      - 'cmd.exe /c'
+  condition: selection and suspicious
+falsepositives:
+  - Software installers that unpack a service to a temp folder
+level: high

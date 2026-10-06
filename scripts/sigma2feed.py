@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Convert Sigma rules (YAML) to rules of Laravel-MDM-Server.
+"""Convert Sigma rules (YAML) to rules and parsers of Laravel-MDM-Server.
 
-  python scripts/sigma2feed.py sigma/*.yml            # writes rules/<platform>/org.sigma-<slug>.json
+  python scripts/sigma2feed.py sigma/*.yml            # writes rules/ and parsers/ files
   python scripts/sigma2feed.py --stdout rule.yml      # print instead of writing
 
-Supported: logsource product windows|linux with category process_creation (-> source "processes");
+Supported logsources:
+  * windows|linux + category process_creation -> a rule over the "processes" source
+    (rules/<platform>/org.sigma-<slug>.json)
+  * windows + service security|system|windefend (EventID, EventData fields, Provider_Name) -> a parser
+    (parsers/windows/org.sigma-<slug>-log.json) that makes an event plus a rule over "events"
+    (rules/windows/org.sigma-<slug>.json). EventData fields become Data.<Field>.
+Selections:
 selections as maps / lists of maps; modifiers contains, startswith, endswith, re, all; wildcards
 (* and ?); conditions with and / or / not, parentheses, "1 of x*", "all of x*", "1 of them".
 Anything else (other log sources, fieldrefs, base64, ...) is reported and the rule is skipped.
@@ -21,6 +27,26 @@ ROOT = Path(__file__).resolve().parent.parent
 LEVELS = {"informational": "info", "low": "low", "medium": "medium", "high": "high", "critical": "critical"}
 # Sigma field -> field of the server's `processes` source
 PROCESS_FIELDS = {"Image": "Path", "CommandLine": "CommandLine", "User": "User"}
+# Sigma windows service -> log source of the server
+LOG_SOURCES = {"security": "windows.security", "system": "windows.system", "windefend": "windows.defender"}
+
+
+def process_field(name):
+    if name not in PROCESS_FIELDS:
+        raise Unsupported(f"field {name!r} has no counterpart in the server's processes source")
+    return PROCESS_FIELDS[name]
+
+
+def log_field(name):
+    if name == "EventID":
+        return "Id"
+    if name == "Provider_Name":
+        return "Provider"
+    if not re.fullmatch(r"[A-Za-z0-9_]+", name):
+        raise Unsupported(f"field {name!r} is not an EventData field name")
+    if name in ("Channel", "Computer", "Level", "Keywords", "Task", "Opcode"):
+        raise Unsupported(f"field {name!r} is not collected by the agent")
+    return f"Data.{name}"
 
 
 class Unsupported(Exception):
@@ -39,7 +65,7 @@ def value_cond(field, mods, value):
     elif "endswith" in mods:
         v = f"*{v}"
     if "*" not in v and "?" not in v:
-        return {"field": field, "op": "eq", "value": v}
+        return {"field": field, "op": "eq", "value": int(v) if field == "Id" and v.isdigit() else v}
     core = v.strip("*")
     if "*" not in core and "?" not in core:
         start, end = v.startswith("*"), v.endswith("*")
@@ -57,22 +83,20 @@ def group(op, items):
     return items[0] if len(items) == 1 else {op: items}
 
 
-def selection_cond(sel):
+def selection_cond(sel, fmap):
     if isinstance(sel, list):
         if all(isinstance(s, dict) for s in sel):
-            return group("any", [selection_cond(s) for s in sel])
+            return group("any", [selection_cond(s, fmap) for s in sel])
         raise Unsupported("keyword selections are not supported")
     if not isinstance(sel, dict):
         raise Unsupported("unsupported selection")
     parts = []
     for key, val in sel.items():
         name, *mods = key.split("|")
-        if name not in PROCESS_FIELDS:
-            raise Unsupported(f"field {name!r} has no counterpart in the server's processes source")
+        field = fmap(name)
         unknown = set(mods) - {"contains", "startswith", "endswith", "re", "all"}
         if unknown:
             raise Unsupported(f"modifier {sorted(unknown)[0]!r} is not supported")
-        field = PROCESS_FIELDS[name]
         vals = val if isinstance(val, list) else [val]
         if any(v is None or isinstance(v, (dict, list)) for v in vals):
             raise Unsupported(f"unsupported value for {key}")
@@ -141,30 +165,51 @@ def parse_condition(text, selections):
     return result
 
 
+def slugify(title):
+    return re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:40].strip("-")
+
+
 def convert(doc):
+    """-> list of (kind, platform, definition); kind is "rules" or "parsers"."""
     ls = doc.get("logsource") or {}
-    product, category = ls.get("product"), ls.get("category")
-    if product not in ("windows", "linux") or category != "process_creation" or ls.get("service"):
-        raise Unsupported(f"logsource {ls} is not supported (only windows/linux process_creation)")
+    product, category, service = ls.get("product"), ls.get("category"), ls.get("service")
     det = doc.get("detection") or {}
     if isinstance(det.get("condition"), list):
         raise Unsupported("multiple conditions are not supported")
-    selections = {k: selection_cond(v) for k, v in det.items() if k != "condition"}
-    when = parse_condition(det["condition"], selections)
-    slug = re.sub(r"[^a-z0-9]+", "-", doc["title"].lower()).strip("-")[:48].strip("-")
+    slug = slugify(doc["title"])
     key = f"org.sigma-{slug}"
+    severity = LEVELS.get(doc.get("level", "medium"), "medium")
     refs = "; ".join(doc.get("references") or [])
-    return product, {
-        "key": key,
-        "name": doc["title"][:120],
-        "description": (doc.get("description", "") + (f" Converted from Sigma rule {doc['id']}." if doc.get("id") else ""))[:1000],
-        "severity": LEVELS.get(doc.get("level", "medium"), "medium"),
-        "platform": product,
-        "source": "processes",
-        "when": when,
-        "message": "{Name} {CommandLine}",
-        "remediation": ("False positives: " + "; ".join(doc["falsepositives"]))[:1000] if doc.get("falsepositives") else refs[:1000],
-    }
+    remediation = ("False positives: " + "; ".join(doc["falsepositives"]))[:1000] if doc.get("falsepositives") else refs[:1000]
+    note = f" Converted from Sigma rule {doc['id']}." if doc.get("id") else ""
+    description = (doc.get("description", "") + note)[:1000]
+
+    def build_when(fmap):
+        selections = {k: selection_cond(v, fmap) for k, v in det.items() if k != "condition"}
+        return parse_condition(det["condition"], selections)
+
+    if product in ("windows", "linux") and category == "process_creation" and not service:
+        return [("rules", product, {
+            "key": key, "name": doc["title"][:120], "description": description, "severity": severity,
+            "platform": product, "source": "processes", "when": build_when(process_field),
+            "message": "{Name} {CommandLine}", "remediation": remediation,
+        })]
+    if product == "windows" and service in LOG_SOURCES and not category:
+        event = "sg_" + slug.replace("-", "_")[:28].strip("_")
+        parser = {
+            "key": f"{key}-log", "name": doc["title"][:120], "description": description,
+            "source": LOG_SOURCES[service], "when": build_when(log_field),
+            "event": {"type": event, "user": "{Data.TargetUserName|Data.SubjectUserName}",
+                      "source": "{Data.IpAddress|Data.WorkstationName}", "message": doc["title"][:480]},
+        }
+        rule = {
+            "key": key, "name": doc["title"][:120], "description": description, "severity": severity,
+            "platform": "windows", "source": "events",
+            "when": {"field": "Type", "op": "eq", "value": event},
+            "message": "{Message} ({Count}x)", "remediation": remediation,
+        }
+        return [("parsers", "windows", parser), ("rules", "windows", rule)]
+    raise Unsupported(f"logsource {ls} is not supported (windows/linux process_creation, windows security/system/windefend)")
 
 
 def main(argv):
@@ -175,19 +220,20 @@ def main(argv):
     failed = 0
     for f in files:
         try:
-            product, rule = convert(yaml.safe_load(Path(f).read_text()))
+            outputs = convert(yaml.safe_load(Path(f).read_text()))
         except (Unsupported, KeyError) as e:
             print(f"SKIP {f}: {e}")
             failed += 1
             continue
-        out = json.dumps(rule, indent=2, ensure_ascii=False) + "\n"
-        if to_stdout:
-            print(out)
-        else:
-            path = ROOT / "rules" / product / f"{rule['key']}.json"
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(out)
-            print(f"OK   {f} -> {path.relative_to(ROOT)}")
+        for kind, product, definition in outputs:
+            out = json.dumps(definition, indent=2, ensure_ascii=False) + "\n"
+            if to_stdout:
+                print(out)
+            else:
+                path = ROOT / kind / product / f"{definition['key']}.json"
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(out)
+                print(f"OK   {f} -> {path.relative_to(ROOT)}")
     return 1 if failed else 0
 
 
