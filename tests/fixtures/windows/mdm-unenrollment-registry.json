@@ -1,0 +1,9 @@
+{
+  "rule": "detections/sigma/windows/mdm-unenrollment-registry.yml",
+  "positive": [
+    {"TargetObject": "HKLM\\SOFTWARE\\Microsoft\\Enrollments\\1234-ABCD"}
+  ],
+  "negative": [
+    {"TargetObject": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"}
+  ]
+}

@@ -1,0 +1,22 @@
+title: Windows MDM Enrollment Registry Key Deleted
+id: c99c7481-bab6-4466-a5bc-54d26f923514
+status: experimental
+description: Detects deletion of MDM enrollment registry keys, which may indicate an attempt to unenroll a Windows device from MDM (e.g. Intune) outside of the supported workflow.
+author: PanoptiPulse
+date: 2026-10-06
+tags:
+  - attack.defense-evasion
+  - attack.t1112
+logsource:
+  product: windows
+  category: registry_delete
+detection:
+  selection:
+    TargetObject|contains: '\SOFTWARE\Microsoft\Enrollments\'
+  condition: selection
+falsepositives:
+  - Authorized device retirement or re-enrollment
+  - Autopilot reset
+level: medium
+references:
+  - https://learn.microsoft.com/en-us/mem/intune/

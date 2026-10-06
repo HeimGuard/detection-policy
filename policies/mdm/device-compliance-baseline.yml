@@ -1,0 +1,18 @@
+id: mdm-device-compliance-baseline
+description: Baseline compliance requirements every MDM-enrolled device must meet.
+version: 1
+severity: high
+scope:
+  platforms: [macos, windows, ios, android]
+requirements:
+  disk_encryption: required
+  screen_lock:
+    required: true
+    max_timeout_minutes: 5
+  os_update:
+    max_days_behind: 30
+  firewall: enabled
+  jailbreak_root: forbidden
+non_compliance:
+  grace_period_hours: 24
+  actions: [notify_user, notify_security, restrict_access]
