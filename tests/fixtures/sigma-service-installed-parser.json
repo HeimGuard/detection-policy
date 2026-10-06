@@ -1,0 +1,31 @@
+{
+  "key": "org.sigma-service-installed-from-suspicious-path-log",
+  "positive": [
+    {
+      "Id": 4697,
+      "Data": {
+        "ServiceFileName": "C:\\Users\\Public\\svc.exe"
+      }
+    },
+    {
+      "Id": 4697,
+      "Data": {
+        "ServiceFileName": "powershell -nop -c x"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "Id": 4697,
+      "Data": {
+        "ServiceFileName": "C:\\Program Files\\App\\svc.exe"
+      }
+    },
+    {
+      "Id": 4698,
+      "Data": {
+        "ServiceFileName": "C:\\Users\\Public\\svc.exe"
+      }
+    }
+  ]
+}

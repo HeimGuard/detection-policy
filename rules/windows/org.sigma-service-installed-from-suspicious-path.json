@@ -1,0 +1,15 @@
+{
+  "key": "org.sigma-service-installed-from-suspicious-path",
+  "name": "Service Installed From Suspicious Path",
+  "description": "Detects a service installed (event 4697) whose binary runs from a temporary folder or through a script interpreter. Converted from Sigma rule 5af99b0e-0fe7-41c3-bcce-d63a9a2545be.",
+  "severity": "high",
+  "platform": "windows",
+  "source": "events",
+  "when": {
+    "field": "Type",
+    "op": "eq",
+    "value": "sg_service_installed_from_suspi"
+  },
+  "message": "{Message} ({Count}x)",
+  "remediation": "False positives: Software installers that unpack a service to a temp folder"
+}

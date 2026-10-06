@@ -1,0 +1,20 @@
+{
+  "key": "org.events-sudo-auth-failure",
+  "positive": [
+    {
+      "Type": "sudo_auth_failure",
+      "Count": 5,
+      "User": "jonatanrek"
+    }
+  ],
+  "negative": [
+    {
+      "Type": "sudo_auth_failure",
+      "Count": 2
+    },
+    {
+      "Type": "sudo_failed",
+      "Count": 5
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "key": "org.linux-sudo-auth-failure",
+  "name": "sudo: PAM authentication failure",
+  "description": "Every wrong sudo password as logged by PAM (pam_unix(sudo:auth)). Complements the bundled parser, which only reads the summary line 'N incorrect password attempts' that sudo writes when all attempts of one run fail.",
+  "source": "linux.auth",
+  "when": {"field": "Identifier", "op": "eq", "value": "sudo"},
+  "pattern": "pam_unix\\(sudo:auth\\): authentication failure;.*\\buser=(?<user>\\S+)",
+  "event": {"type": "sudo_auth_failure", "user": "{user}", "source": "sudo", "message": "sudo: wrong password for {user}"}
+}

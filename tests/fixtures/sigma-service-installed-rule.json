@@ -1,0 +1,15 @@
+{
+  "key": "org.sigma-service-installed-from-suspicious-path",
+  "positive": [
+    {
+      "Type": "sg_service_installed_from_suspi",
+      "Count": 1
+    }
+  ],
+  "negative": [
+    {
+      "Type": "service_installed",
+      "Count": 1
+    }
+  ]
+}

