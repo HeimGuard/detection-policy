@@ -1,7 +1,7 @@
 {
   "key": "org.sigma-certutil-download-of-remote-file",
   "name": "Certutil Download Of Remote File",
-  "description": "Detects certutil used to download a file from a URL. Converted from Sigma rule 19b08b1c-861d-4e75-a1ef-ea0c1baf202b.",
+  "description": "Detects certutil used to download a file from a URL. Converted from Sigma rule 57b14bc1-e97e-4c1f-a9df-9a020eb284de.",
   "severity": "high",
   "platform": "windows",
   "source": "processes",

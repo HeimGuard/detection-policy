@@ -1,5 +1,5 @@
 title: Certutil Download Of Remote File
-id: 19b08b1c-861d-4e75-a1ef-ea0c1baf202b
+id: 57b14bc1-e97e-4c1f-a9df-9a020eb284de
 status: test
 description: Detects certutil used to download a file from a URL.
 author: PanoptiPulse
