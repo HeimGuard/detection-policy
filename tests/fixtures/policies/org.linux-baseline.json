@@ -1,0 +1,58 @@
+{
+  "policy": "org.linux-baseline",
+  "cases": [
+    {
+      "name": "a server as the baseline wants it",
+      "items": [
+        {
+          "FirewallEnabled": true,
+          "SshRootLogin": "prohibit-password",
+          "SshPasswordAuthentication": false,
+          "AutomaticUpdates": true,
+          "DaysSinceUpdate": 3
+        }
+      ],
+      "expect": {
+        "Linux.FirewallEnabled": "pass",
+        "Linux.SshNoRootLogin": "pass",
+        "Linux.SshNoPasswords": "pass",
+        "Linux.UnattendedUpgrades": "pass",
+        "Linux.UpdatesRecent": "pass"
+      }
+    },
+    {
+      "name": "everything open",
+      "items": [
+        {
+          "FirewallEnabled": false,
+          "SshRootLogin": "yes",
+          "SshPasswordAuthentication": true,
+          "AutomaticUpdates": false,
+          "DaysSinceUpdate": 120
+        }
+      ],
+      "expect": {
+        "Linux.FirewallEnabled": "fail",
+        "Linux.SshNoRootLogin": "fail",
+        "Linux.SshNoPasswords": "warn",
+        "Linux.UnattendedUpgrades": "warn",
+        "Linux.UpdatesRecent": "fail"
+      }
+    },
+    {
+      "name": "no sshd: the SSH checks are by hand",
+      "items": [
+        {
+          "FirewallEnabled": true,
+          "AutomaticUpdates": true,
+          "DaysSinceUpdate": 40
+        }
+      ],
+      "expect": {
+        "Linux.SshNoRootLogin": "manual",
+        "Linux.SshNoPasswords": "manual",
+        "Linux.UpdatesRecent": "warn"
+      }
+    }
+  ]
+}

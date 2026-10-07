@@ -1,0 +1,77 @@
+{
+  "key": "org.linux-baseline",
+  "name": "Linux server baseline",
+  "description": "Internal baseline over the security settings every Debian / Ubuntu agent reports.",
+  "version": "1.0.0",
+  "platform": "linux",
+  "source": "posture",
+  "checks": [
+    {
+      "id": "Linux.FirewallEnabled",
+      "name": "A firewall is active",
+      "reference": "baseline 1.1",
+      "severity": "high",
+      "fail": {
+        "field": "FirewallEnabled",
+        "op": "false"
+      },
+      "message": "No firewall is active (ufw, firewalld, nftables / iptables)",
+      "remediation": "Turn on ufw or firewalld with a default deny for incoming traffic."
+    },
+    {
+      "id": "Linux.SshNoRootLogin",
+      "name": "SSH does not allow root to sign in with a password",
+      "reference": "baseline 2.1",
+      "severity": "high",
+      "fail": {
+        "field": "SshRootLogin",
+        "op": "eq",
+        "value": "yes"
+      },
+      "message": "sshd: PermitRootLogin {SshRootLogin}",
+      "remediation": "Set PermitRootLogin no (or prohibit-password) in /etc/ssh/sshd_config."
+    },
+    {
+      "id": "Linux.SshNoPasswords",
+      "name": "SSH takes keys, not passwords",
+      "reference": "baseline 2.2",
+      "severity": "medium",
+      "warn": {
+        "field": "SshPasswordAuthentication",
+        "op": "true"
+      },
+      "message": "sshd accepts passwords",
+      "remediation": "Set PasswordAuthentication no in /etc/ssh/sshd_config."
+    },
+    {
+      "id": "Linux.UnattendedUpgrades",
+      "name": "Security updates install automatically",
+      "reference": "baseline 3.1",
+      "severity": "medium",
+      "warn": {
+        "field": "AutomaticUpdates",
+        "op": "false"
+      },
+      "message": "unattended-upgrades is off",
+      "remediation": "apt install unattended-upgrades && dpkg-reconfigure -plow unattended-upgrades"
+    },
+    {
+      "id": "Linux.UpdatesRecent",
+      "name": "Packages upgraded in the last 30 days",
+      "reference": "baseline 3.2",
+      "severity": "medium",
+      "fail": {
+        "field": "DaysSinceUpdate",
+        "op": "gt",
+        "value": 60
+      },
+      "warn": {
+        "field": "DaysSinceUpdate",
+        "op": "gt",
+        "value": 30
+      },
+      "message": "The last apt upgrade was {DaysSinceUpdate} days ago",
+      "remediation": "apt update && apt upgrade"
+    }
+  ]
+}
