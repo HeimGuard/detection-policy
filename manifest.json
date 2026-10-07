@@ -1,9 +1,12 @@
 {
-  "version": "2026.10.2",
+  "version": "2026.10.3",
   "files": {
     "parsers/linux/org.linux-sudo-auth-failure.json": "4b725b12c90ef8209c4c2004f7cbddf69731458b6e61479f20c14b4e374770d4",
     "parsers/windows/org.sigma-service-installed-from-suspicious-path-log.json": "b81f043bb615f4144bd4638c26c15c609798c4f9176b1c43051987027051e861",
     "parsers/windows/org.windows-4648-explicit-credentials.json": "9948675c411452af8e37f8949241723ff2b271682a84454db7165c2d9356343c",
+    "policies/linux/org.linux-baseline.json": "e531eb8f0778301d45c8a829ace215b68de89e67883b69546c89371c3df63a43",
+    "policies/windows/org.cis-mssql-2019-2022.json": "429f8ad6782cdd4fd2c2df4ae92668c6cbee5352693b4faaeeee79ec287c96af",
+    "policies/windows/org.windows-baseline.json": "868759843b9615b365e536037d075c89d2adfa280e5c8a420d150ba28d42eb10",
     "rules/linux/org.events-sudo-auth-failure.json": "cf2cada4db415736b58b4a4f3f7af7ab29b121cac12335139a5a2998f3a1727e",
     "rules/linux/org.listening-telnet.json": "b08d147fe9f6e8147ddb71f434b6e616cd29b68c6663f25d3cee001fc391107c",
     "rules/windows/org.admins-too-many.json": "0bc741c9c4999ec5ebde026ca536024c9aaea6bef0d117dbde08997e018814eb",

@@ -1,0 +1,360 @@
+{
+  "key": "org.cis-mssql-2019-2022",
+  "name": "CIS Microsoft SQL Server 2019 / 2022 Benchmark",
+  "description": "CIS Microsoft SQL Server 2019 / 2022 Benchmark checks, with backup, integrity and ownership checks of our own. Needs agent 1.18.0+ and read access of NT AUTHORITY\\SYSTEM to each instance; an instance the agent cannot connect to is Manual.",
+  "version": "1.0.0",
+  "platform": "windows",
+  "source": "sqlserver",
+  "manual": {
+    "field": "Error",
+    "op": "exists"
+  },
+  "checks": [
+    {
+      "id": "Sql.AdHocDistributedQueriesDisabled",
+      "name": "Ad Hoc Distributed Queries is disabled",
+      "reference": "CIS 2.1",
+      "severity": "medium",
+      "description": "OPENROWSET and OPENDATASOURCE let users query remote data sources ad hoc.",
+      "fail": {
+        "field": "AdHocDistributedQueries",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'Ad Hoc Distributed Queries' is {AdHocDistributedQueries}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'Ad Hoc Distributed Queries', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;"
+    },
+    {
+      "id": "Sql.ClrEnabledDisabled",
+      "name": "clr enabled is disabled",
+      "reference": "CIS 2.2",
+      "severity": "medium",
+      "description": "CLR assemblies run .NET code inside SQL Server.",
+      "fail": {
+        "field": "ClrEnabled",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'clr enabled' is {ClrEnabled}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'clr enabled', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;"
+    },
+    {
+      "id": "Sql.CrossDbOwnershipChainingDisabled",
+      "name": "cross db ownership chaining is disabled",
+      "reference": "CIS 2.3",
+      "severity": "high",
+      "description": "Ownership chains across databases let a user reach objects of another database without permissions on them.",
+      "fail": {
+        "field": "CrossDbOwnershipChaining",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'cross db ownership chaining' is {CrossDbOwnershipChaining}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'cross db ownership chaining', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;"
+    },
+    {
+      "id": "Sql.DatabaseMailXpsDisabled",
+      "name": "Database Mail XPs is disabled",
+      "reference": "CIS 2.4",
+      "severity": "low",
+      "description": "Database Mail can send data out of the server.",
+      "fail": {
+        "field": "DatabaseMailXps",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'Database Mail XPs' is {DatabaseMailXps}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'Database Mail XPs', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;"
+    },
+    {
+      "id": "Sql.OleAutomationDisabled",
+      "name": "Ole Automation Procedures is disabled",
+      "reference": "CIS 2.5",
+      "severity": "high",
+      "description": "OLE Automation procedures run COM objects with the rights of the SQL Server service.",
+      "fail": {
+        "field": "OleAutomationProcedures",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'Ole Automation Procedures' is {OleAutomationProcedures}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'Ole Automation Procedures', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;"
+    },
+    {
+      "id": "Sql.RemoteAccessDisabled",
+      "name": "remote access is disabled",
+      "reference": "CIS 2.6",
+      "severity": "medium",
+      "description": "Remote access lets stored procedures run on this server from remote servers.",
+      "fail": {
+        "field": "RemoteAccess",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'remote access' is {RemoteAccess}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'remote access', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;"
+    },
+    {
+      "id": "Sql.RemoteAdminConnectionsDisabled",
+      "name": "remote admin connections is disabled",
+      "reference": "CIS 2.7",
+      "severity": "medium",
+      "description": "The dedicated admin connection should only be reachable locally (except on failover cluster instances).",
+      "fail": {
+        "field": "RemoteAdminConnections",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'remote admin connections' is {RemoteAdminConnections}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'remote admin connections', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;",
+      "applies": {
+        "field": "Clustered",
+        "op": "false"
+      }
+    },
+    {
+      "id": "Sql.ScanForStartupProcsDisabled",
+      "name": "scan for startup procs is disabled",
+      "reference": "CIS 2.8",
+      "severity": "medium",
+      "description": "Procedures that run at startup are a place for persistence.",
+      "fail": {
+        "field": "ScanForStartupProcs",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'scan for startup procs' is {ScanForStartupProcs}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'scan for startup procs', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;"
+    },
+    {
+      "id": "Sql.TrustworthyOff",
+      "name": "TRUSTWORTHY is off on user databases",
+      "reference": "CIS 2.9",
+      "severity": "high",
+      "description": "A TRUSTWORTHY database lets its code act with server-level rights (msdb is exempt).",
+      "fail": {
+        "field": "TrustworthyCount",
+        "op": "gt",
+        "value": 0
+      },
+      "message": "{Instance}: TRUSTWORTHY is on for {TrustworthyDatabases}",
+      "remediation": "ALTER DATABASE [<database>] SET TRUSTWORTHY OFF;"
+    },
+    {
+      "id": "Sql.SaDisabled",
+      "name": "The sa login is disabled",
+      "reference": "CIS 2.13",
+      "severity": "high",
+      "description": "The login with SID 0x01 is the best-known target of password guessing.",
+      "fail": {
+        "field": "SaEnabled",
+        "op": "true"
+      },
+      "message": "{Instance}: the sa login ({SaName}) is enabled",
+      "remediation": "ALTER LOGIN [<sa login>] DISABLE;"
+    },
+    {
+      "id": "Sql.SaRenamed",
+      "name": "The sa login is renamed",
+      "reference": "CIS 2.14",
+      "severity": "medium",
+      "description": "A renamed sa login is harder to guess.",
+      "fail": {
+        "field": "SaName",
+        "op": "eq",
+        "value": "sa"
+      },
+      "message": "{Instance}: the login with SID 0x01 is still named sa",
+      "remediation": "ALTER LOGIN [sa] WITH NAME = [<new name>];"
+    },
+    {
+      "id": "Sql.XpCmdshellDisabled",
+      "name": "xp_cmdshell is disabled",
+      "reference": "CIS 2.15",
+      "severity": "critical",
+      "description": "xp_cmdshell runs operating system commands with the rights of the SQL Server service.",
+      "fail": {
+        "field": "XpCmdshell",
+        "op": "ne",
+        "value": 0
+      },
+      "message": "{Instance}: 'xp_cmdshell' is {XpCmdshell}",
+      "remediation": "EXECUTE sp_configure 'show advanced options', 1; RECONFIGURE; EXECUTE sp_configure 'xp_cmdshell', 0; RECONFIGURE; EXECUTE sp_configure 'show advanced options', 0; RECONFIGURE;"
+    },
+    {
+      "id": "Sql.WindowsAuthOnly",
+      "name": "Windows authentication only",
+      "reference": "CIS 3.1",
+      "severity": "medium",
+      "description": "Mixed mode allows SQL logins with passwords kept by SQL Server.",
+      "warn": {
+        "field": "WindowsAuthOnly",
+        "op": "false"
+      },
+      "message": "{Instance} is in mixed authentication mode",
+      "remediation": "Server properties > Security > Windows Authentication mode, then restart the service."
+    },
+    {
+      "id": "Sql.SysadminCount",
+      "name": "At most 3 sysadmin logins",
+      "reference": "custom (least privilege)",
+      "severity": "medium",
+      "description": "Enabled sysadmin logins other than service accounts (NT SERVICE\\*, ##...##, NT AUTHORITY\\SYSTEM).",
+      "warn": {
+        "field": "SysadminCount",
+        "op": "gt",
+        "value": 3
+      },
+      "message": "{Instance}: {SysadminCount} sysadmin logins ({SysadminLogins})",
+      "remediation": "ALTER SERVER ROLE sysadmin DROP MEMBER [<login>]; grant only the permissions needed."
+    },
+    {
+      "id": "Sql.PasswordPolicyEnforced",
+      "name": "SQL logins enforce the password policy and expiration",
+      "reference": "CIS 4.2, 4.3",
+      "severity": "medium",
+      "description": "Enabled SQL logins without CHECK_POLICY or CHECK_EXPIRATION.",
+      "fail": {
+        "field": "WeakPolicyCount",
+        "op": "gt",
+        "value": 0
+      },
+      "message": "{Instance}: no password policy or expiration for {WeakPolicyLogins}",
+      "remediation": "ALTER LOGIN [<login>] WITH CHECK_POLICY = ON, CHECK_EXPIRATION = ON;"
+    },
+    {
+      "id": "Sql.FullBackupWithin24h",
+      "name": "Every user database has a full backup from the last 24 hours",
+      "reference": "custom (backup)",
+      "severity": "high",
+      "description": "Online user databases, from the backup history in msdb.",
+      "fail": {
+        "field": "NoFullBackupCount",
+        "op": "gt",
+        "value": 0
+      },
+      "message": "{Instance}: no full backup in 24 hours for {NoFullBackupDatabases}",
+      "remediation": "Schedule a daily full backup (BACKUP DATABASE) of every user database."
+    },
+    {
+      "id": "Sql.LogBackupWithin1hForFullRecovery",
+      "name": "Databases in full recovery have a log backup from the last hour",
+      "reference": "custom (RPO)",
+      "severity": "high",
+      "description": "FULL and BULK_LOGGED user databases need log backups to meet the recovery point objective (and to keep the log from growing).",
+      "fail": {
+        "field": "NoLogBackupCount",
+        "op": "gt",
+        "value": 0
+      },
+      "message": "{Instance}: no log backup in an hour for {NoLogBackupDatabases}",
+      "remediation": "Schedule log backups (BACKUP LOG) at least hourly, or use the SIMPLE recovery model where point-in-time restore is not needed."
+    },
+    {
+      "id": "Sql.CheckDbWithin7d",
+      "name": "Every user database had a good CHECKDB in the last 7 days",
+      "reference": "custom (integrity)",
+      "severity": "high",
+      "description": "From the last known good DBCC CHECKDB; manual before SQL Server 2016 SP2, where it cannot be read.",
+      "fail": {
+        "field": "NoCheckDbCount",
+        "op": "gt",
+        "value": 0
+      },
+      "message": "{Instance}: no good CHECKDB in 7 days for {NoCheckDbDatabases}",
+      "remediation": "Schedule DBCC CHECKDB weekly (for example with a maintenance plan)."
+    },
+    {
+      "id": "Sql.LinkedServerNoSa",
+      "name": "No linked server signs in as sa",
+      "reference": "CIS 3.x (linked servers)",
+      "severity": "high",
+      "description": "A linked server mapped to sa gives its users sysadmin on the remote server.",
+      "fail": {
+        "field": "LinkedServerSaCount",
+        "op": "gt",
+        "value": 0
+      },
+      "message": "{Instance}: linked servers sign in as sa: {LinkedServersSa}",
+      "remediation": "EXEC sp_droplinkedsrvlogin, then map to a least-privilege login with sp_addlinkedsrvlogin."
+    },
+    {
+      "id": "Sql.DbOwnerNotSa",
+      "name": "No user database is owned by sa",
+      "reference": "custom (ownership)",
+      "severity": "medium",
+      "description": "Databases owned by sa make ownership chains and TRUSTWORTHY escalate to sysadmin.",
+      "fail": {
+        "field": "OwnedBySaCount",
+        "op": "gt",
+        "value": 0
+      },
+      "message": "{Instance}: owned by sa: {OwnedBySaDatabases}",
+      "remediation": "ALTER AUTHORIZATION ON DATABASE::[<database>] TO [<dedicated owner login>];"
+    },
+    {
+      "id": "Sql.ForceEncryptionOrTde",
+      "name": "Connections are encrypted or the databases use TDE",
+      "reference": "7.x (encryption)",
+      "severity": "medium",
+      "description": "Warns when Force Encryption is off (and not every connection is encrypted) and a user database is without TDE.",
+      "warn": {
+        "all": [
+          {
+            "not": {
+              "field": "ForceEncryption",
+              "op": "true"
+            }
+          },
+          {
+            "not": {
+              "field": "AllConnectionsEncrypted",
+              "op": "true"
+            }
+          },
+          {
+            "field": "NoTdeCount",
+            "op": "gt",
+            "value": 0
+          }
+        ]
+      },
+      "requires": [
+        "NoTdeCount"
+      ],
+      "message": "{Instance}: Force Encryption is off and without TDE: {NoTdeDatabases}",
+      "remediation": "Turn on Force Encryption with a trusted certificate (SQL Server Configuration Manager), or encrypt the databases with TDE."
+    },
+    {
+      "id": "Sql.ErrorLogCount",
+      "name": "At least 12 error log files are kept",
+      "reference": "CIS 5.1",
+      "severity": "low",
+      "description": "Enough error logs to investigate after several restarts.",
+      "fail": {
+        "field": "ErrorLogCount",
+        "op": "lt",
+        "value": 12
+      },
+      "message": "{Instance}: only {ErrorLogCount} error logs are kept",
+      "remediation": "EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\\Microsoft\\MSSQLServer\\MSSQLServer', N'NumErrorLogs', REG_DWORD, 12;"
+    },
+    {
+      "id": "Sql.LoginAuditingFailedOrBoth",
+      "name": "Failed logins are audited",
+      "reference": "CIS 5.4",
+      "severity": "medium",
+      "description": "Login auditing set to failed logins or both; manual when the registry cannot be read.",
+      "fail": {
+        "field": "LoginAuditLevel",
+        "op": "not_in",
+        "value": [
+          "Failure",
+          "Both"
+        ]
+      },
+      "message": "{Instance}: login auditing is {LoginAuditLevel}",
+      "remediation": "Server properties > Security > Login auditing: Failed logins only (or Both), then restart the service."
+    }
+  ]
+}

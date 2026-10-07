@@ -1,0 +1,147 @@
+{
+  "key": "org.windows-baseline",
+  "name": "Windows workstation baseline",
+  "description": "Internal baseline over the security settings every Windows agent reports.",
+  "version": "1.0.0",
+  "platform": "windows",
+  "source": "posture",
+  "checks": [
+    {
+      "id": "Win.FirewallEnabled",
+      "name": "The firewall is on in every profile",
+      "reference": "baseline 1.1",
+      "severity": "high",
+      "fail": {
+        "field": "FirewallEnabled",
+        "op": "false"
+      },
+      "message": "The firewall is off in a profile",
+      "remediation": "Turn Windows Defender Firewall on for the domain, private and public profiles."
+    },
+    {
+      "id": "Win.AntivirusEnabled",
+      "name": "Antivirus is on and up to date",
+      "reference": "baseline 1.2",
+      "severity": "high",
+      "fail": {
+        "field": "AntivirusEnabled",
+        "op": "false"
+      },
+      "warn": {
+        "field": "AntivirusUpToDate",
+        "op": "false"
+      },
+      "requires": [
+        "AntivirusEnabled"
+      ],
+      "message": "{AntivirusName}: on {AntivirusEnabled}, up to date {AntivirusUpToDate}",
+      "remediation": "Turn the antivirus on and update its signatures."
+    },
+    {
+      "id": "Win.DiskEncrypted",
+      "name": "The system drive is encrypted",
+      "reference": "baseline 1.3",
+      "severity": "high",
+      "fail": {
+        "field": "DiskEncrypted",
+        "op": "false"
+      },
+      "message": "BitLocker is off on the system drive",
+      "remediation": "Turn BitLocker on for the system drive."
+    },
+    {
+      "id": "Win.SecureBoot",
+      "name": "Secure Boot is on",
+      "reference": "baseline 1.4",
+      "severity": "medium",
+      "fail": {
+        "field": "SecureBoot",
+        "op": "false"
+      },
+      "message": "Secure Boot is off",
+      "remediation": "Turn Secure Boot on in the UEFI settings."
+    },
+    {
+      "id": "Win.Smb1Disabled",
+      "name": "SMBv1 is off",
+      "reference": "baseline 2.1",
+      "severity": "high",
+      "fail": {
+        "field": "Smb1Enabled",
+        "op": "true"
+      },
+      "message": "SMBv1 is on",
+      "remediation": "Set-SmbServerConfiguration -EnableSMB1Protocol $false"
+    },
+    {
+      "id": "Win.UacEnabled",
+      "name": "UAC is on",
+      "reference": "baseline 2.2",
+      "severity": "high",
+      "fail": {
+        "field": "UacEnabled",
+        "op": "false"
+      },
+      "message": "UAC is off",
+      "remediation": "Set EnableLUA to 1 in HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System."
+    },
+    {
+      "id": "Win.RdpNla",
+      "name": "Remote Desktop requires NLA",
+      "reference": "baseline 2.3",
+      "severity": "medium",
+      "applies": {
+        "field": "RdpEnabled",
+        "op": "true"
+      },
+      "fail": {
+        "field": "RdpNla",
+        "op": "false"
+      },
+      "message": "Remote Desktop is on without Network Level Authentication",
+      "remediation": "Require Network Level Authentication for Remote Desktop."
+    },
+    {
+      "id": "Win.GuestDisabled",
+      "name": "The Guest account is off",
+      "reference": "baseline 2.4",
+      "severity": "medium",
+      "fail": {
+        "field": "GuestEnabled",
+        "op": "true"
+      },
+      "message": "The Guest account is enabled",
+      "remediation": "Disable-LocalUser -Name Guest"
+    },
+    {
+      "id": "Win.NoAutoLogon",
+      "name": "No automatic sign-in with a stored password",
+      "reference": "baseline 2.5",
+      "severity": "high",
+      "fail": {
+        "field": "AutoLogon",
+        "op": "true"
+      },
+      "message": "Windows signs in automatically with a stored password",
+      "remediation": "Remove AutoAdminLogon and DefaultPassword from HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon."
+    },
+    {
+      "id": "Win.UpdatesRecent",
+      "name": "Updates installed in the last 30 days",
+      "reference": "baseline 3.1",
+      "severity": "medium",
+      "fail": {
+        "field": "DaysSinceUpdate",
+        "op": "gt",
+        "value": 60
+      },
+      "warn": {
+        "field": "DaysSinceUpdate",
+        "op": "gt",
+        "value": 30
+      },
+      "message": "The last update was {DaysSinceUpdate} days ago",
+      "remediation": "Install the pending Windows updates."
+    }
+  ]
+}

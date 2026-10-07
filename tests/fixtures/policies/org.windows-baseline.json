@@ -1,0 +1,115 @@
+{
+  "policy": "org.windows-baseline",
+  "cases": [
+    {
+      "name": "a workstation as the baseline wants it",
+      "items": [
+        {
+          "FirewallEnabled": true,
+          "AntivirusName": "Microsoft Defender Antivirus",
+          "AntivirusEnabled": true,
+          "AntivirusUpToDate": true,
+          "RealTimeProtection": true,
+          "DiskEncrypted": true,
+          "SecureBoot": true,
+          "RdpEnabled": true,
+          "RdpNla": true,
+          "Smb1Enabled": false,
+          "UacEnabled": true,
+          "GuestEnabled": false,
+          "AutoLogon": false,
+          "AutomaticUpdates": true,
+          "DaysSinceUpdate": 5
+        }
+      ],
+      "expect": {
+        "Win.FirewallEnabled": "pass",
+        "Win.AntivirusEnabled": "pass",
+        "Win.DiskEncrypted": "pass",
+        "Win.SecureBoot": "pass",
+        "Win.Smb1Disabled": "pass",
+        "Win.UacEnabled": "pass",
+        "Win.RdpNla": "pass",
+        "Win.GuestDisabled": "pass",
+        "Win.NoAutoLogon": "pass",
+        "Win.UpdatesRecent": "pass"
+      }
+    },
+    {
+      "name": "everything off",
+      "items": [
+        {
+          "FirewallEnabled": false,
+          "AntivirusName": "Microsoft Defender Antivirus",
+          "AntivirusEnabled": false,
+          "AntivirusUpToDate": true,
+          "RealTimeProtection": true,
+          "DiskEncrypted": false,
+          "SecureBoot": false,
+          "RdpEnabled": true,
+          "RdpNla": false,
+          "Smb1Enabled": true,
+          "UacEnabled": false,
+          "GuestEnabled": true,
+          "AutoLogon": true,
+          "AutomaticUpdates": true,
+          "DaysSinceUpdate": 90
+        }
+      ],
+      "expect": {
+        "Win.FirewallEnabled": "fail",
+        "Win.AntivirusEnabled": "fail",
+        "Win.DiskEncrypted": "fail",
+        "Win.SecureBoot": "fail",
+        "Win.Smb1Disabled": "fail",
+        "Win.UacEnabled": "fail",
+        "Win.RdpNla": "fail",
+        "Win.GuestDisabled": "fail",
+        "Win.NoAutoLogon": "fail",
+        "Win.UpdatesRecent": "fail"
+      }
+    },
+    {
+      "name": "warnings: old signatures, updates 45 days ago",
+      "items": [
+        {
+          "FirewallEnabled": true,
+          "AntivirusName": "Microsoft Defender Antivirus",
+          "AntivirusEnabled": true,
+          "AntivirusUpToDate": false,
+          "RealTimeProtection": true,
+          "DiskEncrypted": true,
+          "SecureBoot": true,
+          "RdpEnabled": true,
+          "RdpNla": true,
+          "Smb1Enabled": false,
+          "UacEnabled": true,
+          "GuestEnabled": false,
+          "AutoLogon": false,
+          "AutomaticUpdates": true,
+          "DaysSinceUpdate": 45
+        }
+      ],
+      "expect": {
+        "Win.AntivirusEnabled": "warn",
+        "Win.UpdatesRecent": "warn"
+      }
+    },
+    {
+      "name": "RDP off: NLA does not apply; not reported: by hand",
+      "items": [
+        {
+          "FirewallEnabled": true,
+          "RdpEnabled": false,
+          "RdpNla": false
+        }
+      ],
+      "expect": {
+        "Win.RdpNla": "na",
+        "Win.FirewallEnabled": "pass",
+        "Win.DiskEncrypted": "manual",
+        "Win.UpdatesRecent": "manual"
+      }
+    }
+  ]
+}

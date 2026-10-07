@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Validate the rule feed for Laravel-MDM-Server and (re)generate manifest.json.
 
-  python scripts/feed.py check    # validate rules, parsers, fixtures and manifest
+  python scripts/feed.py check    # validate rules, parsers, policies, fixtures and manifest
   python scripts/feed.py build    # regenerate manifest.json (SHA-256 of every file)
 
-Mirrors the server's checks (app/Support/SecurityRules.php, SecurityParsers.php, SecurityFeed.php).
+Mirrors the server's checks (app/Support/SecurityRules.php, SecurityParsers.php, CompliancePolicies.php,
+SecurityFeed.php).
 """
 import hashlib
 import json
@@ -15,7 +16,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 KEY = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 FIELD = re.compile(r"^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)*$")
-PATH = re.compile(r"^(rules|parsers)/[\w.-]+(/[\w.-]+)*\.json$")
+PATH = re.compile(r"^(rules|parsers|policies)/[\w.-]+(/[\w.-]+)*\.json$")
+CHECK_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{1,63}$")
+STATUSES = ["fail", "warn", "manual", "pass", "na"]  # worst first
+FEED_DIRS = ("rules", "parsers", "policies")
 SEVERITIES = {"critical", "high", "medium", "low", "info"}
 PLATFORMS = {"any", "windows", "linux"}
 SOURCES = {
@@ -27,8 +31,19 @@ SOURCES = {
     "posture": ["FirewallEnabled", "AntivirusName", "AntivirusEnabled", "AntivirusUpToDate", "RealTimeProtection",
                 "DiskEncrypted", "SecureBoot", "RdpEnabled", "RdpNla", "Smb1Enabled", "UacEnabled", "GuestEnabled",
                 "AutoLogon", "SshRootLogin", "SshPasswordAuthentication", "AutomaticUpdates", "DaysSinceUpdate"],
+    "sqlserver": ["Instance", "Version", "Edition", "Clustered", "Error",
+                  "AdHocDistributedQueries", "ClrEnabled", "CrossDbOwnershipChaining", "DatabaseMailXps",
+                  "OleAutomationProcedures", "RemoteAccess", "RemoteAdminConnections", "ScanForStartupProcs", "XpCmdshell",
+                  "TrustworthyCount", "TrustworthyDatabases", "SaEnabled", "SaName", "WindowsAuthOnly",
+                  "SysadminCount", "SysadminLogins", "WeakPolicyCount", "WeakPolicyLogins",
+                  "NoFullBackupCount", "NoFullBackupDatabases", "NoLogBackupCount", "NoLogBackupDatabases",
+                  "NoCheckDbCount", "NoCheckDbDatabases", "LinkedServerSaCount", "LinkedServersSa",
+                  "OwnedBySaCount", "OwnedBySaDatabases", "ForceEncryption", "AllConnectionsEncrypted",
+                  "NoTdeCount", "NoTdeDatabases", "ErrorLogCount", "LoginAuditLevel"],
     "events": ["Type", "Count", "User", "Source", "Message", "Last"],
 }
+# What compliance checks may look at: the inventory, not the events.
+POLICY_SOURCES = {k for k in SOURCES if k != "events"}
 LOG_SOURCES = {"windows.security", "windows.system", "windows.defender", "linux.auth"}
 EVENT_FIELDS = {"type", "user", "source", "message", "count"}
 UNARY = {"exists", "empty", "true", "false"}
@@ -113,7 +128,7 @@ def test(c, item):
         return not test(c["not"], item)
     op, val, got = c["op"], c.get("value"), get(item, c["field"])
     if op == "exists":
-        return got is not None
+        return got is not None and got != ""
     if op == "empty":
         return got in (None, "", [])
     if op == "true":
@@ -193,6 +208,128 @@ def rule_errors(r, parser):
     return errs
 
 
+def policy_errors(p):
+    """CompliancePolicies::errors of the server."""
+    if not isinstance(p, dict):
+        return ["not a JSON object"]
+    errs = []
+    if not isinstance(p.get("key"), str) or not KEY.match(p["key"]):
+        errs.append("bad key")
+    if not isinstance(p.get("name"), str) or not p["name"].strip() or len(p["name"]) > 120:
+        errs.append("bad name")
+    if "description" in p and (not isinstance(p["description"], str) or len(p["description"]) > 1000):
+        errs.append("bad description")
+    if "version" in p and (not isinstance(p["version"], str) or len(p["version"]) > 32):
+        errs.append("bad version")
+    if p.get("platform", "any") not in PLATFORMS:
+        errs.append("bad platform")
+    if "source" in p and p["source"] not in POLICY_SOURCES:
+        errs.append(f"source must be one of {sorted(POLICY_SOURCES)}")
+    for f in ("applies", "manual"):
+        if f in p:
+            cond_errors(p[f], f, 1, [0], errs)
+    checks = p.get("checks")
+    if not isinstance(checks, list) or not checks:
+        return errs + ["checks: a list of at least one check"]
+    if len(checks) > 300:
+        return errs + ["checks: at most 300"]
+    ids = set()
+    for i, c in enumerate(checks):
+        path = f"checks.{i}"
+        if not isinstance(c, dict):
+            errs.append(f"{path}: not an object")
+            continue
+        cid = c.get("id")
+        if not isinstance(cid, str) or not CHECK_ID.match(cid):
+            errs.append(f"{path}: bad id")
+        elif cid.lower() in ids:
+            errs.append(f"{path}: duplicate id {cid}")
+        else:
+            ids.add(cid.lower())
+            path = cid
+        if not isinstance(c.get("name"), str) or not c["name"].strip() or len(c["name"]) > 200:
+            errs.append(f"{path}: bad name")
+        if c.get("severity") not in SEVERITIES:
+            errs.append(f"{path}: bad severity")
+        if c.get("source", p.get("source")) not in POLICY_SOURCES:
+            errs.append(f"{path}: source must be one of {sorted(POLICY_SOURCES)} (or the policy's)")
+        if "reference" in c and (not isinstance(c["reference"], str) or len(c["reference"]) > 120):
+            errs.append(f"{path}: bad reference")
+        for f in ("description", "message", "remediation"):
+            if f in c and (not isinstance(c[f], str) or len(c[f]) > 1000):
+                errs.append(f"{path}: bad {f}")
+        if "fail" not in c and "warn" not in c:
+            errs.append(f"{path}: 'fail' or 'warn' is needed")
+        for f in ("applies", "manual", "fail", "warn"):
+            if f in c:
+                cond_errors(c[f], f"{path}.{f}", 1, [0], errs)
+        if "requires" in c and (not isinstance(c["requires"], list) or not all(isinstance(x, str) and FIELD.match(x) for x in c["requires"])):
+            errs.append(f"{path}: requires is a list of field names")
+        source = c.get("source", p.get("source"))
+        if source in SOURCES:
+            for field in condition_fields(c) + list(c.get("requires", []) if isinstance(c.get("requires"), list) else []):
+                if field.split(".")[0] not in SOURCES[source]:
+                    errs.append(f"{path}: {source} has no field {field}")
+    return errs
+
+
+def condition_fields(c, all_ops=True):
+    """The fields a check's conditions name (with all_ops False: the ones it cannot be told without)."""
+    fields = []
+
+    def walk(x):
+        if not isinstance(x, dict):
+            return
+        for g in ("all", "any"):
+            if g in x and isinstance(x[g], list):
+                for ch in x[g]:
+                    walk(ch)
+                return
+        if "not" in x:
+            walk(x["not"])
+            return
+        if isinstance(x.get("field"), str) and (all_ops or x.get("op") not in ("exists", "empty")):
+            fields.append(x["field"])
+
+    for part in (("applies", "manual", "fail", "warn") if all_ops else ("fail", "warn")):
+        walk(c.get(part))
+    return list(dict.fromkeys(fields))
+
+
+def item_status(p, c, item):
+    """CompliancePolicies::itemStatus of the server."""
+    for applies in (p.get("applies"), c.get("applies")):
+        if applies is not None and not test(applies, item):
+            return "na"
+    for manual in (p.get("manual"), c.get("manual")):
+        if manual is not None and test(manual, item):
+            return "manual"
+    for field in c["requires"] if "requires" in c else condition_fields(c, all_ops=False):
+        if get(item, field) in (None, ""):
+            return "manual"
+    if "fail" in c and test(c["fail"], item):
+        return "fail"
+    if "warn" in c and test(c["warn"], item):
+        return "warn"
+    return "pass"
+
+
+def check_status(p, c, items):
+    """The worst status of the items; without items the check does not apply."""
+    statuses = [item_status(p, c, i) for i in items if isinstance(i, dict) and i]
+    return min(statuses, key=STATUSES.index) if statuses else "na"
+
+
+def load_policies():
+    out = []
+    for f in sorted((ROOT / "policies").rglob("*.json")):
+        rel = f.relative_to(ROOT).as_posix()
+        data = json.loads(f.read_text())
+        for d in ([data] if isinstance(data, dict) and "key" in data else data):
+            out.append((rel, d))
+    return out
+
+
 def load_definitions():
     out = []
     for f in sorted(list((ROOT / "rules").rglob("*.json")) + list((ROOT / "parsers").rglob("*.json"))):
@@ -206,7 +343,7 @@ def load_definitions():
 
 def manifest_files():
     files = {}
-    for f in sorted(list((ROOT / "rules").rglob("*.json")) + list((ROOT / "parsers").rglob("*.json"))):
+    for f in sorted(f for d in FEED_DIRS for f in (ROOT / d).rglob("*.json")):
         files[f.relative_to(ROOT).as_posix()] = hashlib.sha256(f.read_bytes()).hexdigest()
     return files
 
@@ -230,6 +367,15 @@ def check():
             errors.append(f"{rel}: duplicate key {key}")
         seen.add(key)
 
+    policies = load_policies()
+    for rel, p in policies:
+        for e in policy_errors(p):
+            errors.append(f"{rel}: {e}")
+        key = p.get("key") if isinstance(p, dict) else None
+        if key in seen:
+            errors.append(f"{rel}: duplicate key {key}")
+        seen.add(key)
+
     mf = ROOT / "manifest.json"
     if not mf.exists():
         errors.append("manifest.json missing (run: python scripts/feed.py build)")
@@ -246,8 +392,11 @@ def check():
 
     by_key = {d["key"]: (rel, parser, d) for rel, parser, d in defs if isinstance(d, dict) and "key" in d}
     covered = set()
+    errors += check_policy_fixtures(policies)
     for f in sorted((ROOT / "tests" / "fixtures").rglob("*.json")):
         fx = json.loads(f.read_text())
+        if "policy" in fx:
+            continue
         entry = by_key.get(fx.get("key"))
         name = f.relative_to(ROOT).as_posix()
         if not entry:
@@ -271,8 +420,43 @@ def check():
 
     for e in errors:
         print("ERROR", e)
-    print(f"Checked {len(defs)} definition(s), {len(errors)} error(s)")
+    checks = sum(len(p.get("checks", [])) for _, p in policies if isinstance(p, dict))
+    print(f"Checked {len(defs)} definition(s), {len(policies)} policy(ies) with {checks} check(s), {len(errors)} error(s)")
     return 1 if errors else 0
+
+
+def check_policy_fixtures(policies):
+    """tests/fixtures/policies/*.json: {"policy": key, "cases": [{"name", "items": [...], "expect": {check id: status}}]}.
+    Every check of every policy needs a case where it does not pass (fail or warn) and one where it passes."""
+    errors = []
+    by_key = {p["key"]: p for _, p in policies if isinstance(p, dict) and "key" in p}
+    seen = {key: {} for key in by_key}
+    for f in sorted((ROOT / "tests" / "fixtures").rglob("*.json")):
+        fx = json.loads(f.read_text())
+        if "policy" not in fx:
+            continue
+        name = f.relative_to(ROOT).as_posix()
+        p = by_key.get(fx["policy"])
+        if p is None:
+            errors.append(f"{name}: unknown policy {fx['policy']!r}")
+            continue
+        checks = {c["id"]: c for c in p["checks"] if isinstance(c, dict) and "id" in c}
+        for i, case in enumerate(fx.get("cases", [])):
+            label = f"{name}: case {i} ({case.get('name', '')})"
+            for cid, expected in case.get("expect", {}).items():
+                if cid not in checks:
+                    errors.append(f"{label}: unknown check {cid}")
+                    continue
+                got = check_status(p, checks[cid], case.get("items", []))
+                if got != expected:
+                    errors.append(f"{label}: {cid} is {got}, expected {expected}")
+                seen[fx["policy"]].setdefault(cid, set()).add(got)
+    for key, p in by_key.items():
+        for c in p.get("checks", []):
+            got = seen[key].get(c.get("id"), set())
+            if "pass" not in got or not got & {"fail", "warn"}:
+                errors.append(f"{key}: {c.get('id')} needs a fixture case that passes and one that fails or warns")
+    return errors
 
 
 def matches_parser(p, record):
