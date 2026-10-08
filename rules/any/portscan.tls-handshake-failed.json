@@ -1,0 +1,14 @@
+{
+  "key": "portscan.tls-handshake-failed",
+  "name": "TLS would not negotiate",
+  "description": "A TLS port that fails the handshake usually runs an outdated or misconfigured TLS stack.",
+  "severity": "low",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "TlsFailed",
+    "op": "true"
+  },
+  "message": "TLS on port {Port} would not negotiate",
+  "remediation": "Check the TLS protocols and certificate configured on this service."
+}

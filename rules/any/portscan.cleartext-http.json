@@ -1,0 +1,22 @@
+{
+  "key": "portscan.cleartext-http",
+  "name": "HTTP served without TLS",
+  "description": "A web service over plain HTTP exposes its traffic and any credentials to the network.",
+  "severity": "low",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "all": [
+      {
+        "field": "Http",
+        "op": "true"
+      },
+      {
+        "field": "Tls",
+        "op": "false"
+      }
+    ]
+  },
+  "message": "HTTP without TLS on port {Port}",
+  "remediation": "Serve the site over HTTPS and redirect HTTP to it."
+}

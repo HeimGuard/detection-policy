@@ -1,0 +1,15 @@
+{
+  "key": "portscan.ftp",
+  "name": "FTP is exposed",
+  "description": "FTP is unencrypted; credentials and files travel in the clear.",
+  "severity": "low",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "Service",
+    "op": "eq",
+    "value": "ftp"
+  },
+  "message": "FTP is exposed on port {Port}",
+  "remediation": "Use SFTP or FTPS instead."
+}

@@ -1,0 +1,21 @@
+{
+  "key": "portscan.missing-headers",
+  "positive": [
+    {
+      "Port": 80,
+      "Http": true,
+      "Hsts": false,
+      "Csp": true,
+      "XFrameOptions": true
+    }
+  ],
+  "negative": [
+    {
+      "Port": 80,
+      "Http": true,
+      "Hsts": true,
+      "Csp": true,
+      "XFrameOptions": true
+    }
+  ]
+}

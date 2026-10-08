@@ -1,0 +1,17 @@
+{
+  "key": "portscan.expired-cert",
+  "positive": [
+    {
+      "Port": 443,
+      "Tls": true,
+      "CertExpired": true
+    }
+  ],
+  "negative": [
+    {
+      "Port": 443,
+      "Tls": true,
+      "CertExpired": false
+    }
+  ]
+}

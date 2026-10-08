@@ -1,0 +1,15 @@
+{
+  "key": "portscan.ftp",
+  "positive": [
+    {
+      "Port": 21,
+      "Service": "ftp"
+    }
+  ],
+  "negative": [
+    {
+      "Port": 22,
+      "Service": "ssh"
+    }
+  ]
+}

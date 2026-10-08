@@ -1,0 +1,34 @@
+{
+  "key": "portscan.missing-headers",
+  "name": "Missing HTTP security headers",
+  "description": "The web service is missing Content-Security-Policy, X-Frame-Options or HSTS.",
+  "severity": "low",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "all": [
+      {
+        "field": "Http",
+        "op": "true"
+      },
+      {
+        "any": [
+          {
+            "field": "Hsts",
+            "op": "false"
+          },
+          {
+            "field": "Csp",
+            "op": "false"
+          },
+          {
+            "field": "XFrameOptions",
+            "op": "false"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "Missing HTTP security headers on port {Port}",
+  "remediation": "Add Content-Security-Policy and X-Frame-Options, and Strict-Transport-Security over TLS."
+}

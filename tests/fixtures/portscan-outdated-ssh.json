@@ -1,0 +1,15 @@
+{
+  "key": "portscan.outdated-ssh",
+  "positive": [
+    {
+      "Port": 22,
+      "Banner": "SSH-2.0-OpenSSH_5.3"
+    }
+  ],
+  "negative": [
+    {
+      "Port": 22,
+      "Banner": "SSH-2.0-OpenSSH_9.2"
+    }
+  ]
+}

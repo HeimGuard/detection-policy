@@ -1,0 +1,14 @@
+{
+  "key": "portscan.expired-cert",
+  "name": "Expired TLS certificate",
+  "description": "The certificate presented on this port has expired, so clients cannot trust it.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "CertExpired",
+    "op": "true"
+  },
+  "message": "Expired TLS certificate on port {Port}",
+  "remediation": "Renew the TLS certificate."
+}

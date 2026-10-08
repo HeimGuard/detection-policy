@@ -1,0 +1,25 @@
+{
+  "key": "portscan.database",
+  "name": "Database reachable from the network",
+  "description": "A database port reachable from the network is a common target for theft and ransomware.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "Port",
+    "op": "in",
+    "value": [
+      1433,
+      1521,
+      3306,
+      5432,
+      5984,
+      6379,
+      9200,
+      11211,
+      27017
+    ]
+  },
+  "message": "Database service exposed on port {Port}",
+  "remediation": "Bind it to localhost or restrict the port to trusted hosts in the firewall."
+}

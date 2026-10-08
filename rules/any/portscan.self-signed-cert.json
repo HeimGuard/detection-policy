@@ -1,0 +1,14 @@
+{
+  "key": "portscan.self-signed-cert",
+  "name": "Self-signed TLS certificate",
+  "description": "A self-signed certificate cannot be verified and lets an attacker impersonate the service.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "CertSelfSigned",
+    "op": "true"
+  },
+  "message": "Self-signed TLS certificate on port {Port}",
+  "remediation": "Install a certificate from a trusted CA (or your own internal CA)."
+}

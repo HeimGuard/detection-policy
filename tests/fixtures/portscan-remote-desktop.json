@@ -1,0 +1,15 @@
+{
+  "key": "portscan.remote-desktop",
+  "positive": [
+    {
+      "Port": 3389,
+      "Service": "rdp"
+    }
+  ],
+  "negative": [
+    {
+      "Port": 22,
+      "Service": "ssh"
+    }
+  ]
+}
