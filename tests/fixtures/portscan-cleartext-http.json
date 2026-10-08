@@ -1,0 +1,17 @@
+{
+  "key": "portscan.cleartext-http",
+  "positive": [
+    {
+      "Port": 80,
+      "Http": true,
+      "Tls": false
+    }
+  ],
+  "negative": [
+    {
+      "Port": 443,
+      "Http": true,
+      "Tls": true
+    }
+  ]
+}

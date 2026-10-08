@@ -1,0 +1,15 @@
+{
+  "key": "portscan.tls-handshake-failed",
+  "positive": [
+    {
+      "Port": 443,
+      "TlsFailed": true
+    }
+  ],
+  "negative": [
+    {
+      "Port": 443,
+      "TlsFailed": false
+    }
+  ]
+}

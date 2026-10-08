@@ -1,0 +1,15 @@
+{
+  "key": "portscan.outdated-ssh",
+  "name": "Outdated SSH server",
+  "description": "The SSH banner reports an old server version with known weaknesses.",
+  "severity": "low",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "Banner",
+    "op": "matches",
+    "value": "dropbear_201[0-7]|OpenSSH_[1-6]\\."
+  },
+  "message": "Outdated SSH server on port {Port}: {Banner}",
+  "remediation": "Update the SSH server to a current release."
+}

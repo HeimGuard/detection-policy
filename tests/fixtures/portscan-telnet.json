@@ -1,0 +1,15 @@
+{
+  "key": "portscan.telnet",
+  "positive": [
+    {
+      "Port": 23,
+      "Service": "telnet"
+    }
+  ],
+  "negative": [
+    {
+      "Port": 22,
+      "Service": "ssh"
+    }
+  ]
+}

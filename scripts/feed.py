@@ -28,6 +28,8 @@ SOURCES = {
                 "DiskEncrypted", "SecureBoot", "RdpEnabled", "RdpNla", "Smb1Enabled", "UacEnabled", "GuestEnabled",
                 "AutoLogon", "SshRootLogin", "SshPasswordAuthentication", "AutomaticUpdates", "DaysSinceUpdate"],
     "events": ["Type", "Count", "User", "Source", "Message", "Last"],
+    "portscan": ["Ip", "Network", "Port", "Service", "Banner", "Server", "Title",
+                 "Tls", "Http", "Hsts", "Csp", "XFrameOptions", "CertSelfSigned", "CertExpired", "TlsFailed"],
 }
 LOG_SOURCES = {"windows.security", "windows.system", "windows.defender", "linux.auth"}
 EVENT_FIELDS = {"type", "user", "source", "message", "count"}

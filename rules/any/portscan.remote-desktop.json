@@ -1,0 +1,18 @@
+{
+  "key": "portscan.remote-desktop",
+  "name": "Remote desktop exposed",
+  "description": "RDP and VNC reachable from the network are frequently brute-forced.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "Port",
+    "op": "in",
+    "value": [
+      3389,
+      5900
+    ]
+  },
+  "message": "Remote desktop ({Service}) exposed on port {Port}",
+  "remediation": "Limit it to a VPN or trusted addresses."
+}

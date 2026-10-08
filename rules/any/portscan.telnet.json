@@ -1,0 +1,15 @@
+{
+  "key": "portscan.telnet",
+  "name": "Telnet is exposed",
+  "description": "Telnet sends everything, passwords included, in the clear.",
+  "severity": "high",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "Service",
+    "op": "eq",
+    "value": "telnet"
+  },
+  "message": "Telnet is exposed on port {Port}",
+  "remediation": "Disable Telnet and use SSH instead."
+}

@@ -1,0 +1,15 @@
+{
+  "key": "portscan.database",
+  "positive": [
+    {
+      "Port": 3306,
+      "Service": "mysql"
+    }
+  ],
+  "negative": [
+    {
+      "Port": 80,
+      "Service": "http"
+    }
+  ]
+}

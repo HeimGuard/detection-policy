@@ -1,0 +1,15 @@
+{
+  "key": "portscan.smb",
+  "positive": [
+    {
+      "Port": 445,
+      "Service": "microsoft-ds"
+    }
+  ],
+  "negative": [
+    {
+      "Port": 80,
+      "Service": "http"
+    }
+  ]
+}

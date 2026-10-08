@@ -1,0 +1,17 @@
+{
+  "key": "portscan.self-signed-cert",
+  "positive": [
+    {
+      "Port": 443,
+      "Tls": true,
+      "CertSelfSigned": true
+    }
+  ],
+  "negative": [
+    {
+      "Port": 443,
+      "Tls": true,
+      "CertSelfSigned": false
+    }
+  ]
+}

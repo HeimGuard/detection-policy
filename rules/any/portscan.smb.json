@@ -1,0 +1,18 @@
+{
+  "key": "portscan.smb",
+  "name": "SMB/NetBIOS exposed",
+  "description": "File-sharing ports reachable from the network widen the attack surface.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "portscan",
+  "when": {
+    "field": "Port",
+    "op": "in",
+    "value": [
+      139,
+      445
+    ]
+  },
+  "message": "SMB/NetBIOS exposed on port {Port}",
+  "remediation": "Restrict SMB to the networks that need it."
+}
