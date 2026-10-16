@@ -1,0 +1,12 @@
+{
+  "key": "org.windows-4624-logon",
+  "name": "Windows: successful sign-in",
+  "description": "4624 of people, as a logon event: interactive (2), network (3), unlock (7), remote desktop (10) and cached (11) sign-ins; services, SYSTEM, window manager and computer accounts are left out. Source is the remote address, else the workstation.",
+  "source": "windows.security",
+  "when": {"all": [
+    {"field": "Id", "op": "eq", "value": 4624},
+    {"field": "Data.LogonType", "op": "in", "value": ["2", "3", "7", "10", "11"]},
+    {"field": "Data.TargetUserName", "op": "not_matches", "value": "^(SYSTEM|LOCAL SERVICE|NETWORK SERVICE|ANONYMOUS LOGON|(DWM|UMFD)-\\d+)$|\\$$"}
+  ]},
+  "event": {"type": "logon", "user": "{Data.TargetUserName}", "source": "{Data.IpAddress|Data.WorkstationName}", "message": "Sign-in of {Data.TargetUserName} (logon type {Data.LogonType})"}
+}

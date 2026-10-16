@@ -1,0 +1,53 @@
+{
+  "key": "org.windows-4624-logon",
+  "positive": [
+    {
+      "Id": 4624,
+      "Data": {
+        "TargetUserName": "alice",
+        "LogonType": "10",
+        "IpAddress": "192.0.2.10",
+        "AuthenticationPackageName": "Negotiate"
+      }
+    },
+    {
+      "Id": 4624,
+      "Data": {
+        "TargetUserName": "bob",
+        "LogonType": "2",
+        "IpAddress": "127.0.0.1",
+        "WorkstationName": "PC-01"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "Id": 4624,
+      "Data": {
+        "TargetUserName": "SYSTEM",
+        "LogonType": "5"
+      }
+    },
+    {
+      "Id": 4624,
+      "Data": {
+        "TargetUserName": "PC-01$",
+        "LogonType": "3"
+      }
+    },
+    {
+      "Id": 4624,
+      "Data": {
+        "TargetUserName": "DWM-2",
+        "LogonType": "2"
+      }
+    },
+    {
+      "Id": 4625,
+      "Data": {
+        "TargetUserName": "alice",
+        "LogonType": "10"
+      }
+    }
+  ]
+}

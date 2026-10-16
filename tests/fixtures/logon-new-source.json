@@ -1,0 +1,18 @@
+{
+  "key": "org.events-logon-new-source",
+  "positive": [
+    {
+      "Type": "logon",
+      "User": "alice",
+      "Source": "192.0.2.10",
+      "Message": "Sign-in of alice (logon type 10)"
+    }
+  ],
+  "negative": [
+    {
+      "Type": "failed_logon",
+      "User": "alice",
+      "Source": "192.0.2.10"
+    }
+  ]
+}

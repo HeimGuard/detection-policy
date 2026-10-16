@@ -185,6 +185,13 @@ def rule_errors(r, parser):
         t = r.get("threshold")
         if t is not None and (not isinstance(t, int) or not 1 <= t <= 10000):
             errs.append("bad threshold")
+        # Only combinations no device had in the last N days (server: SecurityEvent::RETENTION_DAYS).
+        u = r.get("unseen_days")
+        if u is not None and (r.get("source") != "events" or not isinstance(u, int) or isinstance(u, bool) or not 1 <= u <= 30):
+            errs.append("unseen_days: on events rules, a whole number from 1 to 30")
+        by = r.get("unseen_by")
+        if by is not None and (u is None or not isinstance(by, list) or not by or len(set(by)) != len(by) or set(by) - {"User", "Source"}):
+            errs.append("unseen_by: a list of User and / or Source, with unseen_days")
         for f in ("description", "message", "remediation"):
             if f in r and (not isinstance(r[f], str) or len(r[f]) > 1000):
                 errs.append(f"bad {f}")
