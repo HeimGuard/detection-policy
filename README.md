@@ -31,6 +31,16 @@ scripts/sigma2feed.py        # Sigma -> server rule converter
 Rule format: see [Security scanner](https://github.com/PanoptiPulse/Laravel-MDM-Server/blob/main/docs/security-scanner.md).
 Rules use a `key` prefixed `org.`; the same key as a bundled rule would replace it.
 
+## Sign-ins
+
+`org.linux-sshd-accepted` (sshd `Accepted ...`) and `org.windows-4624-logon` (4624 of people: logon
+types 2, 3, 7, 10, 11, without services, SYSTEM and computer accounts) turn successful sign-ins into
+one event type, `logon` (user, and the address or workstation it came from). Rules over it with
+`"unseen_days": 10` alert only on a user / address combination no device had in the last 10 days
+(`org.events-ssh-publickey-new-source`, `org.events-logon-new-source`); `unseen_days` needs a server
+with that option, an older one ignores it and alerts on every sign-in. Windows agents collect every
+4624 once this parser is in the feed (a busy log; agents send it in parts).
+
 ## Sigma rules
 
 Put a Sigma rule in `sigma/` and convert it:

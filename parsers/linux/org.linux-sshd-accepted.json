@@ -1,0 +1,9 @@
+{
+  "key": "org.linux-sshd-accepted",
+  "name": "sshd: successful sign-in",
+  "description": "Every successful SSH sign-in (password, public key, keyboard-interactive) as a logon event: user and the address it came from. The base of the sign-in rules (new user / address).",
+  "source": "linux.auth",
+  "when": {"field": "Identifier", "op": "in", "value": ["sshd", "sshd-session"]},
+  "pattern": "^Accepted (?<method>\\S+) for (?<user>\\S+) from (?<ip>\\S+) port \\d+",
+  "event": {"type": "logon", "user": "{user}", "source": "{ip}", "message": "SSH sign-in of {user} from {ip} with {method}"}
+}

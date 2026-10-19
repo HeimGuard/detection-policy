@@ -1,0 +1,25 @@
+{
+  "key": "org.events-ssh-publickey-new-source",
+  "positive": [
+    {
+      "Type": "logon",
+      "User": "deploy",
+      "Source": "192.0.2.10",
+      "Message": "SSH sign-in of deploy from 192.0.2.10 with publickey"
+    }
+  ],
+  "negative": [
+    {
+      "Type": "logon",
+      "User": "alice",
+      "Source": "198.51.100.7",
+      "Message": "SSH sign-in of alice from 198.51.100.7 with password"
+    },
+    {
+      "Type": "failed_logon",
+      "User": "deploy",
+      "Source": "192.0.2.10",
+      "Message": "ssh: failed publickey for deploy"
+    }
+  ]
+}

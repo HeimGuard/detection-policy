@@ -1,0 +1,23 @@
+{
+  "key": "org.linux-sshd-accepted",
+  "positive": [
+    {
+      "Identifier": "sshd",
+      "Message": "Accepted publickey for deploy from 192.0.2.10 port 51234 ssh2: ED25519 SHA256:abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG"
+    },
+    {
+      "Identifier": "sshd-session",
+      "Message": "Accepted password for alice from 198.51.100.7 port 40022 ssh2"
+    }
+  ],
+  "negative": [
+    {
+      "Identifier": "sshd",
+      "Message": "Failed publickey for deploy from 192.0.2.10 port 51234 ssh2"
+    },
+    {
+      "Identifier": "sudo",
+      "Message": "Accepted publickey for deploy from 192.0.2.10 port 51234 ssh2"
+    }
+  ]
+}

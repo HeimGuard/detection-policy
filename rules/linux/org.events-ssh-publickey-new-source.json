@@ -1,0 +1,15 @@
+{
+  "key": "org.events-ssh-publickey-new-source",
+  "name": "SSH key sign-in of a new user or from a new address",
+  "description": "A successful SSH sign-in with a public key of a user from an address (the combination) that no device had in the last 10 days. Public key authentication is generally safe, but a new combination can be unauthorized access with a stolen or added key, or lateral movement.",
+  "severity": "medium",
+  "platform": "linux",
+  "source": "events",
+  "when": {"all": [
+    {"field": "Type", "op": "eq", "value": "logon"},
+    {"field": "Message", "op": "contains", "value": "with publickey"}
+  ]},
+  "unseen_days": 10,
+  "message": "{User} signed in with an SSH key from {Source}, not seen in the last 10 days",
+  "remediation": "Check that the sign-in was expected: who uses this account from that address, and which key it was (sshd log, ~/.ssh/authorized_keys). Remove keys that are not known."
+}

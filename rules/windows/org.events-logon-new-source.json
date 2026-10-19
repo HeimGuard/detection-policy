@@ -1,0 +1,12 @@
+{
+  "key": "org.events-logon-new-source",
+  "name": "Sign-in of a new user or from a new address",
+  "description": "A successful Windows sign-in (interactive, network, remote desktop, unlock, cached) of a user from an address or workstation (the combination) that no device had in the last 10 days. Can be unauthorized access with stolen credentials or lateral movement.",
+  "severity": "low",
+  "platform": "windows",
+  "source": "events",
+  "when": {"field": "Type", "op": "eq", "value": "logon"},
+  "unseen_days": 10,
+  "message": "{User} signed in from {Source}, not seen in the last 10 days ({Message})",
+  "remediation": "Check that the sign-in was expected: who uses this account from that address or workstation. Reset the password and review the account if not."
+}
