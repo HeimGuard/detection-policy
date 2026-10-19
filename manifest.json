@@ -32,6 +32,6 @@
     "rules/windows/org.sigma-service-installed-from-suspicious-path.json": "95bb058fd60b67a8fb6afcb42202ad6a9a6b093758753beea9a44036be11de21",
     "rules/windows/org.startup-intel-queencreek.json": "ea51899e747dabf3f4b6438038dd02d806f6190f69de8169a33c32bf0aca9c15",
     "rules/windows/org.startup-mdm-enrollment-tampering.json": "849dc8fb840cbfb554cc1013187e46b47c8ed2f6898d6b412efed6a1937f4d3b",
-    "rules/windows/startup.suspicious-windows.json": "c9f8783436b79f743284597dcf42b7c858c43d96891fc91e3d44e41845d624a3"
+    "rules/windows/startup.suspicious-windows.json": "ffe72358117579900acb5f9157f9544b20735f0b2019df25fe5ea32b395da25d"
   }
 }
