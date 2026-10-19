@@ -1,0 +1,32 @@
+{
+  "key": "startup.suspicious-windows",
+  "name": "Suspicious startup item",
+  "description": "Programs started with Windows from temporary folders, or through script hosts used by malware.",
+  "severity": "medium",
+  "platform": "windows",
+  "source": "startup",
+  "when": {
+    "any": [
+      {
+        "field": "Command",
+        "op": "matches",
+        "value": "\\\\(appdata\\\\local\\\\temp|windows\\\\temp|users\\\\public|\\$recycle\\.bin)\\\\"
+      },
+      {
+        "field": "Command",
+        "op": "matches",
+        "value": "\\b(mshta|wscript|cscript)(\\.exe)?\\b|regsvr32.*scrobj|rundll32.*(javascript|http)"
+      },
+      {
+        "field": "Command",
+        "op": "matches",
+        "value": "(powershell|pwsh).*\\s[-/](e|enc|encodedcommand|w(indowstyle)?\\s+h(idden)?)\\b"
+      }
+    ]
+  },
+  "message": "{Name} ({Location}): {Command}",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1053/005/",
+    "https://attack.mitre.org/techniques/T1547/001/"
+  ]
+}

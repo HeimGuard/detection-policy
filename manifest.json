@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.5",
+  "version": "2026.10.6",
   "files": {
     "parsers/linux/org.linux-sshd-accepted.json": "cea4e1f7b7812f126a73e6cd51ef3a4fe7264363186bd6d8eb47ae41ece09755",
     "parsers/linux/org.linux-sudo-auth-failure.json": "4b725b12c90ef8209c4c2004f7cbddf69731458b6e61479f20c14b4e374770d4",
@@ -30,6 +30,8 @@
     "rules/windows/org.process-mdm-unenroll.json": "75ea5523a8094e82362752da8e30fc90340e151e8e92186e0acc1d2e0dbd0e79",
     "rules/windows/org.sigma-certutil-download-of-remote-file.json": "637cd972b301e5bb36e58d0f82f2856409064f5a18e02441928824f98cb70957",
     "rules/windows/org.sigma-service-installed-from-suspicious-path.json": "95bb058fd60b67a8fb6afcb42202ad6a9a6b093758753beea9a44036be11de21",
-    "rules/windows/org.startup-mdm-enrollment-tampering.json": "849dc8fb840cbfb554cc1013187e46b47c8ed2f6898d6b412efed6a1937f4d3b"
+    "rules/windows/org.startup-intel-queencreek.json": "ea51899e747dabf3f4b6438038dd02d806f6190f69de8169a33c32bf0aca9c15",
+    "rules/windows/org.startup-mdm-enrollment-tampering.json": "849dc8fb840cbfb554cc1013187e46b47c8ed2f6898d6b412efed6a1937f4d3b",
+    "rules/windows/startup.suspicious-windows.json": "ffe72358117579900acb5f9157f9544b20735f0b2019df25fe5ea32b395da25d"
   }
 }

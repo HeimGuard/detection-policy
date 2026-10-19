@@ -1,0 +1,27 @@
+{
+  "key": "startup.suspicious-windows",
+  "positive": [
+    {
+      "Name": "Updater",
+      "Location": "Run",
+      "Command": "wscript.exe C:\\Users\\bob\\AppData\\Local\\Temp\\x.vbs"
+    },
+    {
+      "Name": "USER_ESRV_SVC_QUEENCREEK",
+      "Location": "Task Scheduler \\",
+      "Command": "\"C:\\Windows\\System32\\Wscript.exe\" //B //NoLogo \"C:\\Users\\Public\\task.vbs\""
+    },
+    {
+      "Name": "USER_ESRV_SVC_QUEENCREEK",
+      "Location": "Task Scheduler \\",
+      "Command": "\"C:\\Windows\\System32\\Wscript.exe\" //B //NoLogo \"C:\\Program Files\\Intel\\SUR\\QUEENCREEK\\x64\\task.vbs\""
+    }
+  ],
+  "negative": [
+    {
+      "Name": "OneDrive",
+      "Location": "Run",
+      "Command": "\"C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe\" /background"
+    }
+  ]
+}

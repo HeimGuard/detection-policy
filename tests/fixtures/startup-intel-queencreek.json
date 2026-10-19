@@ -1,0 +1,22 @@
+{
+  "key": "org.startup-intel-queencreek",
+  "positive": [
+    {
+      "Name": "USER_ESRV_SVC_QUEENCREEK",
+      "Location": "Task Scheduler \\",
+      "Command": "\"C:\\Windows\\System32\\Wscript.exe\" //B //NoLogo \"C:\\Program Files\\Intel\\SUR\\QUEENCREEK\\x64\\task.vbs\""
+    }
+  ],
+  "negative": [
+    {
+      "Name": "USER_ESRV_SVC_QUEENCREEK",
+      "Location": "Task Scheduler \\",
+      "Command": "\"C:\\Windows\\System32\\Wscript.exe\" //B //NoLogo \"C:\\Users\\Public\\task.vbs\""
+    },
+    {
+      "Name": "Updater",
+      "Location": "Run",
+      "Command": "wscript.exe C:\\Users\\bob\\AppData\\Local\\Temp\\x.vbs"
+    }
+  ]
+}
