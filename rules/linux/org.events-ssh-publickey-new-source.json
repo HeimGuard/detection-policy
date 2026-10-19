@@ -11,5 +11,6 @@
   ]},
   "unseen_days": 10,
   "message": "{User} signed in with an SSH key from {Source}, not seen in the last 10 days",
-  "remediation": "Check that the sign-in was expected: who uses this account from that address, and which key it was (sshd log, ~/.ssh/authorized_keys). Remove keys that are not known."
+  "remediation": "Check that the sign-in was expected: who uses this account from that address, and which key it was (sshd log, ~/.ssh/authorized_keys). Remove keys that are not known.",
+  "urls": ["https://attack.mitre.org/techniques/T1021/004/", "https://attack.mitre.org/techniques/T1098/004/", "https://attack.mitre.org/techniques/T1078/"]
 }

@@ -185,6 +185,11 @@ def rule_errors(r, parser):
         t = r.get("threshold")
         if t is not None and (not isinstance(t, int) or not 1 <= t <= 10000):
             errs.append("bad threshold")
+        # Links shown with the rule and its findings (server: SecurityRules::urlList).
+        urls = r.get("urls")
+        if urls is not None and (not isinstance(urls, list) or len(urls) > 10 or not all(
+                isinstance(u, str) and len(u) <= 500 and re.match(r"^https?://[^/\s]+\S*$", u, re.I) for u in urls)):
+            errs.append("urls: a list of up to 10 http(s) addresses")
         # Only combinations no device had in the last N days (server: SecurityEvent::RETENTION_DAYS).
         u = r.get("unseen_days")
         if u is not None and (r.get("source") != "events" or not isinstance(u, int) or isinstance(u, bool) or not 1 <= u <= 30):

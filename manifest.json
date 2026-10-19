@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.4",
+  "version": "2026.10.5",
   "files": {
     "parsers/linux/org.linux-sshd-accepted.json": "cea4e1f7b7812f126a73e6cd51ef3a4fe7264363186bd6d8eb47ae41ece09755",
     "parsers/linux/org.linux-sudo-auth-failure.json": "4b725b12c90ef8209c4c2004f7cbddf69731458b6e61479f20c14b4e374770d4",
@@ -17,13 +17,13 @@
     "rules/any/portscan.smb.json": "75a5241f3b188d5e437df1bbe1a536183b273f14da3e3f9efc187678b465d1f7",
     "rules/any/portscan.telnet.json": "4fecfd92c2229de76a552f5e1b4759030f4f3a2b1f7859317750b40a0e97b2ba",
     "rules/any/portscan.tls-handshake-failed.json": "917858ed989c543bdfa87c98909fdf9e897a6b737ad027dc04c85400497fce8c",
-    "rules/linux/org.events-ssh-publickey-new-source.json": "f9e0c97dc70704d61fd9577f15624b4e9c59467fdfa723cd3b0ea7a4c835bd46",
+    "rules/linux/org.events-ssh-publickey-new-source.json": "61b5e66c2db1a9faf3f4d10c81d5832a6d8b3e44923a2d04b25c0570b9777766",
     "rules/linux/org.events-sudo-auth-failure.json": "cf2cada4db415736b58b4a4f3f7af7ab29b121cac12335139a5a2998f3a1727e",
     "rules/linux/org.listening-telnet.json": "b08d147fe9f6e8147ddb71f434b6e616cd29b68c6663f25d3cee001fc391107c",
     "rules/windows/org.admins-too-many.json": "0bc741c9c4999ec5ebde026ca536024c9aaea6bef0d117dbde08997e018814eb",
     "rules/windows/org.events-account-locked-repeated.json": "4bb713cbdf85f38fa63adfe3ced4ee314204c95b33ad6538ef600738e03f9d8e",
     "rules/windows/org.events-explicit-credentials-many.json": "31ad095d54dc4d796a910dbfab38fc118fa5bc4585053b05d3984f69f5576fc9",
-    "rules/windows/org.events-logon-new-source.json": "6f560564bf6844e52c167276533dbea2fc1b2eab2f8c8494c7088dfb52a8aebb",
+    "rules/windows/org.events-logon-new-source.json": "1eadb15f54e95bcea554fcc79f23b0839ffa3f89ae736805868f802fb9d1f024",
     "rules/windows/org.posture-auto-updates-off.json": "249a36854d007d1dfe24ee0ded350842d4ef14165c4095fd18cb7c68df03d91f",
     "rules/windows/org.posture-defender-realtime-off.json": "1d9554407e2fbcee2720b3ed8ec77a6a92999ea3413823a7bf08e30098b5a4a1",
     "rules/windows/org.posture-os-update-overdue.json": "329c817c755b06813a18609bd40c288fe641755d9a16e55ea5da217cf3390966",
