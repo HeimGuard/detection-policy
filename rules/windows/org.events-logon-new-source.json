@@ -8,5 +8,6 @@
   "when": {"field": "Type", "op": "eq", "value": "logon"},
   "unseen_days": 10,
   "message": "{User} signed in from {Source}, not seen in the last 10 days ({Message})",
-  "remediation": "Check that the sign-in was expected: who uses this account from that address or workstation. Reset the password and review the account if not."
+  "remediation": "Check that the sign-in was expected: who uses this account from that address or workstation. Reset the password and review the account if not.",
+  "urls": ["https://attack.mitre.org/techniques/T1078/", "https://attack.mitre.org/techniques/T1021/001/", "https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624"]
 }
