@@ -1,0 +1,27 @@
+{
+  "key": "org.startup-intel-queencreek",
+  "name": "Intel QUEENCREEK task (Intel SUR)",
+  "description": "Intel's System Usage Report task (Intel Driver & Support Assistant / Computing Improvement Program): USER_ESRV_SVC_QUEENCREEK runs wscript with task.vbs from C:\\Program Files\\Intel\\SUR\\QUEENCREEK. Not malware, but it collects usage data; matched exactly (name, path and arguments), anything else of the kind stays a suspicious startup item.",
+  "severity": "info",
+  "platform": "windows",
+  "source": "startup",
+  "when": {
+    "all": [
+      {
+        "field": "Name",
+        "op": "matches",
+        "value": "^USER_ESRV_SVC_QUEENCREEK$"
+      },
+      {
+        "field": "Command",
+        "op": "matches",
+        "value": "^\"?C:\\\\Windows\\\\System32\\\\wscript\\.exe\"? //B //NoLogo \"C:\\\\Program Files\\\\Intel\\\\SUR\\\\QUEENCREEK\\\\x64\\\\task\\.vbs\"$"
+      }
+    ]
+  },
+  "message": "{Name} ({Location}): Intel QUEENCREEK telemetry task",
+  "remediation": "Nothing to do if Intel software is wanted on the device; to stop the telemetry, uninstall Intel Computing Improvement Program / the SUR component or disable the task.",
+  "urls": [
+    "https://mobeigi.com/blog/security/malware/the-curious-case-of-queencreek/"
+  ]
+}

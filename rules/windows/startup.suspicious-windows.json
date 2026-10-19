@@ -1,0 +1,52 @@
+{
+  "key": "startup.suspicious-windows",
+  "name": "Suspicious startup item",
+  "description": "Programs started with Windows from temporary folders, or through script hosts used by malware. Replaces the bundled rule: Intel's QUEENCREEK task (USER_ESRV_SVC_QUEENCREEK running its task.vbs from C:\\Program Files\\Intel\\SUR\\QUEENCREEK) is left out, org.startup-intel-queencreek reports it instead.",
+  "severity": "medium",
+  "platform": "windows",
+  "source": "startup",
+  "when": {
+    "all": [
+      {
+        "any": [
+          {
+            "field": "Command",
+            "op": "matches",
+            "value": "\\\\(appdata\\\\local\\\\temp|windows\\\\temp|users\\\\public|\\$recycle\\.bin)\\\\"
+          },
+          {
+            "field": "Command",
+            "op": "matches",
+            "value": "\\b(mshta|wscript|cscript)(\\.exe)?\\b|regsvr32.*scrobj|rundll32.*(javascript|http)"
+          },
+          {
+            "field": "Command",
+            "op": "matches",
+            "value": "(powershell|pwsh).*\\s[-/](e|enc|encodedcommand|w(indowstyle)?\\s+h(idden)?)\\b"
+          }
+        ]
+      },
+      {
+        "not": {
+          "all": [
+            {
+              "field": "Name",
+              "op": "matches",
+              "value": "^USER_ESRV_SVC_QUEENCREEK$"
+            },
+            {
+              "field": "Command",
+              "op": "matches",
+              "value": "^\"?C:\\\\Windows\\\\System32\\\\wscript\\.exe\"? //B //NoLogo \"C:\\\\Program Files\\\\Intel\\\\SUR\\\\QUEENCREEK\\\\x64\\\\task\\.vbs\"$"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "message": "{Name} ({Location}): {Command}",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1053/005/",
+    "https://attack.mitre.org/techniques/T1547/001/"
+  ]
+}
