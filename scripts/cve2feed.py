@@ -129,6 +129,12 @@ def before(version):
     return "0"
 
 
+def name_pattern(product):
+    """The package / program name as a whole word: 'ray' matches 'ray' and 'python3-ray', not 'libbluray'."""
+    parts = [re.escape(x) for x in re.split(r"[\s_-]+", product) if x]
+    return r"(^|[^a-z0-9])" + "[ _-]".join(parts) + r"($|[^a-z])"
+
+
 def range_cond(rng):
     start, end_excl, end_incl = rng
     conds = []
@@ -145,7 +151,7 @@ def build_rule(cve, vendor, product, ranges):
     items = [range_cond(r) for r in sorted(set(ranges), key=lambda r: tuple(x or "" for x in r))[:8]]
     ranged = [{"all": c} if len(c) > 1 else c[0] for c, *_ in items]
     when = {"all": [
-        {"field": "Name", "op": "contains", "value": name},
+        {"field": "Name", "op": "matches", "value": name_pattern(name)},
         ranged[0] if len(ranged) == 1 else {"any": ranged},
     ]}
     key = re.sub(r"[^a-z0-9.-]+", "-", f"org.cve-{cid[4:]}-{product}".lower()).strip("-")[:64].rstrip("-.")
@@ -179,7 +185,7 @@ def make_fixture(rule, name, ranges):
 
     positive = next((v for v in inside if hit(v)), None)
     negative = next((v for v in outside if not hit(v)), None)
-    if positive is None or negative is None or hit(positive, "Unrelated tool"):
+    if positive is None or negative is None or hit(positive, "Unrelated tool") or hit(positive, f"lib{name.replace(' ', '')}x"):
         return None
     return {
         "key": rule["key"],
@@ -187,6 +193,7 @@ def make_fixture(rule, name, ranges):
         "negative": [
             {"Name": name, "Version": negative, "Source": "x"},
             {"Name": "Unrelated tool", "Version": positive, "Source": "x"},
+            {"Name": f"lib{name.replace(' ', '')}x", "Version": positive, "Source": "x"},
         ],
     }
 
