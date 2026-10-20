@@ -65,6 +65,16 @@ Modifiers `contains`, `startswith`, `endswith`, `re`, `all`, wildcards and `and`
 `parsers/` are overwritten by the converter; CI fails when they differ from `sigma/`. Add a fixture for every
 generated key, then build the manifest.
 
+## Nightly CVE rules
+
+`.github/workflows/cve-rules.yml` runs every night (and on demand) `scripts/cve2feed.py`: it asks the NVD for
+CVEs changed in the last 2 days that are on the CISA Known Exploited Vulnerabilities list and have a product with
+a version range, and writes a `software` rule (`Name` contains the product, `Version` in the range) plus a fixture
+for each into `rules/any/org.cve-<year>-<id>-<product>.json`. It bumps the manifest version, runs
+`feed.py check` and opens a pull request (`automation/cve-rules`) for review; existing keys are never
+overwritten. Optional secret `NVD_API_KEY` raises the NVD rate limit. Product names come from CPE and may not
+match every installed name, so check the match in the pull request.
+
 ## Workflow
 
 1. Add or change a rule / parser and a fixture in `tests/fixtures/`.

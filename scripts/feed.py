@@ -35,7 +35,9 @@ LOG_SOURCES = {"windows.security", "windows.system", "windows.defender", "linux.
 EVENT_FIELDS = {"type", "user", "source", "message", "count"}
 UNARY = {"exists", "empty", "true", "false"}
 OPS = {"eq", "ne", "contains", "not_contains", "starts_with", "ends_with", "matches", "not_matches",
-       "in", "not_in", "gt", "gte", "lt", "lte", "exists", "empty", "true", "false"}
+       "in", "not_in", "gt", "gte", "lt", "lte", "version_lt", "version_lte", "version_gt", "version_gte",
+       "exists", "empty", "true", "false"}
+VERSION_OPS = {"version_lt": "<", "version_lte": "<=", "version_gt": ">", "version_gte": ">="}
 
 
 def rx(pattern):
@@ -97,6 +99,18 @@ def cond_errors(c, path, depth, count, errs):
             errs.append(f"{path}: bad regex ({e})")
 
 
+def version_tuple(value):
+    """Numeric part of a version ('2:1.2-3ubuntu1' -> (1, 2)), like the server's SecurityRules::version()."""
+    m = re.search(r"(\d+(?:\.\d+)*)", re.sub(r"^\d+:", "", str(value)))
+    return tuple(int(x) for x in m.group(1).split(".")) if m else None
+
+
+def version_compare(a, b):
+    n = max(len(a), len(b))
+    a, b = a + (0,) * (n - len(a)), b + (0,) * (n - len(b))
+    return (a > b) - (a < b)
+
+
 def get(item, field):
     cur = item
     for part in field.split("."):
@@ -145,6 +159,12 @@ def test(c, item):
         return s in [str(x).lower() for x in val]
     if op == "not_in":
         return s not in [str(x).lower() for x in val]
+    if op in VERSION_OPS:
+        a, b = version_tuple(got), version_tuple(val)
+        if a is None or b is None:
+            return False
+        c = version_compare(a, b)
+        return {"version_lt": c < 0, "version_lte": c <= 0, "version_gt": c > 0, "version_gte": c >= 0}[op]
     try:
         n = float(got)
     except (TypeError, ValueError):
