@@ -11,9 +11,11 @@ key is never overwritten, so a rule edited by hand stays. Set NVD_API_KEY for a 
 import argparse
 import json
 import os
+import random
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
@@ -28,35 +30,60 @@ TARGET_SW = {"*", "-", "windows", "linux", "debian", "ubuntu"}
 SEVERITY = {"CRITICAL": "critical", "HIGH": "high", "MEDIUM": "medium", "LOW": "low"}
 
 
+class NvdError(Exception):
+    """The NVD did not answer after all retries."""
+
+
+RETRY_STATUS = {403, 429, 500, 502, 503, 504}  # NVD answers 403 / 429 when the rate limit is hit
+ATTEMPTS = 8
+WINDOW_DAYS = 30  # the NVD refuses a date range over 120 days; short windows keep every page small
+
+
+def request(url, headers):
+    """GET a JSON document; waits and retries (exponential backoff with jitter, Retry-After honoured)."""
+    for attempt in range(ATTEMPTS):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as r:
+                return json.load(r)
+        except urllib.error.HTTPError as e:
+            if e.code not in RETRY_STATUS:
+                raise NvdError(f"NVD answered {e.code}") from e
+            reason, retry_after = f"HTTP {e.code}", e.headers.get("Retry-After", "")
+        except (urllib.error.URLError, TimeoutError, ConnectionError, json.JSONDecodeError) as e:
+            reason, retry_after = str(e), ""
+        if attempt == ATTEMPTS - 1:
+            raise NvdError(f"NVD unavailable after {ATTEMPTS} attempts ({reason})")
+        wait = float(retry_after) if retry_after.isdigit() else min(120, 6 * 2 ** attempt)
+        wait = min(wait, 300) * random.uniform(0.75, 1.25)
+        print(f"NVD: {reason}; attempt {attempt + 1}/{ATTEMPTS}, waiting {wait:.0f}s", file=sys.stderr)
+        time.sleep(wait)
+
+
 def fetch(days):
-    since = datetime.now(timezone.utc) - timedelta(days=days)
-    params = {
-        "hasKev": "",
-        "lastModStartDate": since.strftime("%Y-%m-%dT%H:%M:%S.000"),
-        "lastModEndDate": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000"),
-        "resultsPerPage": 200,
-    }
+    """Yield CVEs on the KEV list changed in the last `days` days, newest window first, page by page.
+
+    Raises NvdError when the NVD stops answering; what was yielded before is still good.
+    """
     headers = {"User-Agent": "detection-policy-cve2feed"}
+    pause = 0.7 if os.environ.get("NVD_API_KEY") else 6.5  # the limit is 5 requests per 30 s (50 with a key)
     if os.environ.get("NVD_API_KEY"):
         headers["apiKey"] = os.environ["NVD_API_KEY"]
-    out, start = [], 0
-    while True:
-        query = urllib.parse.urlencode({**params, "startIndex": start}).replace("hasKev=&", "hasKev&")
-        for attempt in range(5):
-            try:
-                with urllib.request.urlopen(urllib.request.Request(f"{API}?{query}", headers=headers), timeout=60) as r:
-                    page = json.load(r)
+    fmt = "%Y-%m-%dT%H:%M:%S.000"
+    end = datetime.now(timezone.utc)
+    oldest = end - timedelta(days=min(days, 120))
+    while end > oldest:
+        begin = max(oldest, end - timedelta(days=WINDOW_DAYS))
+        start = 0
+        while True:
+            query = urllib.parse.urlencode({"lastModStartDate": begin.strftime(fmt), "lastModEndDate": end.strftime(fmt),
+                                            "resultsPerPage": 200, "startIndex": start}) + "&hasKev"
+            page = request(f"{API}?{query}", headers)
+            yield from page.get("vulnerabilities", [])
+            start += page.get("resultsPerPage", 0)
+            time.sleep(pause)
+            if not page.get("resultsPerPage") or start >= page.get("totalResults", 0):
                 break
-            except Exception as e:  # rate limit (403 / 429) or a hiccup: wait and retry
-                if attempt == 4:
-                    raise
-                print(f"NVD: {e}; retrying", file=sys.stderr)
-                time.sleep(10 * (attempt + 1))
-        out += page.get("vulnerabilities", [])
-        start += page.get("resultsPerPage", 0)
-        if not page.get("resultsPerPage") or start >= page.get("totalResults", 0):
-            return out
-        time.sleep(1 if headers.get("apiKey") else 7)
+        end = begin
 
 
 def products(cve):
@@ -172,7 +199,16 @@ def main():
 
     existing = {p.name for p in (ROOT / "rules").rglob("*.json")}
     added = 0
-    for v in fetch(args.days):
+    failure = None
+    feed_iter = fetch(args.days)
+    while True:
+        try:
+            v = next(feed_iter, None)
+        except NvdError as e:
+            failure = e
+            break
+        if v is None:
+            break
         if added >= args.limit:
             print(f"limit of {args.limit} reached")
             break
@@ -197,6 +233,11 @@ def main():
         m = json.loads(mf.read_text())
         mf.write_text(json.dumps({"version": bump(m["version"]), "files": m["files"]}, indent=2) + "\n")
     print(f"{added} new rule(s)")
+    if failure:
+        # Keep what was fetched (the next night continues); fail only when nothing came out of the run.
+        print(f"::warning::{failure}; the CVEs fetched before it were processed", file=sys.stderr)
+        if not added:
+            sys.exit(f"{failure}")
 
 
 if __name__ == "__main__":
