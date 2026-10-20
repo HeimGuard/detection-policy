@@ -112,7 +112,7 @@ def build_rule(cve, vendor, product, ranges):
     cid = cve["id"]
     name = re.sub(r"[_\s]+", " ", product).strip()
     desc = next((d["value"] for d in cve.get("descriptions", []) if d["lang"] == "en"), cid)
-    items = [range_cond(r) for r in sorted(set(ranges))[:8]]
+    items = [range_cond(r) for r in sorted(set(ranges), key=lambda r: tuple(x or "" for x in r))[:8]]
     ranged = [{"all": c} if len(c) > 1 else c[0] for c, *_ in items]
     when = {"all": [
         {"field": "Name", "op": "contains", "value": name},
