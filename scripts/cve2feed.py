@@ -19,6 +19,9 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import feed  # noqa: E402  (the same rule checks and matching as CI)
+
 ROOT = Path(__file__).resolve().parent.parent
 API = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 TARGET_SW = {"*", "-", "windows", "linux", "debian", "ubuntu"}
@@ -133,20 +136,32 @@ def build_rule(cve, vendor, product, ranges):
             r["url"] for r in cve.get("references", [])
             if re.match(r"^https?://[^/\s]+\S*$", r.get("url", "")) and len(r["url"]) <= 500][:4],
     }
-    _, start, end_excl, end_incl = items[0]
-    inside = before(end_excl) if end_excl else end_incl
-    if start and tuple(map(int, re.findall(r"\d+", inside) or [0])) < tuple(map(int, re.findall(r"\d+", start) or [0])):
-        inside = start
-    outside = end_excl or f"{end_incl}.1"
-    fixture = {
-        "key": key,
-        "positive": [{"Name": name, "Version": inside, "Source": "x"}],
+    fixture = make_fixture(rule, name, sorted(set(ranges), key=lambda r: tuple(x or "" for x in r))[:8])
+    return rule, fixture
+
+
+def make_fixture(rule, name, ranges):
+    """A fixture proven against the rule itself, or None when no version inside / outside the ranges is found."""
+    inside, outside = [], ["99999.0"]
+    for start, end_excl, end_incl in ranges:
+        inside += [v for v in (start, before(end_excl) if end_excl else None, end_incl) if v]
+        outside += [end_excl or f"{end_incl}.1", f"{end_excl or end_incl}.1"]
+
+    def hit(version, item_name=name):
+        return feed.test(rule["when"], {"Name": item_name, "Version": version, "Source": "x"})
+
+    positive = next((v for v in inside if hit(v)), None)
+    negative = next((v for v in outside if not hit(v)), None)
+    if positive is None or negative is None or hit(positive, "Unrelated tool"):
+        return None
+    return {
+        "key": rule["key"],
+        "positive": [{"Name": name, "Version": positive, "Source": "x"}],
         "negative": [
-            {"Name": name, "Version": outside, "Source": "x"},
-            {"Name": "Unrelated tool", "Version": inside, "Source": "x"},
+            {"Name": name, "Version": negative, "Source": "x"},
+            {"Name": "Unrelated tool", "Version": positive, "Source": "x"},
         ],
     }
-    return rule, fixture
 
 
 def main():
@@ -158,17 +173,23 @@ def main():
     existing = {p.name for p in (ROOT / "rules").rglob("*.json")}
     added = 0
     for v in fetch(args.days):
+        if added >= args.limit:
+            print(f"limit of {args.limit} reached")
+            break
         cve = v["cve"]
         for (vendor, product), ranges in sorted(products(cve).items()):
             rule, fixture = build_rule(cve, vendor, product, ranges)
             if f"{rule['key']}.json" in existing:
                 continue
             if added >= args.limit:
-                print(f"limit of {args.limit} reached")
                 break
+            if fixture is None or feed.rule_errors(rule, False):
+                print(f"skipped {rule['key']}: no valid rule / fixture could be built", file=sys.stderr)
+                continue
             (ROOT / "rules" / "any" / f"{rule['key']}.json").write_text(json.dumps(rule, indent=2) + "\n")
             (ROOT / "tests" / "fixtures" / f"{rule['key'].removeprefix('org.')}.json").write_text(
                 json.dumps(fixture, indent=2) + "\n")
+            existing.add(f"{rule['key']}.json")
             print("added", rule["key"])
             added += 1
     if added:
