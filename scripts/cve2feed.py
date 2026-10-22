@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Turn newly published / changed CVEs from the NVD into `software` rules of the feed.
 
-  python scripts/cve2feed.py [--days 2] [--limit 50]
+  python scripts/cve2feed.py [--days 2] [--limit 500]
 
-CVEs on the CISA Known Exploited Vulnerabilities list (NVD `hasKev`) are taken, and so are all CVEs of the
-products listed in scripts/cve-products.json (any severity: the rule gets the CVSS severity of the CVE).
-Only CVEs with a product and a version range in their CPE configuration (versionEndExcluding /
-versionEndIncluding) produce a rule.
+Every CVE the NVD changed in the window is taken, whatever its severity: the rule gets the CVSS severity of
+the CVE, and CVEs on the CISA Known Exploited Vulnerabilities list say so in the description. Only CVEs with
+a product and a version range in their CPE configuration (versionEndExcluding / versionEndIncluding)
+produce a rule. scripts/cve-products.json gives the name regex of packages whose name is not the CPE product.
 Each CVE + product becomes rules/any/org.cve-<year>-<id>-<product>.json with a fixture; an existing
 key is never overwritten, so a rule edited by hand stays. Set NVD_API_KEY for a higher rate limit.
 """
@@ -200,59 +200,51 @@ def make_fixture(rule, name, ranges):
     }
 
 
-def sources(days):
-    """(query, wanted, name pattern, kev) per feed: the KEV list, then each product of cve-products.json.
-
-    `wanted` is the (vendor, product) the rule may be built for, None for any product of a KEV CVE.
-    """
-    yield "&hasKev", None, None, True
-    for p in json.loads((ROOT / "scripts" / "cve-products.json").read_text()):
-        cpe = f"cpe:2.3:a:{p['vendor']}:{p['product']}:*:*:*:*:*:*:*:*"
-        yield "&" + urllib.parse.urlencode({"virtualMatchString": cpe}), (p["vendor"], p["product"]), p.get("name"), False
+def name_overrides():
+    """{(vendor, product): name regex} from cve-products.json, for packages whose name is not the CPE product."""
+    items = json.loads((ROOT / "scripts" / "cve-products.json").read_text())
+    return {(p["vendor"], p["product"]): p["name"] for p in items}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=2)
-    ap.add_argument("--limit", type=int, default=50)
+    ap.add_argument("--limit", type=int, default=500)
     args = ap.parse_args()
 
     existing = {p.name for p in (ROOT / "rules").rglob("*.json")}
     added = 0
     failure = None
-    for extra, wanted, name_re, kev in sources(args.days):
-        feed_iter = fetch(args.days, extra)
-        while failure is None:
-            try:
-                v = next(feed_iter, None)
-            except NvdError as e:
-                failure = e
-                break
-            if v is None:
-                break
-            if added >= args.limit:
-                print(f"limit of {args.limit} reached")
-                break
-            cve = v["cve"]
-            for (vendor, product), ranges in sorted(products(cve).items()):
-                if wanted and (vendor, product) != wanted:
-                    continue
-                rule, fixture = build_rule(cve, vendor, product, ranges, name_re, kev)
-                if f"{rule['key']}.json" in existing:
-                    continue
-                if added >= args.limit:
-                    break
-                if fixture is None or feed.rule_errors(rule, False):
-                    print(f"skipped {rule['key']}: no valid rule / fixture could be built", file=sys.stderr)
-                    continue
-                (ROOT / "rules" / "any" / f"{rule['key']}.json").write_text(json.dumps(rule, indent=2) + "\n")
-                (ROOT / "tests" / "fixtures" / f"{rule['key'].removeprefix('org.')}.json").write_text(
-                    json.dumps(fixture, indent=2) + "\n")
-                existing.add(f"{rule['key']}.json")
-                print("added", rule["key"])
-                added += 1
-        if failure or added >= args.limit:
+    overrides = name_overrides()
+    feed_iter = fetch(args.days, "")
+    while True:
+        try:
+            v = next(feed_iter, None)
+        except NvdError as e:
+            failure = e
             break
+        if v is None:
+            break
+        if added >= args.limit:
+            print(f"limit of {args.limit} reached")
+            break
+        cve = v["cve"]
+        for (vendor, product), ranges in sorted(products(cve).items()):
+            rule, fixture = build_rule(cve, vendor, product, ranges, overrides.get((vendor, product)),
+                                       bool(cve.get("cisaExploitAdd")))
+            if f"{rule['key']}.json" in existing:
+                continue
+            if added >= args.limit:
+                break
+            if fixture is None or feed.rule_errors(rule, False):
+                print(f"skipped {rule['key']}: no valid rule / fixture could be built", file=sys.stderr)
+                continue
+            (ROOT / "rules" / "any" / f"{rule['key']}.json").write_text(json.dumps(rule, indent=2) + "\n")
+            (ROOT / "tests" / "fixtures" / f"{rule['key'].removeprefix('org.')}.json").write_text(
+                json.dumps(fixture, indent=2) + "\n")
+            existing.add(f"{rule['key']}.json")
+            print("added", rule["key"])
+            added += 1
     if added:
         mf = ROOT / "manifest.json"
         m = json.loads(mf.read_text())
