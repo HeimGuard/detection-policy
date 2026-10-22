@@ -6,7 +6,7 @@
 Every CVE the NVD changed in the window is taken, whatever its severity: the rule gets the CVSS severity of
 the CVE, and CVEs on the CISA Known Exploited Vulnerabilities list say so in the description. Only CVEs with
 a product and a version range in their CPE configuration (versionEndExcluding / versionEndIncluding)
-produce a rule. scripts/cve-products.json gives the name regex of packages whose name is not the CPE product.
+produce a rule.
 Each CVE + product becomes rules/any/org.cve-<year>-<id>-<product>.json with a fixture; an existing
 key is never overwritten, so a rule edited by hand stays. Set NVD_API_KEY for a higher rate limit.
 """
@@ -146,14 +146,14 @@ def range_cond(rng):
     return conds, start, end_excl, end_incl
 
 
-def build_rule(cve, vendor, product, ranges, name_re=None, kev=True):
+def build_rule(cve, vendor, product, ranges, kev=True):
     cid = cve["id"]
     name = re.sub(r"[_\s]+", " ", product).strip()
     desc = next((d["value"] for d in cve.get("descriptions", []) if d["lang"] == "en"), cid)
     items = [range_cond(r) for r in sorted(set(ranges), key=lambda r: tuple(x or "" for x in r))[:8]]
     ranged = [{"all": c} if len(c) > 1 else c[0] for c, *_ in items]
     when = {"all": [
-        {"field": "Name", "op": "matches", "value": name_re or name_pattern(name)},
+        {"field": "Name", "op": "matches", "value": name_pattern(name)},
         ranged[0] if len(ranged) == 1 else {"any": ranged},
     ]}
     key = re.sub(r"[^a-z0-9.-]+", "-", f"org.cve-{cid[4:]}-{product}".lower()).strip("-")[:64].rstrip("-.")
@@ -200,12 +200,6 @@ def make_fixture(rule, name, ranges):
     }
 
 
-def name_overrides():
-    """{(vendor, product): name regex} from cve-products.json, for packages whose name is not the CPE product."""
-    items = json.loads((ROOT / "scripts" / "cve-products.json").read_text())
-    return {(p["vendor"], p["product"]): p["name"] for p in items}
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=2)
@@ -215,7 +209,6 @@ def main():
     existing = {p.name for p in (ROOT / "rules").rglob("*.json")}
     added = 0
     failure = None
-    overrides = name_overrides()
     feed_iter = fetch(args.days, "")
     while True:
         try:
@@ -230,8 +223,7 @@ def main():
             break
         cve = v["cve"]
         for (vendor, product), ranges in sorted(products(cve).items()):
-            rule, fixture = build_rule(cve, vendor, product, ranges, overrides.get((vendor, product)),
-                                       bool(cve.get("cisaExploitAdd")))
+            rule, fixture = build_rule(cve, vendor, product, ranges, bool(cve.get("cisaExploitAdd")))
             if f"{rule['key']}.json" in existing:
                 continue
             if added >= args.limit:
