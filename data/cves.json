@@ -19,7 +19,11 @@
     "http://secunia.com/advisories/47453",
     "http://www.openwall.com/lists/oss-security/2012/04/07/1"
    ],
-   "severity": "low"
+   "severity": "low",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2019-5645": {
    "desc": "By sending a specially crafted HTTP GET request to a listening Rapid7 Metasploit HTTP handler, an attacker can register an arbitrary regular expression. When evaluated, this malicious handler can either prevent new HTTP handler sessions from being established, or cause a resource exhaustion on the Metasploit server.",
@@ -40,7 +44,11 @@
     "https://github.com/rapid7/metasploit-framework/pull/12433",
     "https://github.com/rapid7/metasploit-framework/pull/12433"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2022-42472": {
    "desc": "A improper neutralization of crlf sequences in http headers ('http response splitting') vulnerability in Fortinet FortiOS 7.2.0 through 7.2.2, FortiOS 7.0.0 through 7.0.8, FortiOS 6.4.0 through 6.4.12, FortiOS 6.2 all versions, FortiOS 6.0 all versions, FortiProxy 7.2.0 through 7.2.1, FortiProxy 7.0.0 through 7.0.7, FortiProxy 2.0.0 through 2.0.10, FortiProxy 1.2 all versions, FortiProxy 01.02 all",
@@ -108,7 +116,11 @@
     "https://fortiguard.com/psirt/FG-IR-22-401",
     "https://fortiguard.com/psirt/FG-IR-22-401"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-29178": {
    "desc": "A access of uninitialized pointer vulnerability [CWE-824] vulnerability in Fortinet FortiOS 7.2.0 through 7.2.4, FortiOS 7.0.0 through 7.0.11, FortiOS 6.4 all versions, FortiOS 6.2 all versions, FortiOS 6.0 all versions, FortiProxy 7.2.0 through 7.2.3, FortiProxy 7.0.0 through 7.0.9, FortiProxy 2.0 all versions, FortiProxy 01.02 all versions, FortiProxy 1.2 all versions, FortiProxy 01.01 all versi",
@@ -142,7 +154,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-095",
     "https://fortiguard.com/psirt/FG-IR-23-095"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-29180": {
    "desc": "A null pointer dereference vulnerability in Fortinet FortiOS 7.2.0 through 7.2.4, FortiOS 7.0.0 through 7.0.11, FortiOS 6.4.0 through 6.4.12, FortiOS 6.2.0 through 6.2.14, FortiOS 6.0.0 through 6.0.16, FortiProxy 7.2.0 through 7.2.3, FortiProxy 7.0.0 through 7.0.10, FortiProxy 2.0.0 through 2.0.12, FortiProxy 01.02 all versions, FortiProxy 1.2 all versions, FortiProxy 01.01 all versions, FortiProx",
@@ -186,7 +202,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-111",
     "https://fortiguard.com/psirt/FG-IR-23-111"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-29181": {
    "desc": "A use of externally-controlled format string vulnerability in Fortinet FortiOS 7.2.0 through 7.2.4, FortiOS 7.0.0 through 7.0.11, FortiOS 6.4.0 through 6.4.12, FortiOS 6.2.0 through 6.2.14, FortiOS 6.0.0 through 6.0.16, FortiOS 5.6 all versions, FortiOS 5.4 all versions, FortiOS 5.2 all versions, FortiOS 5.0 all versions, FortiOS 4.3 all versions, FortiOS 4.2 all versions, FortiOS 4.1 all versions",
@@ -215,7 +235,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-119",
     "https://fortiguard.com/psirt/FG-IR-23-119"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-36640": {
    "desc": "A use of externally-controlled format string vulnerability in Fortinet FortiOS 7.4.0, FortiOS 7.2.0 through 7.2.5, FortiOS 7.0 all versions, FortiOS 6.4 all versions, FortiOS 6.2 all versions, FortiOS 6.0.0 through 6.0.16, FortiPAM 1.1.0, FortiPAM 1.0 all versions, FortiProxy 7.2.0 through 7.2.5, FortiProxy 7.0.0 through 7.0.11, FortiProxy 2.0 all versions, FortiProxy 01.02 all versions, FortiProx",
@@ -259,7 +283,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-137",
     "https://fortiguard.com/psirt/FG-IR-23-137"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-36641": {
    "desc": "A numeric truncation error vulnerability in Fortinet FortiOS 7.4.0, FortiOS 7.2.0 through 7.2.5, FortiOS 7.0.0 through 7.0.12, FortiOS 6.4 all versions, FortiOS 6.2 all versions, FortiOS 6.0 all versions, FortiProxy 7.2.0 through 7.2.4, FortiProxy 7.0.0 through 7.0.10, FortiProxy 2.0 all versions, FortiProxy 01.02 all versions, FortiProxy 1.2 all versions, FortiProxy 01.01 all versions, FortiProxy",
@@ -303,7 +331,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-151",
     "https://fortiguard.com/psirt/FG-IR-23-151"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-41677": {
    "desc": "A insufficiently protected credentials vulnerability in Fortinet FortiOS 7.4.0 through 7.4.1, FortiOS 7.2.0 through 7.2.6, FortiOS 7.0.0 through 7.0.12, FortiOS 6.4.0 through 6.4.14, FortiOS 6.2.0 through 6.2.15, FortiOS 6.0 all versions, FortiProxy 7.4.0 through 7.4.1, FortiProxy 7.2.0 through 7.2.7, FortiProxy 7.0.0 through 7.0.13, FortiProxy 2.0 all versions, FortiProxy 01.02 all versions, Fort",
@@ -332,7 +364,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-493",
     "https://fortiguard.com/psirt/FG-IR-23-493"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-43661": {
    "desc": "Cachet is an open-source status page system. Prior to the 2.4 branch, a template functionality which allows users to create templates allows them to execute any code on the server during the bad filtration and old twig version. Commit 6fb043e109d2a262ce3974e863c54e9e5f5e0587 of the 2.4 branch contains a patch for this issue.",
@@ -353,7 +389,11 @@
     "https://github.com/cachethq/cachet/commit/6fb043e109d2a262ce3974e863c54e9e5f5e0587",
     "https://github.com/cachethq/cachet/security/advisories/GHSA-hv79-p62r-wg3p"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-45581": {
    "desc": "An improper privilege management vulnerability [CWE-269] vulnerability in Fortinet FortiClientEMS 7.2.0 through 7.2.2, FortiClientEMS 7.0.6 through 7.0.10, FortiClientEMS 7.0.0 through 7.0.4, FortiClientEMS 6.4 all versions, FortiClientEMS 06.02 all versions, FortiClientEMS 6.2 all versions allows an\u00a0Site administrator with Super Admin privileges to perform global administrative operations affecti",
@@ -377,7 +417,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-357",
     "https://fortiguard.com/psirt/FG-IR-23-357"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-45583": {
    "desc": "A use of externally-controlled format string vulnerability in Fortinet FortiOS 7.4.0, FortiOS 7.2.0 through 7.2.5, FortiOS 7.0 all versions, FortiOS 6.4 all versions, FortiOS 6.2 all versions, FortiPAM 1.1.0, FortiPAM 1.0 all versions, FortiProxy 7.2.0 through 7.2.5, FortiProxy 7.0.0 through 7.0.11, FortiProxy 2.0 all versions, FortiProxy 01.02 all versions, FortiProxy 1.2 all versions, FortiProxy",
@@ -413,7 +457,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-137",
     "https://fortiguard.com/psirt/FG-IR-23-137"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-47534": {
    "desc": "A improper neutralization of formula elements in a csv file vulnerability in Fortinet FortiClientEMS 7.2.0 through 7.2.2, FortiClientEMS 7.0.0 through 7.0.10, FortiClientEMS 6.4 all versions, FortiClientEMS 06.02 all versions, FortiClientEMS 6.2 all versions, FortiClientEMS 06.00 all versions, FortiClientEMS 6.0 all versions allows attacker to execute unauthorized code or commands via specially cr",
@@ -452,7 +500,11 @@
     "https://fortiguard.com/psirt/FG-IR-23-390",
     "https://fortiguard.com/psirt/FG-IR-23-390"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2023-4911": {
    "desc": "A buffer overflow was discovered in the GNU C Library's dynamic loader ld.so while processing the GLIBC_TUNABLES environment variable. This issue could allow a local attacker to use maliciously crafted GLIBC_TUNABLES environment variables when launching binaries with SUID permission to execute code with elevated privileges.",
@@ -473,7 +525,46 @@
     "https://access.redhat.com/errata/RHSA-2023:5455",
     "https://access.redhat.com/errata/RHSA-2023:5476"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "glibc": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "released",
+       "2.35-0ubuntu3.4"
+      ],
+      "lunar": [
+       "released",
+       "2.37-0ubuntu2.1"
+      ],
+      "mantic": [
+       "released",
+       "2.38-1ubuntu6"
+      ],
+      "noble": [
+       "released",
+       "2.38-1ubuntu6"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2024-12087": {
    "desc": "A path traversal vulnerability exists in rsync. It stems from behavior enabled by the `--inc-recursive` option, a default-enabled option for many client options and can be enabled by the server even if not explicitly enabled by the client. When using the `--inc-recursive` option, a lack of proper symlink verification coupled with deduplication checks occurring on a per-file-list basis could allow ",
@@ -494,7 +585,46 @@
     "https://access.redhat.com/errata/RHSA-2025:23235",
     "https://access.redhat.com/errata/RHSA-2025:23407"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "rsync": {
+      "bionic": [
+       "released",
+       "3.1.2-2.1ubuntu1.6+esm1"
+      ],
+      "focal": [
+       "released",
+       "3.1.3-8ubuntu0.8"
+      ],
+      "jammy": [
+       "released",
+       "3.2.7-0ubuntu0.22.04.3"
+      ],
+      "noble": [
+       "released",
+       "3.2.7-1ubuntu1.1"
+      ],
+      "oracular": [
+       "released",
+       "3.3.0-1ubuntu0.1"
+      ],
+      "trusty": [
+       "released",
+       "3.1.0-2ubuntu0.4+esm1"
+      ],
+      "upstream": [
+       "released",
+       "3.3.0+ds1-3"
+      ],
+      "xenial": [
+       "released",
+       "3.1.1-3ubuntu1.3+esm3"
+      ]
+     }
+    }
+   }
   },
   "CVE-2024-12088": {
    "desc": "A flaw was found in rsync. When using the `--safe-links` option, the rsync client fails to properly verify if a symbolic link destination sent from the server contains another symbolic link within it. This results in a path traversal vulnerability, which may lead to arbitrary file write outside the desired directory.",
@@ -558,7 +688,11 @@
    "refs": [
     "https://fortiguard.fortinet.com/psirt/FG-IR-23-362"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-21762": {
    "desc": "A out-of-bounds write vulnerability in Fortinet FortiOS 7.4.0 through 7.4.2, FortiOS 7.2.0 through 7.2.6, FortiOS 7.0.0 through 7.0.13, FortiOS 6.4.0 through 6.4.14, FortiOS 6.2.0 through 6.2.15, FortiOS 6.0 all versions, FortiProxy 7.4.0 through 7.4.2, FortiProxy 7.2.0 through 7.2.8, FortiProxy 7.0.0 through 7.0.14, FortiProxy 2.0.0 through 2.0.13, FortiProxy 01.02 all versions, FortiProxy 1.2 al",
@@ -593,7 +727,11 @@
     "https://fortiguard.com/psirt/FG-IR-24-015",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-21762"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-26010": {
    "desc": "A stack-based buffer overflow vulnerability in Fortinet FortiOS 7.4.0 through 7.4.3, FortiOS 7.2.0 through 7.2.7, FortiOS 7.0.0 through 7.0.14, FortiOS 6.4 all versions, FortiOS 6.2 all versions, FortiOS 6.0 all versions, FortiPAM 1.2 all versions, FortiPAM 1.1 all versions, FortiPAM 1.0 all versions, FortiProxy 7.4.0 through 7.4.3, FortiProxy 7.2.0 through 7.2.9, FortiProxy 7.0.0 through 7.0.16, ",
@@ -634,7 +772,11 @@
     "https://fortiguard.fortinet.com/psirt/FG-IR-24-036",
     "https://fortiguard.fortinet.com/psirt/FG-IR-24-036"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-26011": {
    "desc": "A missing authentication for critical function vulnerability in Fortinet FortiManager 7.4.0 through 7.4.2, FortiManager 7.2.0 through 7.2.4, FortiManager 7.0.0 through 7.0.11, FortiManager 6.4.0 through 6.4.14, FortiOS 7.4.0 through 7.4.3, FortiOS 7.2.0 through 7.2.7, FortiOS 7.0.0 through 7.0.14, FortiOS 6.4 all versions, FortiOS 6.2 all versions, FortiOS 6.0 all versions, FortiPAM 1.2 all versio",
@@ -703,7 +845,11 @@
    "refs": [
     "https://fortiguard.fortinet.com/psirt/FG-IR-24-032"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-45777": {
    "desc": "A flaw was found in grub2. The calculation of the translation buffer when reading a language .mo file in grub_gettext_getstr_from_position() may overflow, leading to a Out-of-bound write. This issue can be leveraged by an attacker to overwrite grub2's sensitive heap data, eventually leading to the circumvention of secure boot protections.",
@@ -723,7 +869,11 @@
     "https://access.redhat.com/security/cve/CVE-2024-45777",
     "https://bugzilla.redhat.com/show_bug.cgi?id=2346343"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-45778": {
    "desc": "A stack overflow flaw was found when reading a BFS file system. A crafted BFS filesystem may lead to an uncontrolled loop, causing grub2 to crash.",
@@ -743,7 +893,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2345640",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-45779": {
    "desc": "An integer overflow flaw was found in the BFS file system driver in grub2. When reading a file with an indirect extent map, grub2 fails to validate the number of extent entries to be read. A crafted or corrupted BFS filesystem may cause an integer overflow during the file reading, leading to a heap of bounds read. As a consequence, sensitive data may be leaked, or grub2 will crash.",
@@ -763,7 +917,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2345854",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-45780": {
    "desc": "A flaw was found in grub2. When reading tar files, grub2 allocates an internal buffer for the file name. However, it fails to properly verify the allocation against possible integer overflows. It's possible to cause the allocation length to overflow with a crafted tar file, leading to a heap out-of-bounds write. This flaw eventually allows an attacker to circumvent secure boot protections.",
@@ -783,7 +941,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2345856",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-45782": {
    "desc": "A flaw was found in the HFS filesystem. When reading an HFS volume's name at grub_fs_mount(), the HFS filesystem driver performs a strcpy() using the user-provided volume name as input without properly validating the volume name's length. This issue may read to a heap-based out-of-bounds writer, impacting grub's sensitive data integrity and eventually leading to a secure boot protection bypass.",
@@ -802,7 +964,11 @@
     "https://access.redhat.com/security/cve/CVE-2024-45782",
     "https://bugzilla.redhat.com/show_bug.cgi?id=2345858"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-47569": {
    "desc": "A insertion of sensitive information into sent data vulnerability in Fortinet FortiMail 7.4.0 through 7.4.2, FortiMail 7.2.0 through 7.2.6, FortiMail 7.0 all versions, FortiManager 7.6.0 through 7.6.1, FortiManager 7.4.1 through 7.4.3, FortiManager Cloud 7.4.1 through 7.4.3, FortiNDR 7.6.0 through 7.6.1, FortiNDR 7.4.0 through 7.4.8, FortiNDR 7.2 all versions, FortiNDR 7.1 all versions, FortiNDR 7",
@@ -906,7 +1072,11 @@
    "refs": [
     "https://fortiguard.fortinet.com/psirt/FG-IR-24-228"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-48884": {
    "desc": "A improper limitation of a pathname to a restricted directory ('path traversal') vulnerability in Fortinet FortiManager 7.6.0 through 7.6.1, FortiManager 7.4.1 through 7.4.3, FortiManager Cloud 7.4.1 through 7.4.3, FortiOS 7.6.0, FortiOS 7.4.0 through 7.4.4, FortiOS 7.2.0 through 7.2.9, FortiOS 7.0.0 through 7.0.15, FortiOS 6.4.0 through 6.4.15, FortiProxy 7.4.0 through 7.4.5, FortiProxy 7.2.0 thr",
@@ -984,7 +1154,11 @@
    "refs": [
     "https://fortiguard.fortinet.com/psirt/FG-IR-24-259"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2024-50571": {
    "desc": "A heap-based buffer overflow vulnerability in Fortinet FortiAnalyzer 7.6.0 through 7.6.2, FortiAnalyzer 7.4.0 through 7.4.5, FortiAnalyzer 7.2.0 through 7.2.9, FortiAnalyzer 7.0.0 through 7.0.13, FortiAnalyzer 6.4 all versions, FortiAnalyzer 6.2 all versions, FortiAnalyzer 6.0 all versions, FortiAnalyzer Cloud 7.4.1 through 7.4.5, FortiAnalyzer Cloud 7.2.1 through 7.2.9, FortiAnalyzer Cloud 7.0.1 ",
@@ -1090,7 +1264,11 @@
    "refs": [
     "https://fortiguard.fortinet.com/psirt/FG-IR-24-442"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-0678": {
    "desc": "A flaw was found in grub2. When reading data from a squash4 filesystem, grub's squash4 fs module uses user-controlled parameters from the filesystem geometry to determine the internal buffer size, however, it improperly checks for integer overflows. A maliciously crafted filesystem may lead some of those buffer size calculations to overflow, causing it to perform a grub_malloc() operation with a s",
@@ -1110,7 +1288,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2346118",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-0684": {
    "desc": "A flaw was found in grub2. When performing a symlink lookup from a reiserfs filesystem, grub's reiserfs fs module uses user-controlled parameters from the filesystem geometry to determine the internal buffer size, however, it improperly checks for integer overflows. A maliciouly crafted filesystem may lead some of those buffer size calculations to overflow, causing it to perform a grub_malloc() op",
@@ -1130,7 +1312,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2346119",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-0685": {
    "desc": "A flaw was found in grub2. When reading data from a jfs filesystem, grub's jfs filesystem module uses user-controlled parameters from the filesystem geometry to determine the internal buffer size, however, it improperly checks for integer overflows. A maliciouly crafted filesystem may lead some of those buffer size calculations to overflow, causing it to perform a grub_malloc() operation with a sm",
@@ -1150,7 +1336,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2346120",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-0686": {
    "desc": "A flaw was found in grub2. When performing a symlink lookup from a romfs filesystem, grub's romfs filesystem module uses user-controlled parameters from the filesystem geometry to determine the internal buffer size, however, it improperly checks for integer overflows. A maliciously crafted filesystem may lead some of those buffer size calculations to overflow, causing it to perform a grub_malloc()",
@@ -1170,7 +1360,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2346121",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-0689": {
    "desc": "When reading data from disk, the grub's UDF filesystem module utilizes the user controlled data length metadata to allocate its internal buffers. In certain scenarios, while iterating through disk sectors, it assumes the read size from the disk is always smaller than the allocated buffer size which is not guaranteed. A crafted filesystem image may lead to a heap-based buffer overflow resulting in ",
@@ -1190,7 +1384,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2346122",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-10013": {
    "desc": "A vulnerability was detected in Portabilis i-Educar up to 2.10. This affects an unknown function of the file /exportacao-para-o-seb. Performing a manipulation results in improper access controls. The attack is possible to be carried out remotely. The exploit is now public and may be used. Upgrading to version 2.12 mitigates this issue. The patch is named d53365e5656f6499a4deddf89d522814655f769d. Y",
@@ -1235,7 +1433,11 @@
     "https://www.fortra.com/security/advisories/product-security/fi-2025-012",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-10035"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-10070": {
    "desc": "A flaw has been found in Portabilis i-Educar up to 2.10. This affects an unknown part of the file /enturmacao-em-lote/. This manipulation causes improper access controls. The attack is possible to be carried out remotely. The exploit has been published and may be used. Upgrading to version 2.12 is able to mitigate this issue. Patch name: d53365e5656f6499a4deddf89d522814655f769d. You should upgrade",
@@ -1256,7 +1458,11 @@
     "https://github.com/portabilis/i-educar/",
     "https://github.com/portabilis/i-educar/commit/d53365e5656f6499a4deddf89d522814655f769d"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-10071": {
    "desc": "A vulnerability has been found in Portabilis i-Educar up to 2.10. This vulnerability affects unknown code of the file /cancelar-enturmacao-em-lote/. Such manipulation leads to improper access controls. The attack may be performed from remote. The exploit has been disclosed to the public and may be used. Upgrading to version 2.12 is able to resolve this issue. The name of the patch is d53365e5656f6",
@@ -1277,7 +1483,11 @@
     "https://github.com/portabilis/i-educar/",
     "https://github.com/portabilis/i-educar/commit/d53365e5656f6499a4deddf89d522814655f769d"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-10074": {
    "desc": "A vulnerability was identified in Portabilis i-Educar up to 2.10. The affected element is an unknown function of the file /usuarios/tipos/. The manipulation of the argument Tipos de Usu\u00e1rio/Descri\u00e7\u00e3o leads to cross site scripting. The attack can be initiated remotely. The exploit is publicly available and might be used. Upgrading to version 2.12 is sufficient to fix this issue. The identifier of t",
@@ -1298,7 +1508,11 @@
     "https://github.com/portabilis/i-educar/",
     "https://github.com/portabilis/i-educar/commit/5b11c0376fcef7ada4c90760b0ca1ed2f16c4de9"
    ],
-   "severity": "low"
+   "severity": "low",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-10099": {
    "desc": "A weakness has been identified in Portabilis i-Educar up to 2.10. Affected by this vulnerability is an unknown functionality of the file /intranet/educar_usuario_cad.php of the component Editar usu\u00e1rio Page. This manipulation of the argument email/data_inicial/data_expiracao causes cross site scripting. It is possible to initiate the attack remotely. The exploit has been made available to the publ",
@@ -1319,7 +1533,11 @@
     "https://github.com/portabilis/i-educar/",
     "https://github.com/portabilis/i-educar/commit/5b11c0376fcef7ada4c90760b0ca1ed2f16c4de9"
    ],
-   "severity": "low"
+   "severity": "low",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-1125": {
    "desc": "When reading data from a hfs filesystem, grub's hfs filesystem module uses user-controlled parameters from the filesystem metadata to calculate the internal buffers size, however it misses to properly check for integer overflows. A maliciouly crafted filesystem may lead some of those buffer size calculation to overflow, causing it to perform a grub_malloc() operation with a smaller size than expec",
@@ -1339,7 +1557,11 @@
     "https://bugzilla.redhat.com/show_bug.cgi?id=2346138",
     "https://lists.gnu.org/archive/html/grub-devel/2025-02/msg00024.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-11554": {
    "desc": "A security vulnerability has been detected in Portabilis i-Educar up to 2.9.10. Affected by this issue is some unknown functionality of the file app/Http/Controllers/AccessLevelController.php of the component User Type Handler. The manipulation leads to insecure inherited permissions. The attack may be initiated remotely. The exploit has been disclosed publicly and may be used. Upgrading to versio",
@@ -1360,7 +1582,11 @@
     "https://github.com/portabilis/i-educar/commit/d53365e5656f6499a4deddf89d522814655f769d",
     "https://github.com/portabilis/i-educar/tree/2.12"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-12480": {
    "desc": "Triofox versions prior to 16.7.10368.56560, are vulnerable to an Improper Access Control flaw that allows access to initial setup pages even after setup is complete.",
@@ -1381,7 +1607,11 @@
     "https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2025/MNDT-2025-0008.md",
     "https://www.triofox.com/"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-20333": {
    "desc": "A vulnerability in the VPN web server of Cisco Secure Firewall Adaptive Security Appliance (ASA) Software and Cisco Secure Firewall Threat Defense (FTD) Software could allow an authenticated, remote attacker to execute arbitrary code on an affected device.\r\n\r This vulnerability is due to improper validation of user-supplied input in HTTP(S) requests. An attacker with valid VPN user credentials cou",
@@ -1411,7 +1641,11 @@
     "https://sec.cloudapps.cisco.com/security/center/resources/asa_ftd_continued_attacks",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-20333"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-20362": {
    "desc": "Update: On November 5, 2025, Cisco became aware of a new attack variant against devices running Cisco Secure ASA Software or Cisco Secure FTD Software releases that are affected by CVE-2025-20333 and CVE-2025-20362. This attack can cause unpatched devices to unexpectedly reload, leading to denial of service (DoS) conditions. Cisco strongly recommends that all customers upgrade to the fixed softwar",
@@ -1451,7 +1685,11 @@
     "https://sec.cloudapps.cisco.com/security/center/resources/asa_ftd_continued_attacks",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-20362"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-26465": {
    "desc": "A vulnerability was found in OpenSSH when the VerifyHostKeyDNS option is enabled. A machine-in-the-middle attack can be performed by a malicious machine impersonating a legit server. This issue occurs due to how OpenSSH mishandles error codes in specific conditions when verifying the host key. For an attack to be considered successful, the attacker needs to manage to exhaust the client's memory re",
@@ -1472,7 +1710,62 @@
     "https://access.redhat.com/errata/RHSA-2025:6993",
     "https://access.redhat.com/errata/RHSA-2025:8385"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "openssh": {
+      "bionic": [
+       "released",
+       "1:7.6p1-4ubuntu0.7+esm4"
+      ],
+      "focal": [
+       "released",
+       "1:8.2p1-4ubuntu0.12"
+      ],
+      "jammy": [
+       "released",
+       "1:8.9p1-3ubuntu0.11"
+      ],
+      "noble": [
+       "released",
+       "1:9.6p1-3ubuntu13.8"
+      ],
+      "oracular": [
+       "released",
+       "1:9.7p1-7ubuntu4.2"
+      ],
+      "plucky": [
+       "released",
+       "9.9p1-3ubuntu3"
+      ],
+      "questing": [
+       "released",
+       "9.9p1-3ubuntu3"
+      ],
+      "resolute": [
+       "released",
+       "9.9p1-3ubuntu3"
+      ],
+      "stonking": [
+       "released",
+       "9.9p1-3ubuntu3"
+      ],
+      "trusty": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "released",
+       "1:7.2p2-4ubuntu2.10+esm7"
+      ]
+     }
+    }
+   }
   },
   "CVE-2025-34291": {
    "desc": "Langflow versions up to and including 1.6.9 contain a chained vulnerability that enables account takeover and remote code execution. An overly permissive CORS configuration (allow_origins='*' with allow_credentials=True) combined with a refresh token cookie configured as SameSite=None allows a malicious webpage to perform cross-origin requests that include credentials and successfully call the ref",
@@ -1493,7 +1786,11 @@
     "https://www.vulncheck.com/advisories/langflow-cors-misconfiguration-to-token-hijack-and-rce",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-34291"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-41244": {
    "desc": "VMware Aria Operations and VMware Tools contain a local privilege escalation vulnerability.\u00a0A malicious local actor with non-administrative privileges having access to a VM with VMware Tools\u00a0installed and managed by Aria Operations with SDMP enabled may exploit this vulnerability to escalate privileges to root on the same VM.",
@@ -1554,7 +1851,46 @@
     "https://lists.debian.org/debian-lts-announce/2025/10/msg00000.html",
     "https://blog.nviso.eu/2025/09/29/you-name-it-vmware-elevates-it-cve-2025-41244/"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "open-vm-tools": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "released",
+       "2:11.3.0-2ubuntu0~ubuntu20.04.8+esm1"
+      ],
+      "jammy": [
+       "released",
+       "2:12.3.5-3~ubuntu0.22.04.3"
+      ],
+      "noble": [
+       "released",
+       "2:12.5.0-1~ubuntu0.24.04.2"
+      ],
+      "plucky": [
+       "released",
+       "2:12.5.0-1ubuntu0.2"
+      ],
+      "trusty": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "13.0.5"
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2025-5222": {
    "desc": "A stack buffer overflow was found in Internationl components for unicode (ICU ). While running the genrb binary, the 'subtag' struct overflowed at the SRBRoot::addTag function. This issue may lead to memory corruption and local arbitrary code execution.",
@@ -1575,7 +1911,11 @@
     "https://access.redhat.com/errata/RHSA-2025:12331",
     "https://access.redhat.com/errata/RHSA-2025:12332"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-53690": {
    "desc": "Deserialization of Untrusted Data vulnerability in Sitecore Experience Manager (XM), Sitecore Experience Platform (XP) allows Code Injection.This issue affects Experience Manager (XM): through 9.0; Experience Platform (XP): through 9.0.",
@@ -1609,7 +1949,11 @@
     "https://support.sitecore.com/kb?id=kb_article_view&sysparm_article=KB1003865",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-53690"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-58034": {
    "desc": "An Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') vulnerability [CWE-78] vulnerability in Fortinet FortiWeb 8.0.0 through 8.0.1, FortiWeb 7.6.0 through 7.6.5, FortiWeb 7.4.0 through 7.4.10, FortiWeb 7.2.0 through 7.2.11, FortiWeb 7.0.0 through 7.0.11 may allow an authenticated attacker to execute unauthorized code on the underlying system via crafted HTT",
