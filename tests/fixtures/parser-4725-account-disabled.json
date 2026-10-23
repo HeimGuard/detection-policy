@@ -1,0 +1,22 @@
+{
+  "key": "org.windows-4725-account-disabled",
+  "positive": [
+    {
+      "Id": 4725,
+      "Data": {
+        "TargetUserName": "bob",
+        "SubjectUserName": "helpdesk"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "Id": 4624,
+      "Data": {
+        "TargetUserName": "bob",
+        "SubjectUserName": "helpdesk",
+        "TargetSid": "S-1-5-32-544"
+      }
+    }
+  ]
+}

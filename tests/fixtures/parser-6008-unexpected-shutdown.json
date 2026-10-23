@@ -1,0 +1,15 @@
+{
+  "key": "org.windows-6008-unexpected-shutdown",
+  "positive": [
+    {
+      "Id": 6008,
+      "Provider": "EventLog"
+    }
+  ],
+  "negative": [
+    {
+      "Id": 6006,
+      "Provider": "EventLog"
+    }
+  ]
+}

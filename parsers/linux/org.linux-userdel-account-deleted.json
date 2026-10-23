@@ -1,0 +1,18 @@
+{
+  "key": "org.linux-userdel-account-deleted",
+  "name": "userdel: user deleted",
+  "description": "Every `userdel` of an account.",
+  "source": "linux.auth",
+  "when": {
+    "field": "Identifier",
+    "op": "eq",
+    "value": "userdel"
+  },
+  "pattern": "^delete user '(?<user>[^']+)'",
+  "event": {
+    "type": "account_deleted",
+    "user": "{user}",
+    "source": "userdel",
+    "message": "Deleted user {user}"
+  }
+}

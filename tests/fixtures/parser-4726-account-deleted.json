@@ -1,0 +1,22 @@
+{
+  "key": "org.windows-4726-account-deleted",
+  "positive": [
+    {
+      "Id": 4726,
+      "Data": {
+        "TargetUserName": "mallory",
+        "SubjectUserName": "helpdesk"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "Id": 4624,
+      "Data": {
+        "TargetUserName": "bob",
+        "SubjectUserName": "helpdesk",
+        "TargetSid": "S-1-5-32-544"
+      }
+    }
+  ]
+}

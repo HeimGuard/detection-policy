@@ -1,0 +1,25 @@
+{
+  "key": "org.windows-6005-system-start",
+  "name": "Windows: the event log service started (boot)",
+  "description": "6005 of EventLog: the machine booted (the log service starts with it). Gaps and unexpected ones tell about reboots nobody planned.",
+  "source": "windows.system",
+  "when": {
+    "all": [
+      {
+        "field": "Id",
+        "op": "eq",
+        "value": 6005
+      },
+      {
+        "field": "Provider",
+        "op": "eq",
+        "value": "EventLog"
+      }
+    ]
+  },
+  "event": {
+    "type": "system_start",
+    "source": "EventLog",
+    "message": "The system started"
+  }
+}

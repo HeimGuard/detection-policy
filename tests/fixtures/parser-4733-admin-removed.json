@@ -1,0 +1,27 @@
+{
+  "key": "org.windows-4733-admin-removed",
+  "positive": [
+    {
+      "Id": 4733,
+      "Data": {
+        "TargetSid": "S-1-5-32-544",
+        "MemberSid": "S-1-5-21-1-2-3-1001",
+        "SubjectUserName": "helpdesk"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "Id": 4733,
+      "Data": {
+        "TargetSid": "S-1-5-32-555"
+      }
+    },
+    {
+      "Id": 4732,
+      "Data": {
+        "TargetSid": "S-1-5-32-544"
+      }
+    }
+  ]
+}

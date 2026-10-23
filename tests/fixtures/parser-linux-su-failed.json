@@ -1,0 +1,19 @@
+{
+  "key": "org.linux-su-failed",
+  "positive": [
+    {
+      "Identifier": "su",
+      "Message": "FAILED SU (to root) bob on pts/1"
+    }
+  ],
+  "negative": [
+    {
+      "Identifier": "su",
+      "Message": "(to root) bob on pts/1"
+    },
+    {
+      "Identifier": "other",
+      "Message": "FAILED SU (to root) bob on pts/1"
+    }
+  ]
+}

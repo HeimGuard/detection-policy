@@ -1,0 +1,17 @@
+{
+  "key": "org.windows-4725-account-disabled",
+  "name": "Windows: account disabled",
+  "description": "4725: a user account was disabled.",
+  "source": "windows.security",
+  "when": {
+    "field": "Id",
+    "op": "eq",
+    "value": 4725
+  },
+  "event": {
+    "type": "account_disabled",
+    "user": "{Data.TargetUserName}",
+    "source": "{Data.SubjectUserName}",
+    "message": "{Data.SubjectUserName} disabled the account {Data.TargetUserName}"
+  }
+}

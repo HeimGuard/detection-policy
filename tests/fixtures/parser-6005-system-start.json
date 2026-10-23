@@ -1,0 +1,15 @@
+{
+  "key": "org.windows-6005-system-start",
+  "positive": [
+    {
+      "Id": 6005,
+      "Provider": "EventLog"
+    }
+  ],
+  "negative": [
+    {
+      "Id": 6005,
+      "Provider": "Other"
+    }
+  ]
+}

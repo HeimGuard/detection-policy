@@ -1,0 +1,19 @@
+{
+  "key": "org.linux-userdel-account-deleted",
+  "positive": [
+    {
+      "Identifier": "userdel",
+      "Message": "delete user 'mallory'"
+    }
+  ],
+  "negative": [
+    {
+      "Identifier": "userdel",
+      "Message": "new user: name=mallory, UID=1001"
+    },
+    {
+      "Identifier": "other",
+      "Message": "delete user 'mallory'"
+    }
+  ]
+}
