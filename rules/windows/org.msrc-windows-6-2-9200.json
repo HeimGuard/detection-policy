@@ -1,0 +1,38 @@
+{
+  "key": "org.msrc-windows-6-2-9200",
+  "name": "Windows Server 2012 (build 6.2.9200) older than 6.2.9200.26434 (1011 CVEs)",
+  "description": "Microsoft's security updates (2026-Oct, 2026-Sep) fix 1011 CVEs for Windows Server 2012 (build 6.2.9200); the newest fix is 6.2.9200.26434, an older version is affected by at least one of them. Most severe: CVE-2026-100202 (fixed in 6.2.9200.26434), CVE-2026-100220 (fixed in 6.2.9200.26434), CVE-2026-102225 (fixed in 6.2.9200.26434), CVE-2026-108131 (fixed in 6.2.9200.26434), CVE-2026-108399 (fixed in 6.2.9200.26434), CVE-2026-108460 (fixed in 6.2.9200.26434), CVE-2026-108467 (fixed in 6.2.9200.26434), CVE-2026-69499 (fixed in 6.2.9200.26349), CVE-2026-69518 (fixed in 6.2.9200.26349), CVE-2026-69579 (fixed in 6.2.9200.26349), CVE-2026-69590 (fixed in 6.2.9200.26349), CVE-2026-69595 (fixed in 6.2.9200.26349), CVE-2026-69601 (fixed in 6.2.9200.26349), CVE-2026-69603 (fixed in 6.2.9200.26349), CVE-2026-69676 (fixed in 6.2.9200.26349), CVE-2026-69712 (fixed in 6.2.9200.26349), CVE-2026-69730 (fixed in 6.2.9200.26349), CVE-2026-69769 (fixed in 6.2.9200.26349) and 62 more",
+  "severity": "critical",
+  "platform": "windows",
+  "source": "software",
+  "when": {
+    "all": [
+      {
+        "field": "Source",
+        "op": "eq",
+        "value": "windows"
+      },
+      {
+        "field": "Version",
+        "op": "starts_with",
+        "value": "6.2.9200."
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "6.2.9200.26434"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 6.2.9200.26434, which fixes 1011 CVEs of the security updates of Microsoft (not all of them if it is newer than a fix): CVE-2026-100202 (fixed in 6.2.9200.26434), CVE-2026-100220 (fixed in 6.2.9200.26434), CVE-2026-102225 (fixed in 6.2.9200.26434), CVE-2026-108131 (fixed in 6.2.9200.26434), CVE-2026-108399 (fixed in 6.2.9200.26434), CVE-2026-108460 (fixed in 6.2.9200.26434), CVE-2026-108467 (fixed in 6.2.9200.26434), CVE-2026-69499 (fixed in 6.2.9200.26349), CVE-2026-69518 (fixed in 6.2.9200.26349), CVE-2026-69579 (fixed in 6.2.9200.26349), CVE-2026-69590 (fixed in 6.2.9200.26349), CVE-2026-69595 (fixed in 6.2.9200.26349), CVE-2026-69601 (fixed in 6.2.9200.26349), CVE-2026-69603 (fixed in 6.2.9200.26349), CVE-2026-69676 (fixed in 6.2.9200.26349), CVE-2026-69712 (fixed in 6.2.9200.26349), CVE-2026-69730 (fixed in 6.2.9200.26349), CVE-2026-69769 (fixed in 6.2.9200.26349), CVE-2026-69789 (fixed in 6.2.9200.26349) and 61 more",
+  "remediation": "Install the latest cumulative update (Windows Update).",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100202",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100220",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102225",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-108131",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-108399",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-108460",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}

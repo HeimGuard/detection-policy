@@ -1,0 +1,42 @@
+{
+  "key": "org.msrc-windows-6-2-9200",
+  "positive": [
+    {
+      "Name": "Microsoft Windows",
+      "Version": "6.2.9200.0",
+      "Source": "windows"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "6.2.9200.26433",
+      "Source": "windows"
+    }
+  ],
+  "negative": [
+    {
+      "Name": "Microsoft Windows",
+      "Version": "6.2.9200.26434",
+      "Source": "windows"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "6.2.9200.26434.1",
+      "Source": "windows"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "10.0.1.0",
+      "Source": "windows"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "6.2.9200.0",
+      "Source": "registry"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "6.2.9200.0",
+      "Source": "registry (user)"
+    }
+  ]
+}

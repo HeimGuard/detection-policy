@@ -1,0 +1,38 @@
+{
+  "key": "org.msrc-windows-10-0-17763",
+  "name": "Windows Server 2019, Windows 10 Version 1809 (build 10.0.17763) older than 10.0.17763.9376 (1539 CVEs)",
+  "description": "Microsoft's security updates (2026-Oct, 2026-Sep) fix 1539 CVEs for Windows Server 2019, Windows 10 Version 1809 (build 10.0.17763); the newest fix is 10.0.17763.9376, an older version is affected by at least one of them. Most severe: CVE-2026-100202 (fixed in 10.0.17763.9376), CVE-2026-100215 (fixed in 10.0.17763.9376), CVE-2026-100220 (fixed in 10.0.17763.9376), CVE-2026-102211 (fixed in 10.0.17763.9376), CVE-2026-102214 (fixed in 10.0.17763.9376), CVE-2026-102225 (fixed in 10.0.17763.9376), CVE-2026-108131 (fixed in 10.0.17763.9376), CVE-2026-108399 (fixed in 10.0.17763.9376), CVE-2026-108460 (fixed in 10.0.17763.9376), CVE-2026-108467 (fixed in 10.0.17763.9376), CVE-2026-108471 (fixed in 10.0.17763.9376), CVE-2026-69499 (fixed in 10.0.17763.9245), CVE-2026-69518 (fixed in 10.0.17763.9245), CVE-2026-69530 (fixed in 10.0.17763.9245), CVE-2026-69579 (fixed in 10.0.17763.9245), CVE-2026-69590 (fixed in 10.0.17763.9245), CVE-2026-69595 (fixed in 10.0.17763.9245) and 63 more",
+  "severity": "critical",
+  "platform": "windows",
+  "source": "software",
+  "when": {
+    "all": [
+      {
+        "field": "Source",
+        "op": "eq",
+        "value": "windows"
+      },
+      {
+        "field": "Version",
+        "op": "starts_with",
+        "value": "10.0.17763."
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "10.0.17763.9376"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 10.0.17763.9376, which fixes 1539 CVEs of the security updates of Microsoft (not all of them if it is newer than a fix): CVE-2026-100202 (fixed in 10.0.17763.9376), CVE-2026-100215 (fixed in 10.0.17763.9376), CVE-2026-100220 (fixed in 10.0.17763.9376), CVE-2026-102211 (fixed in 10.0.17763.9376), CVE-2026-102214 (fixed in 10.0.17763.9376), CVE-2026-102225 (fixed in 10.0.17763.9376), CVE-2026-108131 (fixed in 10.0.17763.9376), CVE-2026-108399 (fixed in 10.0.17763.9376), CVE-2026-108460 (fixed in 10.0.17763.9376), CVE-2026-108467 (fixed in 10.0.17763.9376), CVE-2026-108471 (fixed in 10.0.17763.9376), CVE-2026-69499 (fixed in 10.0.17763.9245), CVE-2026-69518 (fixed in 10.0.17763.9245), CVE-2026-69530 (fixed in 10.0.17763.9245), CVE-2026-69579 (fixed in 10.0.17763.9245), CVE-2026-69590 (fixed in 10.0.17763.9245), CVE-2026-69595 (fixed in 10.0.17763.9245), CVE-2026-69601 (fixed in 10.0.17763.9245), CVE-2026-69603 (fixed in 10.0.17763.9245) and 61 more",
+  "remediation": "Install the latest cumulative update (Windows Update).",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100202",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100215",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100220",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102211",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102214",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102225",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}

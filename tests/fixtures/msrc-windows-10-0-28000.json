@@ -1,0 +1,42 @@
+{
+  "key": "org.msrc-windows-10-0-28000",
+  "positive": [
+    {
+      "Name": "Microsoft Windows",
+      "Version": "10.0.28000.0",
+      "Source": "windows"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "10.0.28000.3230",
+      "Source": "windows"
+    }
+  ],
+  "negative": [
+    {
+      "Name": "Microsoft Windows",
+      "Version": "10.0.28000.3231",
+      "Source": "windows"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "10.0.28000.3231.1",
+      "Source": "windows"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "10.0.1.0",
+      "Source": "windows"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "10.0.28000.0",
+      "Source": "registry"
+    },
+    {
+      "Name": "Microsoft Windows",
+      "Version": "10.0.28000.0",
+      "Source": "registry (user)"
+    }
+  ]
+}

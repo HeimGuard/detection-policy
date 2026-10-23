@@ -10,3 +10,4 @@
 - Changes go through pull requests; direct pushes to `main` should be avoided.
 - Rules `org.cve-*` (and their fixtures) are generated from `data/cves.json` by `scripts/cve2feed.py`, do not edit them: change the generator
   or the data and run `python scripts/cve2feed.py --offline`. `python -m unittest discover -s tests -p 'test_*.py'` tests the generator.
+- Rules `org.msrc-*` are generated from `data/msrc.json` by `scripts/msrc2feed.py` (`--offline`), do not edit them either.

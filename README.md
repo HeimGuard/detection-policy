@@ -91,6 +91,25 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
 
 `--cve CVE-2026-1 ...` takes named CVEs, `--days 120` goes further back (the NVD allows 120 days).
 
+## Security updates of Microsoft
+
+`.github/workflows/msrc-rules.yml` runs every night (and on demand) `scripts/msrc2feed.py`, apart from the NVD rules:
+it reads the latest monthly security updates of the MSRC (CVRF API, `api.msrc.microsoft.com`) and writes
+`org.msrc-*` rules for what the inventory can tell, opening a pull request (`automation/msrc-rules`) for review.
+Per family the CVEs are one rule over the build that fixes the newest of them, the message tells the build that fixed
+each CVE (a package between two fixes sees what applies):
+
+- **Windows**, one rule per build of the operating system (`10.0.19045`, `10.0.22631`, ...): agents 1.27.0+ list the
+  operating system as software (`Source` `windows`, its build with the revision as the version, `10.0.19045.5555`); client
+  and server with the same build share the fixes. A build older than the newest fix is a finding.
+- **Microsoft Edge** (`Microsoft Edge` on Windows, `microsoft-edge-*` on Linux) and **Visual Studio Code**.
+- Not here: .NET, Office, SQL Server, Exchange. Their names and versions in Programs and Features, and the bands of the
+  .NET SDK (whose fixed builds are not comparable with the runtime's), were not checked on a device.
+
+`data/msrc.json` keeps what the rules need of each monthly update (the newest fixed build, the number of CVEs and the most
+severe ones per family), not the 30 MB documents; the rules are generated from it (`python scripts/msrc2feed.py --offline`, CI
+checks that nothing changes). A rule of your own has another key (`org.<source>-<what>`).
+
 ## Workflow
 
 1. Add or change a rule / parser and a fixture in `tests/fixtures/`.

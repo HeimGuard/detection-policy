@@ -1,0 +1,59 @@
+{
+  "key": "org.msrc-vscode",
+  "name": "Visual Studio Code older than 1.141.1 (22 CVEs)",
+  "description": "Microsoft's security updates (2026-Oct, 2026-Sep) fix 22 CVEs for Visual Studio Code; the newest fix is 1.141.1, an older version is affected by at least one of them. Most severe: CVE-2026-102229 (fixed in 1.141.1), CVE-2026-102231 (fixed in 1.141.1), CVE-2026-102232 (fixed in 1.141.1), CVE-2026-102233 (fixed in 1.141.1), CVE-2026-102234 (fixed in 1.141.1), CVE-2026-102235 (fixed in 1.141.1), CVE-2026-102238 (fixed in 1.141.1), CVE-2026-102851 (fixed in 1.141.1), CVE-2026-69370 (fixed in 1.141.1), CVE-2026-70098 (fixed in 1.141.1), CVE-2026-70334 (fixed in 1.136.2), CVE-2026-78461 (fixed in 1.136.2), CVE-2026-78462 (fixed in 1.136.2), CVE-2026-81356 (fixed in 1.136.2), CVE-2026-81357 (fixed in 1.136.2), CVE-2026-81376 (fixed in 1.136.2), CVE-2026-81377 (fixed in 1.136.2), CVE-2026-81378 (fixed in 1.136.2), CVE-2026-81379 (fixed in 1.136.2), CVE-2026-81380 (fixed in 1.136.2), CVE-2026-81381 (fixed in 1.136.2), CVE-2026-81383 (fixed in 1.136.2)",
+  "severity": "high",
+  "platform": "any",
+  "source": "software",
+  "when": {
+    "all": [
+      {
+        "any": [
+          {
+            "field": "Name",
+            "op": "matches",
+            "value": "^microsoft visual studio code( \\(user\\))?$"
+          },
+          {
+            "all": [
+              {
+                "field": "Name",
+                "op": "eq",
+                "value": "code"
+              },
+              {
+                "field": "Source",
+                "op": "in",
+                "value": [
+                  "dpkg",
+                  "snap"
+                ]
+              }
+            ]
+          },
+          {
+            "field": "Name",
+            "op": "eq",
+            "value": "com.visualstudio.code"
+          }
+        ]
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "1.141.1"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 1.141.1, which fixes 22 CVEs of the security updates of Microsoft (not all of them if it is newer than a fix): CVE-2026-102229 (fixed in 1.141.1), CVE-2026-102231 (fixed in 1.141.1), CVE-2026-102232 (fixed in 1.141.1), CVE-2026-102233 (fixed in 1.141.1), CVE-2026-102234 (fixed in 1.141.1), CVE-2026-102235 (fixed in 1.141.1), CVE-2026-102238 (fixed in 1.141.1), CVE-2026-102851 (fixed in 1.141.1), CVE-2026-69370 (fixed in 1.141.1), CVE-2026-70098 (fixed in 1.141.1), CVE-2026-70334 (fixed in 1.136.2), CVE-2026-78461 (fixed in 1.136.2), CVE-2026-78462 (fixed in 1.136.2), CVE-2026-81356 (fixed in 1.136.2), CVE-2026-81357 (fixed in 1.136.2), CVE-2026-81376 (fixed in 1.136.2), CVE-2026-81377 (fixed in 1.136.2), CVE-2026-81378 (fixed in 1.136.2), CVE-2026-81379 (fixed in 1.136.2), CVE-2026-81380 (fixed in 1.136.2), CVE-2026-81381 (fixed in 1.136.2), CVE-2026-81383 (fixed in 1.136.2)",
+  "remediation": "Update Visual Studio Code.",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102229",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102231",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102232",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102233",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102234",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102235",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}
