@@ -18855,7 +18855,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/541926503"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76039": {
    "desc": "Incorrect reference resolution in Core in Google Chrome on on Android prior to 151.0.7922.169 allowed a remote attacker leveraging social engineering to obtain sensitive information via a crafted HTML page. (Chromium security severity: High)",
@@ -18874,7 +18878,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/525167753"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76040": {
    "desc": "Use after free in Browser in Google Chrome on on Mac prior to 151.0.7922.169 allowed a remote attacker leveraging social engineering to execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -18893,7 +18901,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/534862220"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76041": {
    "desc": "Information leak in Skia in Google Chrome prior to 151.0.7922.169 allowed a remote attacker to potentially bypass web origin policy via a crafted HTML page. (Chromium security severity: High)",
@@ -18912,7 +18924,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/540027341"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76042": {
    "desc": "Use of uninitialized resource in GPU in Google Chrome prior to 151.0.7922.169 allowed a remote attacker who had compromised the renderer process to read memory outside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -18931,7 +18947,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/536460270"
    ],
-   "severity": "low"
+   "severity": "low",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76043": {
    "desc": "Incorrect calculation in V8 in Google Chrome prior to 151.0.7922.169 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -18950,7 +18970,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/539350801"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76044": {
    "desc": "Race condition in USB in Google Chrome prior to 151.0.7922.169 allowed a remote attacker who had compromised the renderer process to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -18969,7 +18993,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/522732244"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76045": {
    "desc": "Use after free in WebGL in Google Chrome prior to 151.0.7922.169 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -18988,7 +19016,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/543082390"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76046": {
    "desc": "Buffer overflow in ANGLE in Google Chrome on on Android prior to 151.0.7922.169 allowed a remote attacker who had compromised the renderer process to execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -19007,7 +19039,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/536581050"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-76047": {
    "desc": "Type confusion in V8 in Google Chrome prior to 151.0.7922.169 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -19026,7 +19062,11 @@
     "https://chromereleases.googleblog.com/2026/08/stable-channel-update-for-desktop_0826575033.html",
     "https://issues.chromium.org/issues/541251902"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-8037": {
    "desc": "OS Command Injection Remote Code Execution Vulnerability in API in Progress ADC Products allows an un-authenticated attacker to execute arbitrary commands on the LoadMaster appliance by exploiting unsanitized input in multiple command endpoints",
@@ -19061,7 +19101,11 @@
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-8037",
     "https://www.esentire.com/security-advisories/progress-kemp-loadmaster-vulnerability-targeted-cve-2026-8037"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-8092": {
    "desc": "Memory safety bugs present in Thunderbird ESR 140.10.1 and Thunderbird 150.0.1. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability was fixed in Firefox 150.0.2, Firefox ESR 140.10.2, Firefox ESR 115.35.2, Thunderbird 150.0.2, and Thunderbird 140.10.2.",
@@ -19104,7 +19148,64 @@
     "https://www.mozilla.org/security/advisories/mfsa2026-41/",
     "https://www.mozilla.org/security/advisories/mfsa2026-42/"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "firefox": {
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "thunderbird": {
+      "jammy": [
+       "needed",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-8093": {
    "desc": "Memory safety bugs present in Thunderbird 150.0.1. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability was fixed in Firefox 150.0.2 and Thunderbird 150.0.2.",
@@ -19132,7 +19233,64 @@
     "https://www.mozilla.org/security/advisories/mfsa2026-43/",
     "https://access.redhat.com/security/cve/CVE-2026-8093"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "firefox": {
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "thunderbird": {
+      "jammy": [
+       "needed",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-83661": {
    "desc": "Photoshop Desktop is affected by an Integer Overflow or Wraparound vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
@@ -19155,7 +19313,11 @@
    "refs": [
     "https://www.adobe.com/trust/security/products/photoshop/apsb26-158.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-84284": {
    "desc": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 17.11 before 19.2.8, 19.3 before 19.3.6, and 19.4 before 19.4.2 that, under certain conditions, could have allowed an unauthenticated user to read work item contents from private groups and projects due to incorrect authorization checks.",
@@ -19180,7 +19342,22 @@
     "https://gitlab.com/gitlab-org/gitlab/-/work_items/627167",
     "https://hackerone.com/reports/3551698"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "gitlab": {
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "ignored",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-85790": {
    "desc": "Use after free in Microsoft QUIC allows an unauthorized attacker to disclose information over a network.",
@@ -19212,7 +19389,11 @@
    "refs": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-85790"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-8743": {
    "desc": "A vulnerability was found in Open5GS up to 2.7.6. This impacts the function ran_ue_find_by_amf_ue_ngap_id of the file src/amf/context.c of the component AMF/MME. Performing a manipulation results in improper authorization. It is possible to initiate the attack remotely. The exploit has been made public and could be used. The patch is named 5746b8576cfceec18ed87eb7d8cf11b1fb4cd8b1. It is suggested ",
@@ -19233,7 +19414,11 @@
     "https://github.com/open5gs/open5gs/issues/4498",
     "https://github.com/open5gs/open5gs/pull/4553"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-8973": {
    "desc": "Memory safety bugs present in Thunderbird 150. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability was fixed in Firefox 151 and Thunderbird 151.",
@@ -19261,7 +19446,64 @@
     "https://access.redhat.com/security/cve/CVE-2026-8973",
     "https://bugzilla.redhat.com/show_bug.cgi?id=2479864"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "firefox": {
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "thunderbird": {
+      "jammy": [
+       "needed",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-8974": {
    "desc": "Memory safety bugs present in Thunderbird 140.10 and Thunderbird 150. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability was fixed in Firefox 151, Firefox ESR 140.11, Thunderbird 151, and Thunderbird 140.11.",
@@ -19299,7 +19541,64 @@
     "https://www.mozilla.org/security/advisories/mfsa2026-50/",
     "https://www.mozilla.org/security/advisories/mfsa2026-51/"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "firefox": {
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "thunderbird": {
+      "jammy": [
+       "needed",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-8975": {
    "desc": "Memory safety bugs present in Thunderbird 140.10 and Thunderbird 150. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability was fixed in Firefox 151, Firefox ESR 115.36, Firefox ESR 140.11, Thunderbird 151, and Thunderbird 140.11.",
@@ -19342,7 +19641,64 @@
     "https://www.mozilla.org/security/advisories/mfsa2026-47/",
     "https://www.mozilla.org/security/advisories/mfsa2026-48/"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "firefox": {
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "thunderbird": {
+      "jammy": [
+       "needed",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-93895": {
    "desc": "IBM WebSphere Application Server - Liberty 20.0.0.12 through 26.0.0.10 could allow an unauthenticated remote attacker to bypass access controls configured on gRPC service methods.",
@@ -19360,7 +19716,11 @@
    "refs": [
     "https://www.ibm.com/support/pages/node/7292228"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-93905": {
    "desc": "IBM WebSphere Application Server - Liberty 17.0.0.3 through 26.0.0.10 could allow an unauthenticated remote attacker to corrupt the persisted status of batch job instances.",
@@ -19378,7 +19738,11 @@
    "refs": [
     "https://www.ibm.com/support/pages/node/7292232"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-93909": {
    "desc": "IBM WebSphere Application Server - Liberty 17.0.0.3 through 26.0.0.10 is vulnerable by an authentication bypass vulnerability when samlWeb-2.0 feature is enabled.",
@@ -19396,7 +19760,11 @@
    "refs": [
     "https://www.ibm.com/support/pages/node/7292236"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95635": {
    "desc": "Photoshop Desktop is affected by a Double Free vulnerability that could result in arbitrary code execution in the context of the current user. An attacker could exploit this vulnerability to execute arbitrary code. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
@@ -19419,7 +19787,11 @@
    "refs": [
     "https://www.adobe.com/trust/security/products/photoshop/apsb26-158.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95636": {
    "desc": "Photoshop Desktop is affected by an Integer Overflow or Wraparound vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
@@ -19442,7 +19814,11 @@
    "refs": [
     "https://www.adobe.com/trust/security/products/photoshop/apsb26-158.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95637": {
    "desc": "Photoshop Desktop is affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
@@ -19465,7 +19841,11 @@
    "refs": [
     "https://www.adobe.com/trust/security/products/photoshop/apsb26-158.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95638": {
    "desc": "Photoshop Desktop is affected by a Heap-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
@@ -19488,7 +19868,11 @@
    "refs": [
     "https://www.adobe.com/trust/security/products/photoshop/apsb26-158.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95639": {
    "desc": "Photoshop Desktop is affected by an Incorrect Authorization vulnerability that could result in arbitrary code execution in the context of the current user. An attacker could exploit this vulnerability to execute arbitrary code. Exploitation of this issue requires user interaction in that a victim must open a malicious file. Scope is changed.",
@@ -19511,7 +19895,11 @@
    "refs": [
     "https://www.adobe.com/trust/security/products/photoshop/apsb26-158.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95640": {
    "desc": "Photoshop Desktop is affected by a NULL Pointer Dereference vulnerability that could result in an application denial-of-service. An attacker could exploit this vulnerability to crash the application, leading to a denial-of-service condition. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
@@ -19534,7 +19922,11 @@
    "refs": [
     "https://www.adobe.com/trust/security/products/photoshop/apsb26-158.html"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95641": {
    "desc": "Photoshop Desktop is affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
@@ -19557,7 +19949,11 @@
    "refs": [
     "https://www.adobe.com/trust/security/products/photoshop/apsb26-158.html"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95695": {
    "desc": "IBM WebSphere Application Server - Liberty 20.0.0.12 through 26.0.0.10 could allow a remote attacker to bypass security restrictions due to incorrect authorization.",
@@ -19575,7 +19971,11 @@
    "refs": [
     "https://www.ibm.com/support/pages/node/7292228"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-95696": {
    "desc": "IBM WebSphere Application Server - Liberty 20.0.0.12 through 26.0.0.10 could allow a remote attacker to cause a denial of service due to an uncaught exception.",
@@ -19593,7 +19993,11 @@
    "refs": [
     "https://www.ibm.com/support/pages/node/7292228"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96222": {
    "desc": "Improper certificate validation in Active Directory Federation Services (AD FS) allows an unauthorized attacker to perform spoofing over a network.",
@@ -19625,7 +20029,11 @@
    "refs": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96222"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96251": {
    "desc": "Reliance on untrusted inputs in a security decision in Microsoft PowerShell allows an unauthorized attacker to execute code over a network.",
@@ -19653,7 +20061,11 @@
    "refs": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96251"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96303": {
    "desc": "Improperly implemented security check for standard in Microsoft PowerShell allows an unauthorized attacker to bypass a security feature over a network.",
@@ -19681,7 +20093,11 @@
    "refs": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96303"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96652": {
    "desc": "Plex Media Server before 1.43.3.10861 allows SSRF via '/player/timeline'. An attacker using any X-Plex-Token value can include a full URL in the 'protocol' parameter and force the Plex server to POST to the attacker's chosen destination.",
@@ -19702,7 +20118,11 @@
     "https://www.cve.org/CVERecord?id=CVE-2026-96652",
     "https://zmain.info/blog/plex2shell"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96654": {
    "desc": "Plex Media Server before 1.43.3.10861 does not correctly neutralize URL values included in 'searchOne,' allowing an attacker to call other plugins' functions and supply their own parameters.",
@@ -19723,7 +20143,11 @@
     "https://www.cve.org/CVERecord?id=CVE-2026-96654",
     "https://zmain.info/blog/plex2shell"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96655": {
    "desc": "Plex Media Server before 1.43.3.10861 allows an authenticated user to request arbitrary internal or external addresses via the '/video/:/transcode/universal' path parameter.",
@@ -19744,7 +20168,11 @@
     "https://www.cve.org/CVERecord?id=CVE-2026-96655",
     "https://zmain.info/blog/plex2shell"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96656": {
    "desc": "Plex Media Server before 1.43.3.10861 allows an admin user to write arbitrary files that may be executed on load. The preference TranscoderH264Options is appended verbatim to x264's option string on every transcode. At startup, all .so files are run without signature, execute bit, or symbol checks.",
@@ -19765,7 +20193,11 @@
     "https://www.cve.org/CVERecord?id=CVE-2026-96656",
     "https://zmain.info/blog/plex2shell"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96957": {
    "desc": "Improper verification of cryptographic signature in .NET allows an unauthorized attacker to bypass a security feature over a network.",
@@ -19797,7 +20229,11 @@
    "refs": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96957"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96958": {
    "desc": "Inefficient algorithmic complexity in .NET allows an unauthorized attacker to deny service over a network.",
@@ -19825,7 +20261,11 @@
    "refs": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96958"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96959": {
    "desc": "Allocation of resources without limits or throttling in .NET allows an unauthorized attacker to deny service over a network.",
@@ -19853,7 +20293,11 @@
    "refs": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96959"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-96960": {
    "desc": "Asymmetric resource consumption (amplification) in .NET allows an unauthorized attacker to deny service over a network.",
@@ -19881,7 +20325,11 @@
    "refs": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96960"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   }
  }
 }
