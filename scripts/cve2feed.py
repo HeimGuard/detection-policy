@@ -45,6 +45,8 @@ GENERIC = {"tools", "tool", "core", "server", "client", "agent", "manager", "ser
            "platform", "engine", "framework", "library", "libs", "utils", "utilities", "common", "base", "data",
            "system", "console", "portal", "gateway", "network", "desktop", "web", "app", "application", "plugin",
            "plugins", "extension", "sdk", "api", "cli", "gui", "linux", "windows", "kernel", "mobile", "cloud"}
+# Version of how a source package of the tracker is taken as the product (2: grub2 / grub2 is one, php8.5 / php).
+UBUNTU_RELATION = 2
 # Ubuntu releases, oldest first: when a rule is too big the fixes of the oldest are dropped first.
 RELEASES = ["trusty", "xenial", "bionic", "focal", "jammy", "noble", "oracular", "plucky", "questing", "resolute"]
 MAX_FIXED_CVES = 30  # a group of more CVEs is not hidden by a changelog (the conditions would not fit)
@@ -203,16 +205,17 @@ def generic(product):
 
 
 def related(product, source):
-    """Whether an Ubuntu source package is the product (php8.5 / php, glib2.0 / glib, expat / libexpat)."""
-    flat = lambda s: re.sub(r"[^a-z0-9]", "", s.lower())
-    stem = flat(re.sub(r"[0-9.]+$", "", source.lower()))
+    """Whether an Ubuntu source package is the product (php8.5 / php, glib2.0 / glib, expat / libexpat, grub2 / grub2)."""
+    flat = lambda text: re.sub(r"[^a-z0-9]", "", text.lower())
     prod = flat(product)
-    return len(stem) >= 3 and stem in (prod, "lib" + prod) or (len(prod) >= 3 and prod == "lib" + stem)
+    names = {flat(source), flat(re.sub(r"[0-9.]+$", "", source))} - {""}  # with and without its version (php8.5, php)
+    return any(len(name) >= 3 and (name == prod or "lib" + name == prod or name == "lib" + prod) for name in names)
 
 
 def source_regex(source):
-    """The binary packages of a source package: php8.5 -> php8.5, php8.5-cli, libphp8.5-embed; glib2.0 ->
-    libglib2.0-0t64, gir1.2-glib-2.0; libsoup3 -> libsoup-3.0-0; expat -> libexpat1, libexpat1-dev."""
+    """The binary packages of a source package by their names: php8.5 -> php8.5, php8.5-cli, libphp8.5-embed; glib2.0 ->
+    libglib2.0-0t64; libsoup3 -> libsoup-3.0-0; expat -> libexpat1, libexpat1-dev. Only a guess (gir1.2-glib-2.0 is
+    glib2.0 on one release and gobject-introspection on another), for agents that do not send SourcePackage."""
     core = ""
     for token in re.findall(r"[a-z]+|\d+(?:\.\d+)*|[^a-z\d]+", source.lower()):
         if token[0].isdigit():
@@ -221,7 +224,7 @@ def source_regex(source):
             core += token
         else:
             core += "[-_.]?"
-    return r"^(?:lib|gir1\.2-)?" + core + r"[0-9.]*(?:[-_.+][a-z0-9.+_~-]*)?$"
+    return r"^(?:lib)?" + core + r"[0-9.]*(?:[-_.+][a-z0-9.+_~-]*)?$"
 
 
 def ubuntu_lookup(cid, found):
@@ -252,7 +255,10 @@ def dpkg_info(product, ubuntu):
         if not related(product, source):
             continue
         pattern = source_regex(source)
-        if all(status == "not-affected" for status, _ in rel.values()):
+        # "upstream" is the project, not a release, and a release that ended ("ignored") says nothing any more: the
+        # releases that are left decide whether the CVE touches the package.
+        releases = [status for release, (status, _) in rel.items() if release != "upstream" and status != "ignored"]
+        if releases and all(status == "not-affected" for status in releases):
             info["unaffected"].append([source, pattern])
             continue
         info["names"].append([source, pattern])
@@ -303,22 +309,32 @@ def fix_prefix(version):
     return head + "-" if dash else version
 
 
+def by_source(sources, pattern):
+    """A binary package is one of these source packages: by its SourcePackage (agents 1.24.0+, dpkg) when it has one,
+    else (an older agent, or a package that is its own source) by its name."""
+    return {"any": [{"field": "SourcePackage", "op": "in", "value": sources},
+                    {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": pattern}]}]}
+
+
 def build_when(product, ranges, info, cids, fixes):
     ranged = [range_cond(r) for r in ranges]
     sources = [source for source, _ in info["names"]]
-    patterns = [name_pattern(product)] + [p for _, p in info["names"]]
+    loose = alternatives([name_pattern(product)] + [p for _, p in info["names"]])
     dpkg_names = alternatives([p for _, p in info["names"]]) if info["names"] else dpkg_name_pattern(product)
-    # The source package of a binary one (agents 1.24.0+, dpkg: libssl3t64 is openssl) says more than its name; an
-    # older agent sends none and the name patterns judge.
-    from_source = [{"field": "SourcePackage", "op": "in", "value": sources}] if sources else []
-    name = {"field": "Name", "op": "matches", "value": alternatives(patterns)}
     conds = [
-        {"any": [name] + from_source} if from_source else name,
+        # What a package is the product by its source package when it says (libssl3t64 is openssl, gir1.2-glib-2.0 is
+        # gobject-introspection or glib2.0, by the release), else by its name.
+        {"any": [{"field": "SourcePackage", "op": "in", "value": sources},
+                 {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": loose}]}]}
+        if sources else {"field": "Name", "op": "matches", "value": loose},
         ranged[0] if len(ranged) == 1 else {"any": ranged},
         # rpm packages are not read for backported fixes yet, so they stay out of the CVE rules.
         {"field": "Source", "op": "not_in", "value": ["rpm"]},
         # A dpkg package is the product itself, not a library named after it.
-        {"any": [{"field": "Source", "op": "ne", "value": "dpkg"}, {"field": "Name", "op": "matches", "value": dpkg_names}] + from_source},
+        {"any": [{"field": "Source", "op": "ne", "value": "dpkg"}] + (
+            [{"field": "SourcePackage", "op": "in", "value": sources},
+             {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": dpkg_names}]}]
+            if sources else [{"field": "Name", "op": "matches", "value": dpkg_names}])},
     ]
     # Debian / Ubuntu backport fixes without changing the upstream version: a changelog that names the CVE (the agent
     # sends the ids as ",CVE-1,CVE-2,") says the package is fixed.
@@ -327,21 +343,19 @@ def build_when(product, ranges, info, cids, fixes):
         conds.append({"not": named[0] if len(named) == 1 else {"all": named}})
     # What the Ubuntu tracker says: a package at or after the version that fixed it is fine, and so is one of a
     # source package the CVE does not touch. A Debian revision (+deb12u1) is not comparable with an Ubuntu one.
-    skip = [{"all": [
-        {"field": "Source", "op": "eq", "value": "dpkg"},
-        {"any": [{"field": "Name", "op": "matches", "value": pattern}, {"field": "SourcePackage", "op": "eq", "value": source}]},
-        {"field": "Version", "op": "starts_with", "value": fix_prefix(version)},
-        {"field": "Version", "op": "dpkg_gte", "value": version},
-        {"field": "Version", "op": "not_matches", "value": r"[+~]deb\d"},
-    ]} for source, pattern, version, _ in fixes]
+    # (The conditions are nested at most 6 deep, so the choice of the source package is spelled out per fix.)
+    fixed = []
+    for source, pattern, version, _ in fixes:
+        after = [{"field": "Version", "op": "starts_with", "value": fix_prefix(version)}, {"field": "Version", "op": "dpkg_gte", "value": version}]
+        fixed.append({"all": [{"field": "SourcePackage", "op": "eq", "value": source}] + after})
+        fixed.append({"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": pattern}] + after})
+    if fixed:
+        conds.append({"not": {"all": [{"field": "Source", "op": "eq", "value": "dpkg"},
+                                      {"field": "Version", "op": "not_matches", "value": r"[+~]deb\d"},
+                                      fixed[0] if len(fixed) == 1 else {"any": fixed}]}})
     if info["unaffected"]:
-        skip.append({"all": [
-            {"field": "Source", "op": "eq", "value": "dpkg"},
-            {"any": [{"field": "Name", "op": "matches", "value": alternatives([p for _, p in info["unaffected"]])},
-                     {"field": "SourcePackage", "op": "in", "value": [s for s, _ in info["unaffected"]]}]},
-        ]})
-    if skip:
-        conds.append({"not": skip[0] if len(skip) == 1 else {"any": skip}})
+        conds.append({"not": {"all": [{"field": "Source", "op": "eq", "value": "dpkg"},
+                                      by_source([s for s, _ in info["unaffected"]], alternatives([p for _, p in info["unaffected"]]))]}})
     return {"all": conds}
 
 
@@ -477,6 +491,7 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
         negative.append({"Name": source, "Version": version, "Source": "dpkg"})
         negative.append({"Name": source, "Version": version + ".1", "Source": "dpkg"})
         negative.append({"Name": "libweird-binary0", "Version": version, "Source": "dpkg", "SourcePackage": source})
+        negative.append({"Name": source, "Version": revision, "Source": "dpkg", "SourcePackage": "some-other-source"})
     if info["unaffected"]:
         negative.append({"Name": info["unaffected"][0][0], "Version": v, "Source": "dpkg"})
     positive = [i for i in positive if hit(i)]
@@ -609,6 +624,8 @@ def refresh_ubuntu(state, limit, workers=8):
     due = []
     for cid, entry in sorted(state["cves"].items(), key=lambda c: (c[1].get("ubuntu", {}).get("checked", ""), c[0])):
         ubuntu = entry.get("ubuntu")
+        if ubuntu and not ubuntu["sources"] and ubuntu.get("relation", 1) < UBUNTU_RELATION and any(re.search(r"\d", p) for p in entry["products"]):
+            ubuntu = None  # answered with no source of the product while names with a digit (grub2) were not matched
         if ubuntu:
             age = (today - datetime.strptime(ubuntu["checked"], "%Y-%m-%d").date()).days
             settled = all(status in ("released", "not-affected", "ignored") for rel in ubuntu["sources"].values()
@@ -620,7 +637,7 @@ def refresh_ubuntu(state, limit, workers=8):
     with ThreadPoolExecutor(max_workers=workers) as pool:
         for done, (cid, found) in enumerate(pool.map(lambda cid: (cid, ubuntu_lookup(cid, state["cves"][cid]["products"])), due), 1):
             if found is not None:
-                state["cves"][cid]["ubuntu"] = {"checked": today.isoformat(), "sources": found}
+                state["cves"][cid]["ubuntu"] = {"checked": today.isoformat(), "sources": found, "relation": UBUNTU_RELATION}
             if done % 50 == 0:
                 save_state(state)  # a long run keeps what it has
     return len(due)

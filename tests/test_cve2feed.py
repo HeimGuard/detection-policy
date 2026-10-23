@@ -49,8 +49,8 @@ class Names(unittest.TestCase):
 
     def test_a_source_package_is_its_binary_packages_and_nothing_else(self):
         for source, yes, no in (
-            ("glib2.0", ["libglib2.0-0t64", "libglib2.0-bin", "libglib2.0-data", "gir1.2-glib-2.0"],
-             ["libaccounts-glib0", "glib-networking", "libjson-glib-1.0-0", "libdbus-glib-1-2"]),
+            ("glib2.0", ["libglib2.0-0t64", "libglib2.0-bin", "libglib2.0-data"],
+             ["gir1.2-glib-2.0", "libaccounts-glib0", "glib-networking", "libjson-glib-1.0-0", "libdbus-glib-1-2"]),
             ("php8.5", ["php8.5-cli", "php8.5-common", "libphp8.5-embed"], ["php-cli", "php-enum", "php8.3-cli", "php-symfony-console"]),
             ("expat", ["libexpat1", "libexpat1-dev", "expat"], ["libexpatx", "python3-expat-foo2"]),
             ("libsoup3", ["libsoup-3.0-0", "libsoup-3.0-common", "libsoup3"], ["libsoup2.4-1"]),
@@ -61,7 +61,7 @@ class Names(unittest.TestCase):
                 self.assertFalse(self.matches(source, name), f"{source}: {name}")
 
     def test_which_source_packages_are_the_product(self):
-        for product, source in (("php", "php8.5"), ("glib", "glib2.0"), ("libexpat", "expat"), ("libsoup", "libsoup3"), ("rsyslog", "rsyslog")):
+        for product, source in (("php", "php8.5"), ("glib", "glib2.0"), ("libexpat", "expat"), ("libsoup", "libsoup3"), ("rsyslog", "rsyslog"), ("grub2", "grub2")):
             self.assertTrue(cve2feed.related(product, source), f"{product} / {source}")
         for product, source in (("chrome", "chromium-browser"), ("php", "phpmyadmin"), ("glib", "glibc"), ("tools", "open-vm-tools")):
             self.assertFalse(cve2feed.related(product, source), f"{product} / {source}")
@@ -127,12 +127,18 @@ class Rules(unittest.TestCase):
 
     def test_a_package_that_only_shares_a_word_is_not_the_product(self):
         state = {"cves": {"CVE-2026-58014": cve("high", {"gnome:glib": [[None, "2.88.1", None]]},
-                                                {"glib2.0": {"resolute": ["released", "2.88.0-1ubuntu0.1"]}})}}
+                                                {"glib2.0": {"resolute": ["released", "2.88.0-1ubuntu0.1"], "jammy": ["released", "2.72.4-0ubuntu2.10"]}})}}
         rules, _, _ = cve2feed.generate(state)
-        item = lambda name, version: {"Name": name, "Version": version, "Source": "dpkg"}
+        item = lambda name, version, **more: {"Name": name, "Version": version, "Source": "dpkg", **more}
         self.assertEqual([], findings(rules, item("libaccounts-glib0", "1.27-3")))
         self.assertEqual([], findings(rules, item("glib-networking", "2.80.1-1build2")))
         self.assertEqual([], findings(rules, item("gir1.2-glib-2.0", "2.88.0-1ubuntu0.1")))
+        # gir1.2-glib-2.0 is built from glib2.0 on one release and from gobject-introspection (1.72.0) on another:
+        # an agent that sends the source package decides by it, one that does not is not guessed at.
+        self.assertEqual([], findings(rules, item("gir1.2-glib-2.0", "1.72.0-1", SourcePackage="gobject-introspection")))
+        self.assertEqual([], findings(rules, item("gir1.2-glib-2.0", "1.72.0-1")))
+        self.assertEqual(1, len(findings(rules, item("libglib2.0-0", "2.72.4-0ubuntu2.9", SourcePackage="glib2.0"))))
+        self.assertEqual([], findings(rules, item("libglib2.0-0", "2.72.4-0ubuntu2.10", SourcePackage="glib2.0")))
         self.assertEqual(1, len(findings(rules, item("libglib2.0-0t64", "2.88.0-1ubuntu0"))))
 
     def test_the_source_package_of_a_binary_package_says_what_its_name_cannot(self):
@@ -154,6 +160,16 @@ class Rules(unittest.TestCase):
         rules, _, _ = cve2feed.generate(state)
         self.assertEqual([], findings(rules, {"Name": "firefox", "Version": "149.0", "Source": "dpkg"}))
         self.assertEqual(1, len(findings(rules, {"Name": "Mozilla Firefox", "Version": "149.0", "Source": "x"})))
+
+    def test_the_upstream_project_and_ended_releases_do_not_decide_whether_ubuntu_is_affected(self):
+        state = {"cves": {"CVE-2025-1125": cve("high", {"gnu:grub2": [[None, "2.12", None]]},
+                                               {"grub2": {"jammy": ["not-affected", ""], "noble": ["not-affected", ""], "trusty": ["ignored", ""],
+                                                          "upstream": ["needs-triage", ""]}})}}
+        rules, _, skipped = cve2feed.generate(state)
+        self.assertEqual([], skipped)
+        item = lambda **more: {"Name": "grub2-common", "Version": "2.06-2ubuntu7.2", "Source": "dpkg", **more}
+        self.assertEqual([], findings(rules, item(SourcePackage="grub2")))
+        self.assertEqual([], findings(rules, item()))
 
     def test_a_bound_such_as_7_1_2_31_finds_debian_numbering(self):
         state = {"cves": {"CVE-2026-106580": cve("medium", {"imagemagick:imagemagick": [[None, "6.9.13-56", None], ["7.0.0-0", "7.1.2-31", None]]})}}
