@@ -83,7 +83,8 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
   (`tools`, `core`, `server`) is left out.
 - **Distribution packages**: a dpkg package is only the product when its name is (`php8.5-cli`, not `php-enum`,
   `libaccounts-glib0` or the metapackage `php-cli`); the binary packages of a source package come from its name
-  (`glib2.0` is `libglib2.0-0t64` and `gir1.2-glib-2.0`). Ubuntu fixes a vulnerability without changing the upstream
+  (`glib2.0` is `libglib2.0-0t64` and `gir1.2-glib-2.0`); agents 1.24.0+ also send the source package of a binary one
+  (`SourcePackage`: `libssl3t64` is `openssl`), which the rules use as well, an older agent is judged by the name. Ubuntu fixes a vulnerability without changing the upstream
   version, so a package at or after the version the tracker names as the fix (`dpkg_gte`, server with the `dpkg_*`
   operators; an older server skips these rules) is not reported, nor is one of a source package the CVE does not
   touch. A release the tracker has no fix for is judged by the NVD range. A changelog that names the CVE (agents

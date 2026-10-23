@@ -117,6 +117,19 @@ class Rules(unittest.TestCase):
         self.assertEqual([], findings(rules, item("gir1.2-glib-2.0", "2.88.0-1ubuntu0.1")))
         self.assertEqual(1, len(findings(rules, item("libglib2.0-0t64", "2.88.0-1ubuntu0"))))
 
+    def test_the_source_package_of_a_binary_package_says_what_its_name_cannot(self):
+        state = {"cves": {"CVE-2026-3": cve("high", {"gnu:gnutls": [[None, "3.8.13", None]]},
+                                            {"gnutls28": {"resolute": ["released", "3.8.12-2ubuntu1.1"], "noble": ["needed", ""]}})}}
+        rules, skipped, = cve2feed.generate(state)[::2]
+        self.assertEqual([], skipped)
+        item = lambda version, **more: {"Name": "libgnutls30t64", "Version": version, "Source": "dpkg", **more}
+        # Agents 1.24.0+ send the source package: libgnutls30t64 is gnutls28, below the fix it is a finding.
+        self.assertEqual(1, len(findings(rules, item("3.8.12-2ubuntu1.0", SourcePackage="gnutls28"))))
+        self.assertEqual([], findings(rules, item("3.8.12-2ubuntu1.1", SourcePackage="gnutls28")))
+        self.assertEqual([], findings(rules, item("3.8.12-2ubuntu1.2", SourcePackage="gnutls28")))
+        # A package of another source package is not gnutls, whatever its name.
+        self.assertEqual([], findings(rules, item("3.8.12-2ubuntu1.0", SourcePackage="something-else")))
+
     def test_a_source_the_cve_does_not_touch_is_not_reported(self):
         state = {"cves": {"CVE-2026-2": cve("high", {"mozilla:firefox": [[None, "150.0", None]]},
                                             {"firefox": {"noble": ["not-affected", ""], "resolute": ["not-affected", ""]}})}}

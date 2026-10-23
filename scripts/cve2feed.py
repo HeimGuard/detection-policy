@@ -305,15 +305,20 @@ def fix_prefix(version):
 
 def build_when(product, ranges, info, cids, fixes):
     ranged = [range_cond(r) for r in ranges]
+    sources = [source for source, _ in info["names"]]
     patterns = [name_pattern(product)] + [p for _, p in info["names"]]
     dpkg_names = alternatives([p for _, p in info["names"]]) if info["names"] else dpkg_name_pattern(product)
+    # The source package of a binary one (agents 1.24.0+, dpkg: libssl3t64 is openssl) says more than its name; an
+    # older agent sends none and the name patterns judge.
+    from_source = [{"field": "SourcePackage", "op": "in", "value": sources}] if sources else []
+    name = {"field": "Name", "op": "matches", "value": alternatives(patterns)}
     conds = [
-        {"field": "Name", "op": "matches", "value": alternatives(patterns)},
+        {"any": [name] + from_source} if from_source else name,
         ranged[0] if len(ranged) == 1 else {"any": ranged},
         # rpm packages are not read for backported fixes yet, so they stay out of the CVE rules.
         {"field": "Source", "op": "not_in", "value": ["rpm"]},
         # A dpkg package is the product itself, not a library named after it.
-        {"any": [{"field": "Source", "op": "ne", "value": "dpkg"}, {"field": "Name", "op": "matches", "value": dpkg_names}]},
+        {"any": [{"field": "Source", "op": "ne", "value": "dpkg"}, {"field": "Name", "op": "matches", "value": dpkg_names}] + from_source},
     ]
     # Debian / Ubuntu backport fixes without changing the upstream version: a changelog that names the CVE (the agent
     # sends the ids as ",CVE-1,CVE-2,") says the package is fixed.
@@ -324,14 +329,17 @@ def build_when(product, ranges, info, cids, fixes):
     # source package the CVE does not touch. A Debian revision (+deb12u1) is not comparable with an Ubuntu one.
     skip = [{"all": [
         {"field": "Source", "op": "eq", "value": "dpkg"},
-        {"field": "Name", "op": "matches", "value": pattern},
+        {"any": [{"field": "Name", "op": "matches", "value": pattern}, {"field": "SourcePackage", "op": "eq", "value": source}]},
         {"field": "Version", "op": "starts_with", "value": fix_prefix(version)},
         {"field": "Version", "op": "dpkg_gte", "value": version},
         {"field": "Version", "op": "not_matches", "value": r"[+~]deb\d"},
-    ]} for _, pattern, version, _ in fixes]
+    ]} for source, pattern, version, _ in fixes]
     if info["unaffected"]:
-        skip.append({"all": [{"field": "Source", "op": "eq", "value": "dpkg"},
-                             {"field": "Name", "op": "matches", "value": alternatives([p for _, p in info["unaffected"]])}]})
+        skip.append({"all": [
+            {"field": "Source", "op": "eq", "value": "dpkg"},
+            {"any": [{"field": "Name", "op": "matches", "value": alternatives([p for _, p in info["unaffected"]])},
+                     {"field": "SourcePackage", "op": "in", "value": [s for s, _ in info["unaffected"]]}]},
+        ]})
     if skip:
         conds.append({"not": skip[0] if len(skip) == 1 else {"any": skip}})
     return {"all": conds}
@@ -439,11 +447,14 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
     if len(cids) <= MAX_FIXED_CVES:
         negative.append({"Name": dpkg_name, "Version": v, "Source": "dpkg", "FixedCves": "," + ",".join(cids) + ","})
     for source, _, version, _ in fixes[:1]:
-        # Just before the fix is a finding, the fix itself and the later revisions are not.
+        # Just before the fix is a finding, the fix itself and the later revisions are not; the source package
+        # of a binary one with a name nobody could guess (SourcePackage, agents 1.24.0+) says the same.
         revision = fix_prefix(version) + "0"
         positive.append({"Name": source, "Version": revision, "Source": "dpkg"})
+        positive.append({"Name": "libweird-binary0", "Version": revision, "Source": "dpkg", "SourcePackage": source})
         negative.append({"Name": source, "Version": version, "Source": "dpkg"})
         negative.append({"Name": source, "Version": version + ".1", "Source": "dpkg"})
+        negative.append({"Name": "libweird-binary0", "Version": version, "Source": "dpkg", "SourcePackage": source})
     if info["unaffected"]:
         negative.append({"Name": info["unaffected"][0][0], "Version": v, "Source": "dpkg"})
     positive = [i for i in positive if hit(i)]
