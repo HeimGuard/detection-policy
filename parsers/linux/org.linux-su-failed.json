@@ -1,0 +1,18 @@
+{
+  "key": "org.linux-su-failed",
+  "name": "su: failed switch of user",
+  "description": "A failed `su` (wrong password): who tried (user) and to which account (source).",
+  "source": "linux.auth",
+  "when": {
+    "field": "Identifier",
+    "op": "eq",
+    "value": "su"
+  },
+  "pattern": "^FAILED SU \\(to (?<target>\\S+)\\) (?<user>\\S+) on ",
+  "event": {
+    "type": "su_failed",
+    "user": "{user}",
+    "source": "{target}",
+    "message": "su to {target} failed for {user}"
+  }
+}

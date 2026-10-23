@@ -1,0 +1,25 @@
+{
+  "key": "org.windows-6008-unexpected-shutdown",
+  "name": "Windows: unexpected shutdown",
+  "description": "6008 of EventLog: the previous shutdown was unexpected (power loss, crash, forced reset).",
+  "source": "windows.system",
+  "when": {
+    "all": [
+      {
+        "field": "Id",
+        "op": "eq",
+        "value": 6008
+      },
+      {
+        "field": "Provider",
+        "op": "eq",
+        "value": "EventLog"
+      }
+    ]
+  },
+  "event": {
+    "type": "unexpected_shutdown",
+    "source": "EventLog",
+    "message": "The previous shutdown was unexpected"
+  }
+}

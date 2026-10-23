@@ -1,0 +1,17 @@
+{
+  "key": "org.windows-4726-account-deleted",
+  "name": "Windows: account deleted",
+  "description": "4726: a user account was deleted by someone; the deleted account is the user, the deleter the source.",
+  "source": "windows.security",
+  "when": {
+    "field": "Id",
+    "op": "eq",
+    "value": 4726
+  },
+  "event": {
+    "type": "account_deleted",
+    "user": "{Data.TargetUserName}",
+    "source": "{Data.SubjectUserName}",
+    "message": "{Data.SubjectUserName} deleted the account {Data.TargetUserName}"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "key": "org.windows-4733-admin-removed",
+  "name": "Windows: removed from Administrators",
+  "description": "4733: a member was removed from the local Administrators group.",
+  "source": "windows.security",
+  "when": {
+    "all": [
+      {
+        "field": "Id",
+        "op": "eq",
+        "value": 4733
+      },
+      {
+        "field": "Data.TargetSid",
+        "op": "eq",
+        "value": "S-1-5-32-544"
+      }
+    ]
+  },
+  "event": {
+    "type": "admin_removed",
+    "user": "{Data.MemberName|Data.MemberSid}",
+    "source": "{Data.SubjectUserName}",
+    "message": "{Data.SubjectUserName} removed {Data.MemberName|Data.MemberSid} from Administrators"
+  }
+}
