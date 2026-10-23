@@ -137,6 +137,34 @@ def name_pattern(product):
     return r"(^|[^a-z0-9])" + "[ _-]".join(parts) + r"($|[^a-z])"
 
 
+# What a Debian / Ubuntu binary package of a product is called (php8.5-cli, google-chrome-stable,
+# python3-ray), as opposed to a library that only mentions it (php-enum, node-chrome-trace-event).
+DPKG_SUFFIXES = "cli|common|bin|core|server|client|fpm|cgi|dev|stable|beta|unstable|esr|browser|utils|tools|data|doc"
+
+
+def dpkg_name_pattern(product):
+    """The name pattern of the product as a dpkg package: one optional word before it (google-, python3-),
+    an optional version (php8.5) and only the known suffixes after it."""
+    parts = [re.escape(x) for x in re.split(r"[\s_-]+", product) if x]
+    return r"^([a-z0-9]+-)?" + "[ _-]".join(parts) + r"[0-9.]*(-(" + DPKG_SUFFIXES + r"))*$"
+
+
+def distro_conds(cid, product):
+    """Conditions that keep a distribution package out of a rule it is not a finding of."""
+    return [
+        # rpm packages are not read for backported fixes yet, so they stay out of the CVE rules.
+        {"field": "Source", "op": "not_in", "value": ["rpm"]},
+        # A dpkg package is the product itself, not a library named after it.
+        {"any": [
+            {"field": "Source", "op": "ne", "value": "dpkg"},
+            {"field": "Name", "op": "matches", "value": dpkg_name_pattern(product)},
+        ]},
+        # Debian / Ubuntu backport fixes without changing the upstream version: a changelog that names
+        # the CVE (the agent sends the ids as ",CVE-1,CVE-2,") says the package is fixed.
+        {"not": {"field": "FixedCves", "op": "contains", "value": f",{cid},"}},
+    ]
+
+
 def range_cond(rng):
     start, end_excl, end_incl = rng
     conds = []
@@ -155,6 +183,7 @@ def build_rule(cve, vendor, product, ranges, kev=True):
     when = {"all": [
         {"field": "Name", "op": "matches", "value": name_pattern(name)},
         ranged[0] if len(ranged) == 1 else {"any": ranged},
+        *distro_conds(cid, name),
     ]}
     key = re.sub(r"[^a-z0-9.-]+", "-", f"org.cve-{cid[4:]}-{product}".lower()).strip("-")[:64].rstrip("-.")
     rule = {
@@ -191,11 +220,17 @@ def make_fixture(rule, name, ranges):
         return None
     return {
         "key": rule["key"],
-        "positive": [{"Name": name, "Version": positive, "Source": "x"}],
+        "positive": [
+            {"Name": name, "Version": positive, "Source": "x"},
+            {"Name": name, "Version": positive, "Source": "dpkg", "FixedCves": ",CVE-2000-0001,"},
+        ],
         "negative": [
             {"Name": name, "Version": negative, "Source": "x"},
             {"Name": "Unrelated tool", "Version": positive, "Source": "x"},
             {"Name": f"lib{name.replace(' ', '')}x", "Version": positive, "Source": "x"},
+            {"Name": name, "Version": positive, "Source": "dpkg", "FixedCves": f",{rule['name'].split()[-1]},"},
+            {"Name": f"{name.replace(' ', '-')}-enum", "Version": positive, "Source": "dpkg"},
+            {"Name": name, "Version": positive, "Source": "rpm"},
         ],
     }
 
