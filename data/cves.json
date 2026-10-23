@@ -11899,9 +11899,9 @@
   "CVE-2026-113344": {
    "desc": "Use after free in Performance in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
    "kev": false,
-   "modified": "",
+   "modified": "2026-10-21T17:01:55.370",
    "products": {
-    "x:chrome": [
+    "google:chrome": [
      [
       null,
       "156.0.8087.47",
@@ -11913,11 +11913,7 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/561926123"
    ],
-   "severity": "high",
-   "ubuntu": {
-    "checked": "2026-10-23",
-    "sources": {}
-   }
+   "severity": "high"
   },
   "CVE-2026-12290": {
    "desc": "Memory safety bug fixed in Thunderbird 152. This vulnerability was fixed in Firefox 152, Firefox ESR 140.12, Firefox ESR 115.37, Thunderbird 152, and Thunderbird 140.12.",
