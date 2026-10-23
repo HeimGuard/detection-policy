@@ -1,0 +1,38 @@
+{
+  "key": "org.msrc-windows-10-0-26100-9445",
+  "name": "Windows 11 Version 24H2, Windows Server 2025 (build 10.0.26100): the update 10.0.26100.9445 is missing (33 CVEs)",
+  "description": "Microsoft's security update 10.0.26100.9445 of Windows 11 Version 24H2, Windows Server 2025 (build 10.0.26100) fixes 33 CVEs (2026-Oct, 2026-Sep). CVEs: CVE-2026-69710, CVE-2026-69725, CVE-2026-69740, CVE-2026-69784, CVE-2026-69799, CVE-2026-69820, CVE-2026-69864, CVE-2026-81354, CVE-2026-68837, CVE-2026-68842, CVE-2026-69333, CVE-2026-69339, CVE-2026-69425, CVE-2026-69440, CVE-2026-69467, CVE-2026-69508, CVE-2026-69720, CVE-2026-69735, CVE-2026-69771, CVE-2026-69777, CVE-2026-69862, CVE-2026-70578, CVE-2026-70579, CVE-2026-71340, CVE-2026-72947, CVE-2026-77500, CVE-2026-77899, CVE-2026-78454, CVE-2026-78455, CVE-2026-78464, CVE-2026-83504, CVE-2026-83518, CVE-2026-85877",
+  "severity": "critical",
+  "platform": "windows",
+  "source": "os",
+  "when": {
+    "all": [
+      {
+        "field": "Id",
+        "op": "eq",
+        "value": "windows"
+      },
+      {
+        "field": "Version",
+        "op": "starts_with",
+        "value": "10.0.26100."
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "10.0.26100.9445"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 10.0.26100.9445, the update that fixes 33 CVEs: CVE-2026-69710, CVE-2026-69725, CVE-2026-69740, CVE-2026-69784, CVE-2026-69799, CVE-2026-69820, CVE-2026-69864, CVE-2026-81354, CVE-2026-68837, CVE-2026-68842, CVE-2026-69333, CVE-2026-69339, CVE-2026-69425, CVE-2026-69440, CVE-2026-69467, CVE-2026-69508, CVE-2026-69720, CVE-2026-69735, CVE-2026-69771, CVE-2026-69777, CVE-2026-69862, CVE-2026-70578, CVE-2026-70579, CVE-2026-71340, CVE-2026-72947, CVE-2026-77500, CVE-2026-77899, CVE-2026-78454, CVE-2026-78455, CVE-2026-78464, CVE-2026-83504, CVE-2026-83518, CVE-2026-85877",
+  "remediation": "Install the latest cumulative update (Windows Update).",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-69710",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-69725",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-69740",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-69784",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-69799",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-69820",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}

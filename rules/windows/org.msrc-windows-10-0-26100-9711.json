@@ -1,0 +1,38 @@
+{
+  "key": "org.msrc-windows-10-0-26100-9711",
+  "name": "Windows 11 Version 24H2, Windows Server 2025 (build 10.0.26100): the update 10.0.26100.9711 is missing (51 CVEs)",
+  "description": "Microsoft's security update 10.0.26100.9711 of Windows 11 Version 24H2, Windows Server 2025 (build 10.0.26100) fixes 51 CVEs (2026-Oct). CVEs: CVE-2026-88074, CVE-2026-102193, CVE-2026-102195, CVE-2026-102196, CVE-2026-102197, CVE-2026-102201, CVE-2026-103554, CVE-2026-103565, CVE-2026-103567, CVE-2026-105722, CVE-2026-108134, CVE-2026-108135, CVE-2026-108461, CVE-2026-108463, CVE-2026-61931, CVE-2026-62687, CVE-2026-70122, CVE-2026-70148, CVE-2026-70184, CVE-2026-70212, CVE-2026-70218, CVE-2026-70280, CVE-2026-71347, CVE-2026-83751, CVE-2026-83773, CVE-2026-83790, CVE-2026-83791, CVE-2026-83828, CVE-2026-83849, CVE-2026-83853, CVE-2026-83870, CVE-2026-83907, CVE-2026-85357, CVE-2026-85793, CVE-2026-85884, CVE-2026-85938, CVE-2026-88079, CVE-2026-88103, CVE-2026-88105, CVE-2026-88113, CVE-2026-96183, CVE-2026-96215, CVE-2026-96220, CVE-2026-96306, CVE-2026-96919, CVE-2026-97799, CVE-2026-97800, CVE-2026-97806, CVE-2026-97807, CVE-2026-97808, CVE-2026-97809",
+  "severity": "critical",
+  "platform": "windows",
+  "source": "os",
+  "when": {
+    "all": [
+      {
+        "field": "Id",
+        "op": "eq",
+        "value": "windows"
+      },
+      {
+        "field": "Version",
+        "op": "starts_with",
+        "value": "10.0.26100."
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "10.0.26100.9711"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 10.0.26100.9711, the update that fixes 51 CVEs: CVE-2026-88074, CVE-2026-102193, CVE-2026-102195, CVE-2026-102196, CVE-2026-102197, CVE-2026-102201, CVE-2026-103554, CVE-2026-103565, CVE-2026-103567, CVE-2026-105722, CVE-2026-108134, CVE-2026-108135, CVE-2026-108461, CVE-2026-108463, CVE-2026-61931, CVE-2026-62687, CVE-2026-70122, CVE-2026-70148, CVE-2026-70184, CVE-2026-70212, CVE-2026-70218, CVE-2026-70280, CVE-2026-71347, CVE-2026-83751, CVE-2026-83773, CVE-2026-83790, CVE-2026-83791, CVE-2026-83828, CVE-2026-83849, CVE-2026-83853, CVE-2026-83870, CVE-2026-83907, CVE-2026-85357, CVE-2026-85793, CVE-2026-85884, CVE-2026-85938, CVE-2026-88079, CVE-2026-88103, CVE-2026-88105, CVE-2026-88113, CVE-2026-96183, CVE-2026-96215, CVE-2026-96220, CVE-2026-96306, CVE-2026-96919, CVE-2026-97799, CVE-2026-97800, CVE-2026-97806, CVE-2026-97807, CVE-2026-97808, CVE-2026-97809",
+  "remediation": "Install the latest cumulative update (Windows Update).",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-88074",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102193",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102195",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102196",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102197",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102201",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}

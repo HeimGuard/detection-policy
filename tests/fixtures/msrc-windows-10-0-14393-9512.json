@@ -1,0 +1,37 @@
+{
+  "key": "org.msrc-windows-10-0-14393-9512",
+  "positive": [
+    {
+      "Id": "windows",
+      "Name": "Microsoft Windows",
+      "Version": "10.0.14393.0"
+    },
+    {
+      "Id": "windows",
+      "Name": "Microsoft Windows",
+      "Version": "10.0.14393.9511"
+    }
+  ],
+  "negative": [
+    {
+      "Id": "windows",
+      "Name": "Microsoft Windows",
+      "Version": "10.0.14393.9512"
+    },
+    {
+      "Id": "windows",
+      "Name": "Microsoft Windows",
+      "Version": "10.0.14393.9512.1"
+    },
+    {
+      "Id": "windows",
+      "Name": "Microsoft Windows",
+      "Version": "10.0.1.0"
+    },
+    {
+      "Id": "ubuntu",
+      "Name": "Microsoft Windows",
+      "Version": "10.0.14393.0"
+    }
+  ]
+}

@@ -28,6 +28,7 @@ SOURCES = {
                 "DiskEncrypted", "SecureBoot", "RdpEnabled", "RdpNla", "Smb1Enabled", "UacEnabled", "GuestEnabled",
                 "AutoLogon", "SshRootLogin", "SshPasswordAuthentication", "AutomaticUpdates", "DaysSinceUpdate"],
     "events": ["Type", "Count", "User", "Source", "Message", "Last"],
+    "os": ["Name", "Version", "Id", "Kernel"],
     "portscan": ["Ip", "Network", "Port", "Service", "Banner", "Server", "Title",
                  "Tls", "Http", "Hsts", "Csp", "XFrameOptions", "CertSelfSigned", "CertExpired", "TlsFailed"],
 }

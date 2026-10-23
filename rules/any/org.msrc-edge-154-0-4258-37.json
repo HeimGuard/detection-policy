@@ -1,0 +1,58 @@
+{
+  "key": "org.msrc-edge-154-0-4258-37",
+  "name": "Microsoft Edge: the update 154.0.4258.37 is missing (4 CVEs)",
+  "description": "Microsoft's security update 154.0.4258.37 of Microsoft Edge fixes 4 CVEs (2026-Oct). CVEs: CVE-2026-85890, CVE-2026-85897, CVE-2026-96198, CVE-2026-96199",
+  "severity": "high",
+  "platform": "any",
+  "source": "software",
+  "when": {
+    "all": [
+      {
+        "any": [
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "ne",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft edge$"
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "eq",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft-edge(-stable|-beta|-dev)?$"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "154.0.4258.37"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 154.0.4258.37, the update that fixes 4 CVEs: CVE-2026-85890, CVE-2026-85897, CVE-2026-96198, CVE-2026-96199",
+  "remediation": "Update Microsoft Edge.",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-85890",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-85897",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96198",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96199",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}

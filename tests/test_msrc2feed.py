@@ -16,6 +16,7 @@ PRODUCTS = [
     {"ProductID": "6", "CPE": "cpe:2.3:a:microsoft:windows_admin_center:*:*:*:*:*:*:*:*", "Value": "Windows Admin Center"},
     {"ProductID": "7", "CPE": "cpe:2.3:a:microsoft:365_apps:*:*:*:*:*:*:*:*", "Value": "Microsoft 365 Apps"},
     {"ProductID": "8", "CPE": "cpe:2.3:o:microsoft:windows_server_2022:*:*:*:*:*:*:*:*", "Value": "Windows Server 2022 (Server Core installation)"},
+    {"ProductID": "9", "CPE": "cpe:2.3:o:microsoft:windows_server_2012_R2:*:*:*:*:*:*:*:*", "Value": "Windows Server 2012 R2"},
 ]
 
 
@@ -27,79 +28,94 @@ def vulnerability(cve, severity, fixes, exploited=False):
             "Remediations": [{"Type": 2, "FixedBuild": build, "ProductID": [pid]} for pid, build in fixes]}
 
 
-DOC = {"ProductTree": {"FullProductName": PRODUCTS}, "Vulnerability": [
+def document(*vulnerabilities):
+    return {"ProductTree": {"FullProductName": PRODUCTS}, "Vulnerability": list(vulnerabilities)}
+
+
+DOC = document(
     vulnerability("CVE-2026-1", "Important", [("1", "10.0.19045.7807"), ("2", "10.0.19045.7807"), ("8", "10.0.20348.5761")]),
     vulnerability("CVE-2026-2", "Critical", [("1", "10.0.19045.7548"), ("3", "10.0.26300.9711")], exploited=True),
     vulnerability("CVE-2026-3", "Moderate", [("4", "155.0.4283.45")]),
     vulnerability("CVE-2026-4", "Low", [("4", "156.0.4314.42"), ("5", "1.141.1")]),
     vulnerability("CVE-2026-5", "Important", [("6", "2.4.2.1234"), ("7", "https://aka.ms/OfficeSecurityReleases")]),
-]}
+    vulnerability("CVE-2026-6", "Important", [("4", "7.1.0"), ("9", "6.3.9600.23470")]),
+)
 
 
 def state(*docs):
-    return {"docs": {f"doc{i}": {"released": "x", "families": msrc2feed.extract(doc)} for i, doc in enumerate(docs)}}
+    return {"docs": {f"doc{i}": {"released": "x", "initial": f"2026-0{i + 1}", **msrc2feed.extract(doc)} for i, doc in enumerate(docs)}}
 
 
-def findings(rules, item):
-    return sorted(r["name"].split(" older")[0] for r in rules.values() if feed.test(r["when"], item))
+def rules_of(*docs):
+    rules, _, skipped = msrc2feed.generate(state(*docs))
+    assert skipped == [], skipped
+    return rules
+
+
+def findings(rules, item, source):
+    return sorted(r["key"] for r in rules.values() if r["source"] == source and feed.test(r["when"], item))
+
+
+def os_item(version, id="windows"):
+    return {"Id": id, "Name": "Microsoft Windows", "Version": version}
 
 
 class Extract(unittest.TestCase):
-    def test_only_the_families_that_can_be_told_are_taken(self):
-        families = msrc2feed.extract(DOC)
-        self.assertEqual({"windows:10.0.19045", "windows:10.0.20348", "windows:10.0.26300", "edge", "vscode"}, set(families))
-        win = families["windows:10.0.19045"]
-        self.assertEqual(("10.0.19045.7807", 2), (win["fixed"], win["n"]))
-        self.assertEqual(["Windows 10 Version 22H2"], win["names"])  # for x64 / 32-bit is not part of the name
-        self.assertEqual(["CVE-2026-2", "CVE-2026-1"], [c[0] for c in win["top"]])  # exploited first
-        self.assertEqual([["CVE-2026-2", "critical", True, "10.0.19045.7548"]], [c for c in win["top"] if c[0] == "CVE-2026-2"])
-        # Admin Center (not an operating system), Office (a link, no build) and the like are not.
-        self.assertFalse([f for f in families if "admin" in f or "365" in f])
+    def test_only_what_can_be_told_is_taken(self):
+        doc = msrc2feed.extract(DOC)
+        self.assertEqual({"windows:10.0.19045", "windows:10.0.20348", "windows:10.0.26300", "edge", "vscode"}, set(doc["families"]))
+        self.assertEqual({"10.0.19045.7548": "2026-2:cx", "10.0.19045.7807": "2026-1:h"}, doc["families"]["windows:10.0.19045"])
+        self.assertEqual(["Windows 10 Version 22H2"], doc["names"]["windows:10.0.19045"])  # for x64 / 32-bit is not part of the name
+        # Admin Center (not an operating system), Office (a link, no build), Edge for iOS (7.1.0), Server 2012 R2 (6.3) are not.
+        self.assertFalse([f for f in doc["families"] if "admin" in f or "365" in f or "6.3" in f])
+        self.assertEqual({"155.0.4283.45": "2026-3:m", "156.0.4314.42": "2026-4:l"}, doc["families"]["edge"])
 
 
 class Rules(unittest.TestCase):
-    def test_windows_by_its_build(self):
-        rules, fixtures, skipped = msrc2feed.generate(state(DOC))
-        self.assertEqual([], skipped)
-        os_item = lambda version, source="windows", name="Microsoft Windows 10 Pro": {"Name": name, "Version": version, "Source": source}
-        self.assertEqual(["Windows 10 Version 22H2 (build 10.0.19045)"], findings(rules, os_item("10.0.19045.5555")))
-        self.assertEqual([], findings(rules, os_item("10.0.19045.7807")))
-        self.assertEqual([], findings(rules, os_item("10.0.19045.9000")))
-        # Another build, and a program that is no operating system, are not it.
-        self.assertEqual(["Windows Server 2022 (build 10.0.20348)"], findings(rules, os_item("10.0.20348.1", name="Microsoft Windows Server 2022 Standard")))
-        self.assertEqual([], findings(rules, os_item("10.0.19045.5555", "registry")))
-        self.assertEqual([], findings(rules, os_item("10.0.22000.1")))
-        rule = rules["org.msrc-windows-10-0-19045"]
-        self.assertIn("CVE-2026-2 (exploited, fixed in 10.0.19045.7548)", rule["message"])
-        self.assertEqual("critical", rule["severity"])
-        self.assertEqual("windows", rule["platform"])
-        for fixture in fixtures.values():
-            self.assertTrue(fixture["positive"] and fixture["negative"])
+    def test_a_rule_is_a_missing_update_and_a_host_sees_the_updates_it_lacks(self):
+        rules = rules_of(DOC)
+        both = {"org.msrc-windows-10-0-19045-7548", "org.msrc-windows-10-0-19045-7807"}
+        # Two updates are missing: two findings, each with the CVEs it fixes.
+        self.assertEqual(sorted(both), findings(rules, os_item("10.0.19045.5555"), "os"))
+        # Only the newest is missing: one finding, and the CVE the older update fixed is not in it.
+        self.assertEqual(["org.msrc-windows-10-0-19045-7807"], findings(rules, os_item("10.0.19045.7548"), "os"))
+        self.assertEqual([], findings(rules, os_item("10.0.19045.7807"), "os"))
+        self.assertEqual([], findings(rules, os_item("10.0.19045.9000"), "os"))
+        old, new = rules["org.msrc-windows-10-0-19045-7548"], rules["org.msrc-windows-10-0-19045-7807"]
+        self.assertEqual(("critical", "high"), (old["severity"], new["severity"]))  # by what the update fixes
+        self.assertIn("CVE-2026-2 (exploited)", old["message"])
+        self.assertNotIn("CVE-2026-2", new["message"])
+        self.assertEqual("os", old["source"])
+        self.assertEqual("windows", old["platform"])
+        # Another build and a system of another family are not it.
+        self.assertEqual(["org.msrc-windows-10-0-20348-5761"], findings(rules, os_item("10.0.20348.1"), "os"))
+        self.assertEqual([], findings(rules, os_item("10.0.22000.1"), "os"))
+        self.assertEqual([], findings(rules, os_item("10.0.19045.5555", "ubuntu"), "os"))
+        self.assertEqual([], findings(rules, {"Name": "Microsoft Windows", "Version": "10.0.19045.5555", "Source": "windows"}, "software"))
 
     def test_edge_and_visual_studio_code(self):
-        rules, _, _ = msrc2feed.generate(state(DOC))
-        item = lambda name, version, source="registry", **more: {"Name": name, "Version": version, "Source": source, **more}
-        self.assertEqual(["Microsoft Edge"], findings(rules, item("Microsoft Edge", "154.0.4258.37")))
-        self.assertEqual([], findings(rules, item("Microsoft Edge", "156.0.4314.42")))
-        self.assertEqual(["Microsoft Edge"], findings(rules, item("microsoft-edge-stable", "154.0.4258.37-1", "dpkg")))
-        self.assertEqual([], findings(rules, item("Microsoft Edge WebView2 Runtime", "154.0.4258.37")))
-        self.assertEqual(["Visual Studio Code"], findings(rules, item("Microsoft Visual Studio Code (User)", "1.140.0", "registry (user)")))
-        self.assertEqual(["Visual Studio Code"], findings(rules, item("code", "1.140.0-1792691907", "dpkg")))
-        self.assertEqual([], findings(rules, item("code", "1.140.0", "registry")))
-        self.assertEqual([], findings(rules, item("Microsoft Visual Studio Code", "1.141.1")))
+        rules = rules_of(DOC)
+        item = lambda name, version, source="registry": {"Name": name, "Version": version, "Source": source}
+        self.assertEqual(["org.msrc-edge-155-0-4283-45", "org.msrc-edge-156-0-4314-42"], findings(rules, item("Microsoft Edge", "154.0.4258.37"), "software"))
+        self.assertEqual(["org.msrc-edge-156-0-4314-42"], findings(rules, item("Microsoft Edge", "155.0.4283.45"), "software"))
+        self.assertEqual([], findings(rules, item("Microsoft Edge", "156.0.4314.42"), "software"))
+        self.assertEqual(["org.msrc-edge-156-0-4314-42"], findings(rules, item("microsoft-edge-stable", "155.0.4283.60-1", "dpkg"), "software"))
+        self.assertEqual([], findings(rules, item("Microsoft Edge WebView2 Runtime", "154.0.4258.37"), "software"))
+        self.assertEqual(["org.msrc-vscode-1-141-1"], findings(rules, item("Microsoft Visual Studio Code (User)", "1.140.0", "registry (user)"), "software"))
+        self.assertEqual(["org.msrc-vscode-1-141-1"], findings(rules, item("code", "1.140.0-1792691907", "dpkg"), "software"))
+        self.assertEqual([], findings(rules, item("code", "1.140.0", "registry"), "software"))
+        self.assertEqual([], findings(rules, item("Microsoft Visual Studio Code", "1.141.1"), "software"))
 
-    def test_the_updates_of_the_window_are_merged_and_a_build_is_older_than_the_newest_fix(self):
-        newer = {"ProductTree": {"FullProductName": PRODUCTS}, "Vulnerability": [vulnerability("CVE-2026-9", "Critical", [("1", "10.0.19045.8000")])]}
-        rules, _, _ = msrc2feed.generate(state(DOC, newer))
-        rule = rules["org.msrc-windows-10-0-19045"]
-        self.assertIn("older than 10.0.19045.8000", rule["name"])
-        self.assertIn("3 CVEs", rule["name"])
-        self.assertEqual(1, len(findings(rules, {"Name": "Windows", "Version": "10.0.19045.7807", "Source": "windows"})))
-        self.assertEqual("critical", rule["severity"])
+    def test_a_cve_two_updates_list_is_counted_once_by_the_newer_update(self):
+        again = document(vulnerability("CVE-2026-1", "Critical", [("1", "10.0.19045.8000")]), vulnerability("CVE-2026-9", "Low", [("1", "10.0.19045.8000")]))
+        rules = rules_of(DOC, again)  # the second document is the newer one
+        self.assertIn("(1 CVEs)", rules["org.msrc-windows-10-0-19045-7548"]["name"])
+        self.assertIn("(2 CVEs)", rules["org.msrc-windows-10-0-19045-8000"]["name"])
+        self.assertNotIn("org.msrc-windows-10-0-19045-7807", rules)  # its only CVE moved to the newer update
+        self.assertEqual(["org.msrc-windows-10-0-19045-7548", "org.msrc-windows-10-0-19045-8000"], findings(rules, os_item("10.0.19045.5555"), "os"))
 
     def test_the_rules_are_valid_for_the_server(self):
-        rules, _, _ = msrc2feed.generate(state(DOC))
-        for rule in rules.values():
+        for rule in rules_of(DOC).values():
             self.assertEqual([], feed.rule_errors(rule, False), rule["key"])
             self.assertLessEqual(len(rule["name"]), 120)
 

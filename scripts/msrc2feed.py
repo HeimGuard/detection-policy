@@ -1,24 +1,25 @@
 #!/usr/bin/env python3
-"""Turn the security updates of Microsoft (MSRC CVRF API) into `software` rules of the feed.
+"""Turn the security updates of Microsoft (MSRC CVRF API) into rules of the feed.
 
   python scripts/msrc2feed.py [--months 2]    # the latest monthly updates of the MSRC, update the state, regenerate
   python scripts/msrc2feed.py --offline       # regenerate rules / fixtures from data/msrc.json only
 
 The CVRF API (https://api.msrc.microsoft.com/cvrf/v3.0, `/updates` and `/cvrf/{id}`) says for every CVE of a monthly
-update, per product, the build that fixes it (`FixedBuild`). What the inventory can tell is turned into rules, one per
-family, the way cve2feed.py does it for the NVD (one finding per package, the message tells the build that fixed each CVE):
+update, per product, the build that fixes it (`FixedBuild`). A rule is **a missing update**: the CVEs a build fixes
+(10.0.19045.7807) are one rule, "older than that build" is its condition, so a host sees exactly the updates it lacks and the
+CVEs each of them fixes (a host that lacks three cumulative updates has three findings; one that has the newest has none):
 
-- **Windows**: one rule per build of the operating system (10.0.19045, 10.0.22631, ...): the agent (1.27.0+) lists the
-  operating system as software with Source "windows" and its build as the version (10.0.19045.5555). A build older
-  than the newest fix of the CVEs of the updates is a finding. Server and client Windows with the same build have the same fixes.
-- **Microsoft Edge** (Windows: "Microsoft Edge", Linux: microsoft-edge-*) and **Visual Studio Code**.
+- **Windows 10 / 11 / Server 2016 and later** (the builds 10.0.x), one family per build of the operating system (10.0.19045 ...):
+  the agent (1.27.0+) lists the operating system as the `os` source, its build with the revision is the version
+  (10.0.19045.5555). Client and server with the same build share the fixes.
+- **Microsoft Edge** (Windows: "Microsoft Edge", Linux: microsoft-edge-*) and **Visual Studio Code**, software.
 
-.NET, Office, SQL Server, Exchange and the like are not here: their names and versions in Programs and Features (and the
-bands of the .NET SDK, whose fixed builds are not comparable with the runtime's) were not checked on a device.
+Not here: Windows 7 to 8.1 and Server 2012 (security-only and monthly rollups have builds of their own, ESU), Hotpatch builds,
+.NET, Office, SQL Server and Exchange (their names and versions in Programs and Features, and the bands of the .NET SDK,
+whose fixed builds are not comparable with the runtime's, were not checked on a device).
 
-data/msrc.json keeps, per monthly update, what the rules need (the newest fixed build, the number of CVEs and the most
-severe ones per family), not the 30 MB documents; the rules and fixtures under rules/*/org.msrc-*.json and
-tests/fixtures/msrc-*.json are a pure function of it (CI checks `--offline`).
+data/msrc.json keeps, per monthly update, the CVEs each family fixes by build (not the 30 MB documents); the rules and
+fixtures under rules/*/org.msrc-*.json and tests/fixtures/msrc-*.json are a pure function of it (CI checks `--offline`).
 """
 import argparse
 import json
@@ -36,7 +37,6 @@ API = "https://api.msrc.microsoft.com/cvrf/v3.0"
 STATE = ROOT / "data" / "msrc.json"
 SEVERITY = {"critical": "critical", "important": "high", "moderate": "medium", "low": "low"}
 RANK = {"critical": 4, "high": 3, "medium": 2, "low": 1}
-TOP = 40  # the most severe CVEs of a family and month the state keeps (the rest only counts)
 BUILD = re.compile(r"^\d+(\.\d+){2,3}$")
 HEADERS = {"Accept": "application/json", "User-Agent": "detection-policy-msrc2feed"}
 
@@ -53,11 +53,12 @@ def family_of(cpe, fixed):
     part, product = parts[2], parts[4]
     # The operating system by the build that fixes it (10.0.19045.7807). Some releases are listed with the part "a"
     # (Windows 11 version 26H2), and "a" has Windows Admin Center, Defender and the like: the product has to be an OS.
-    if part in ("o", "a") and re.match(r"windows_(10|11|server|8|7|vista|xp|rt)", product) and re.match(r"^(10\.0|6\.[0-3])\.\d+\.\d+$", fixed):
+    if part in ("o", "a") and re.match(r"windows_(10|11|server)", product) and re.match(r"^10\.0\.\d+\.\d+$", fixed):
         return "windows:" + ".".join(fixed.split(".")[:3])
-    if part == "a" and product == "microsoft_edge_chromium-based":
+    # The Chromium version of Edge (154.0.4258.37, not the 7.1.0 of Edge for iOS the same CPE product also has) and the one of Code.
+    if part == "a" and product == "microsoft_edge_chromium-based" and re.match(r"^\d{3}\.0\.\d+\.\d+$", fixed):
         return "edge"
-    if part == "a" and product == "visual_studio_code":
+    if part == "a" and product == "visual_studio_code" and re.match(r"^1\.\d+\.\d+$", fixed):
         return "vscode"
     return None
 
@@ -79,11 +80,12 @@ def newer(a, b):
 
 
 def extract(doc):
-    """{family: {"fixed", "n", "top": [[cve, severity, exploited, fixed]], "names"}} of one CVRF document."""
+    """{"families": {family: {fixed build: "2026-1:h,2026-2:cx"}}, "names": {family: [...]}} of one CVRF document: the CVEs
+    (without "CVE-") each family fixes by build, with the severity (c, h, m, l) and x when exploited."""
     products = {p["ProductID"]: p for p in doc["ProductTree"]["FullProductName"]}
-    families = {}
+    found, names = {}, {}
     for v in doc["Vulnerability"]:
-        cve = v["CVE"]
+        cve = v["CVE"].removeprefix("CVE-")
         severity, exploited = {}, {}
         for t in v.get("Threats", []):
             for pid in t.get("ProductID") or []:
@@ -92,7 +94,7 @@ def extract(doc):
                     severity[pid] = SEVERITY.get(text.lower())
                 elif t["Type"] == 1:
                     exploited[pid] = "Exploited:Yes" in text
-        found = {}
+        per_family = {}
         for r in v.get("Remediations", []):
             fixed = r.get("FixedBuild") or ""
             if r.get("Type") != 2 or not BUILD.match(fixed):
@@ -102,47 +104,42 @@ def extract(doc):
                 family = family_of(product["CPE"], fixed) if product and product.get("CPE") else None
                 if not family:
                     continue
-                entry = found.setdefault(family, {"fixed": fixed, "severity": None, "exploited": False, "names": set()})
+                entry = per_family.setdefault(family, {"fixed": fixed, "severity": None, "exploited": False})
                 if newer(fixed, entry["fixed"]):
                     entry["fixed"] = fixed
                 if severity.get(pid) and (entry["severity"] is None or RANK[severity[pid]] > RANK[entry["severity"]]):
                     entry["severity"] = severity[pid]
                 entry["exploited"] = entry["exploited"] or exploited.get(pid, False)
                 if family.startswith("windows:"):
-                    entry["names"].add(re.sub(r"( for (x64-based|ARM64-based|32-bit|x86-based|Itanium-based) Systems| \(Server Core installation\))", "", product["Value"]).strip())
-        for family, entry in found.items():
-            agg = families.setdefault(family, {"fixed": entry["fixed"], "n": 0, "all": [], "names": set()})
-            agg["n"] += 1
-            agg["all"].append([cve, entry["severity"] or "high", entry["exploited"], entry["fixed"]])
-            agg["names"] |= entry["names"]
-            if newer(entry["fixed"], agg["fixed"]):
-                agg["fixed"] = entry["fixed"]
-    for agg in families.values():
-        agg["top"] = sorted(agg.pop("all"), key=lambda c: (not c[2], -RANK[c[1]], c[0]))[:TOP]
-        agg["names"] = sorted({n.lower(): n for n in sorted(agg["names"], reverse=True)}.values())[:3]  # one spelling per name
-    return families
+                    names.setdefault(family, set()).add(re.sub(r"( for (x64-based|ARM64-based|32-bit|x86-based|Itanium-based) Systems| \(Server Core installation\))", "", product["Value"]).strip())
+        for family, entry in per_family.items():
+            letter = {"critical": "c", "high": "h", "medium": "m", "low": "l"}[entry["severity"] or "high"]
+            found.setdefault(family, {}).setdefault(entry["fixed"], {})[cve] = letter + ("x" if entry["exploited"] else "")
+    return {"families": {family: {fixed: ",".join(f"{cve}:{code}" for cve, code in sorted(cves.items())) for fixed, cves in sorted(builds.items())}
+                         for family, builds in sorted(found.items())},
+            "names": {family: sorted({n.lower(): n for n in sorted(values, reverse=True)}.values())[:3] for family, values in sorted(names.items())}}
 
 
 def latest_updates(months):
-    """[(id, CurrentReleaseDate)] of the latest `months` monthly updates, newest first."""
+    """[(id, CurrentReleaseDate, InitialReleaseDate)] of the latest `months` monthly updates, newest first."""
     page = cve2feed.request(f"{API}/updates", HEADERS)
     updates = sorted(page.get("value", []), key=lambda u: u.get("InitialReleaseDate") or "", reverse=True)
-    return [(u["ID"], u["CurrentReleaseDate"]) for u in updates[:months]]
+    return [(u["ID"], u["CurrentReleaseDate"], u.get("InitialReleaseDate") or "") for u in updates[:months]]
 
 
 def refresh(state, months):
     """Downloads the updates that are new or revised and forgets the ones that are out of the window; True when changed."""
-    wanted = dict(latest_updates(months))
+    wanted = {update_id: (released, initial) for update_id, released, initial in latest_updates(months)}
     changed = False
     for update_id in list(state["docs"]):
         if update_id not in wanted:
             del state["docs"][update_id]
             changed = True
-    for update_id, released in wanted.items():
+    for update_id, (released, initial) in wanted.items():
         if state["docs"].get(update_id, {}).get("released") == released:
             continue
         print(f"{update_id}: downloading ({released})", file=sys.stderr)
-        state["docs"][update_id] = {"released": released, "families": extract(cve2feed.request(f"{API}/cvrf/{update_id}", HEADERS))}
+        state["docs"][update_id] = {"released": released, "initial": initial, **extract(cve2feed.request(f"{API}/cvrf/{update_id}", HEADERS))}
         changed = True
     return changed
 
@@ -152,42 +149,43 @@ def refresh(state, months):
 
 
 def merge(state):
-    """{family: {"fixed", "n", "top": [[cve, severity, exploited, fixed]], "names", "updates"}} over the updates of the window."""
-    merged = {}
-    for update_id, doc in sorted(state["docs"].items()):
-        for family, agg in doc["families"].items():
-            m = merged.setdefault(family, {"fixed": agg["fixed"], "n": 0, "top": {}, "names": set(), "updates": []})
-            m["n"] += agg["n"]  # a CVE that two updates list counts twice: rare, and only the count
-            m["names"] |= set(agg["names"])
-            m["updates"].append(update_id)
-            if newer(agg["fixed"], m["fixed"]):
-                m["fixed"] = agg["fixed"]
-            for cve in agg["top"]:
-                if cve[0] not in m["top"] or newer(cve[3], m["top"][cve[0]][3]):
-                    m["top"][cve[0]] = cve
-    for m in merged.values():
-        m["top"] = sorted(m["top"].values(), key=lambda c: (not c[2], -RANK[c[1]], c[0]))
-    return merged
+    """{(family, fixed build): {"cves": {cve: code}, "updates": [...]}, ...} and {family: [names]} over the updates of the window.
+    A CVE that two updates list is the one of the newer update (its build), so every CVE is counted once."""
+    groups, names, seen = {}, {}, set()
+    for update_id, doc in sorted(state["docs"].items(), key=lambda d: d[1].get("initial", ""), reverse=True):
+        for family, builds in doc["families"].items():
+            names.setdefault(family, set()).update(doc["names"].get(family, []))
+            for fixed, cves in builds.items():
+                for item in filter(None, cves.split(",")):
+                    cve, code = item.split(":")
+                    if (family, cve) in seen:
+                        continue
+                    seen.add((family, cve))
+                    group = groups.setdefault((family, fixed), {"cves": {}, "updates": []})
+                    group["cves"][cve] = code
+                    if update_id not in group["updates"]:
+                        group["updates"].append(update_id)
+    return groups, {family: sorted({n.lower(): n for n in sorted(values, reverse=True)}.values())[:3] for family, values in names.items()}
 
 
-def label(family, m):
+def label(family, names):
     if family == "edge":
         return "Microsoft Edge"
     if family == "vscode":
         return "Visual Studio Code"
-    build = family.split(":", 1)[1]
-    names = ", ".join(m["names"]) or "Windows"
-    return f"{names} (build {build})"
+    return f"{', '.join(names) or 'Windows'} (build {family.split(':', 1)[1]})"
 
 
-def when(family, m):
-    fixed = m["fixed"]
+def source_of(family):
+    return "os" if family.startswith("windows:") else "software"
+
+
+def when(family, fixed):
     older = {"field": "Version", "op": "version_lt", "value": fixed}
     if family.startswith("windows:"):
-        build = family.split(":", 1)[1]
-        # The operating system as the agent lists it (Source "windows", the build as the version, agents 1.27.0+).
-        return {"all": [{"field": "Source", "op": "eq", "value": "windows"},
-                        {"field": "Version", "op": "starts_with", "value": build + "."}, older]}
+        # The operating system as the agent lists it (the os source, the build with the revision as the version, agents 1.27.0+).
+        return {"all": [{"field": "Id", "op": "eq", "value": "windows"},
+                        {"field": "Version", "op": "starts_with", "value": family.split(":", 1)[1] + "."}, older]}
     if family == "edge":
         return {"all": [{"any": [
             {"all": [{"field": "Source", "op": "ne", "value": "dpkg"}, {"field": "Name", "op": "matches", "value": r"^microsoft edge$"}]},
@@ -200,27 +198,26 @@ def when(family, m):
     ]}, older]}
 
 
-def build_rule(family, m):
-    name = label(family, m)
-    top = m["top"]
-    kev = [c[0] for c in top if c[2]]
-    texts = [f"{cve} ({'exploited, ' if exploited else ''}fixed in {fixed})" for cve, _, exploited, fixed in top]
-    exploited = f" Exploited: {', '.join(kev[:10])}{' ...' if len(kev) > 10 else ''}." if kev else ""
-    slug = family.replace(":", "-").replace(".", "-")
+def build_rule(family, fixed, group, names):
+    name = label(family, names)
+    cves = sorted(group["cves"].items(), key=lambda c: (not c[1].endswith("x"), "chml".index(c[1][0]), c[0]))
+    exploited = [f"CVE-{cve}" for cve, code in cves if code.endswith("x")]
+    texts = [f"CVE-{cve}{' (exploited)' if code.endswith('x') else ''}" for cve, code in cves]
+    tail = f": the update {fixed} is missing ({len(cves)} CVEs)"
+    slug = family.replace(":", "-").replace(".", "-") + "-" + (fixed.rsplit(".", 1)[1] if family.startswith("windows:") else fixed.replace(".", "-"))
+    severity = {"c": "critical", "h": "high", "m": "medium", "l": "low"}[min((code[0] for _, code in cves), key=lambda l: "chml".index(l))]
     remediation = {"edge": "Update Microsoft Edge.", "vscode": "Update Visual Studio Code."}.get(family, "Install the latest cumulative update (Windows Update).")
     return {
         "key": f"org.msrc-{slug}",
-        "name": f"{name[:120 - len(tail := f' older than {m['fixed']} ({m['n']} CVEs)')]}{tail}",
-        "description": fit(f"Microsoft's security updates ({', '.join(m['updates'])}) fix {m['n']} CVEs for {name}; the newest fix is {m['fixed']}, "
-                                    f"an older version is affected by at least one of them.{exploited} Most severe: ", texts, "")[:1000],
-        "severity": max((c[1] for c in top), key=RANK.get),
+        "name": f"{name[:120 - len(tail)]}{tail}",
+        "description": fit(f"Microsoft's security update {fixed} of {name} fixes {len(cves)} CVEs ({', '.join(group['updates'])}).{(' Exploited: ' + ', '.join(exploited[:10]) + '.') if exploited else ''} CVEs: ", texts)[:1000],
+        "severity": severity,
         "platform": "windows" if family.startswith("windows:") else "any",
-        "source": "software",
-        "when": when(family, m),
-        "message": fit("{Name} {Version} is older than " + m["fixed"] + f", which fixes {m['n']} CVEs of the security updates of Microsoft"
-                                " (not all of them if it is newer than a fix): ", texts, "")[:1000],
+        "source": source_of(family),
+        "when": when(family, fixed),
+        "message": fit("{Name} {Version} is older than " + fixed + f", the update that fixes {len(cves)} CVEs: ", texts)[:1000],
         "remediation": remediation,
-        "urls": [f"https://msrc.microsoft.com/update-guide/vulnerability/{c[0]}" for c in top[:6]] + ["https://msrc.microsoft.com/update-guide"],
+        "urls": [f"https://msrc.microsoft.com/update-guide/vulnerability/CVE-{c[0]}" for c in cves[:6]] + ["https://msrc.microsoft.com/update-guide"],
     }
 
 
@@ -234,16 +231,14 @@ def before(version):
     return "0"
 
 
-def make_fixture(rule, family, m):
+def make_fixture(rule, family, fixed):
     """A fixture proven against the rule itself, None when the rule does not behave."""
-    fixed = m["fixed"]
     below = before(fixed)
     if family.startswith("windows:"):
         build = family.split(":", 1)[1]
-        os_item = lambda version, source="windows": {"Name": "Microsoft Windows", "Version": version, "Source": source}
+        os_item = lambda version, id="windows": {"Id": id, "Name": "Microsoft Windows", "Version": version}
         positive = [os_item(f"{build}.0"), os_item(below)]
-        negative = [os_item(fixed), os_item(f"{fixed}.1"), os_item("10.0.1.0"), os_item(f"{build}.0", "registry"),
-                    {"Name": "Microsoft Windows", "Version": f"{build}.0", "Source": "registry (user)"}]
+        negative = [os_item(fixed), os_item(f"{fixed}.1"), os_item("10.0.1.0"), os_item(f"{build}.0", "ubuntu")]
     elif family == "edge":
         positive = [{"Name": "Microsoft Edge", "Version": below, "Source": "registry"},
                     {"Name": "microsoft-edge-stable", "Version": f"{below}-1", "Source": "dpkg"}]
@@ -263,10 +258,11 @@ def make_fixture(rule, family, m):
 
 def generate(state):
     rules, fixtures, skipped = {}, {}, []
-    for family, m in sorted(merge(state).items()):
-        rule = build_rule(family, m)
+    groups, names = merge(state)
+    for (family, fixed), group in sorted(groups.items()):
+        rule = build_rule(family, fixed, group, names.get(family, []))
         errors = feed.rule_errors(rule, False)
-        fixture = None if errors else make_fixture(rule, family, m)
+        fixture = None if errors else make_fixture(rule, family, fixed)
         if errors or fixture is None:
             skipped.append(f"{rule['key']}: {'; '.join(errors) if errors else 'no valid fixture could be built'}")
             continue
