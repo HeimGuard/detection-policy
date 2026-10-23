@@ -82,7 +82,11 @@
     "https://fortiguard.com/psirt/FG-IR-22-362",
     "https://fortiguard.com/psirt/FG-IR-22-362"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2022-42476": {
    "desc": "A relative path traversal vulnerability [CWE-23] vulnerability in Fortinet FortiOS 7.2.0 through 7.2.3, FortiOS 7.0.0 through 7.0.8, FortiOS 6.4.0 through 6.4.11, FortiOS 6.2.0 through 6.2.12, FortiProxy 7.2.0 through 7.2.1, FortiProxy 7.0.0 through 7.0.7, FortiProxy 2.0.0 through 2.0.11, FortiProxy 1.2 all versions, FortiProxy 01.02 all versions, FortiProxy 1.1 all versions, FortiProxy 01.01 all ",
@@ -645,7 +649,46 @@
     "https://access.redhat.com/errata/RHSA-2025:7050",
     "https://access.redhat.com/errata/RHSA-2025:8385"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "rsync": {
+      "bionic": [
+       "released",
+       "3.1.2-2.1ubuntu1.6+esm1"
+      ],
+      "focal": [
+       "released",
+       "3.1.3-8ubuntu0.8"
+      ],
+      "jammy": [
+       "released",
+       "3.2.7-0ubuntu0.22.04.3"
+      ],
+      "noble": [
+       "released",
+       "3.2.7-1ubuntu1.1"
+      ],
+      "oracular": [
+       "released",
+       "3.3.0-1ubuntu0.1"
+      ],
+      "trusty": [
+       "released",
+       "3.1.0-2ubuntu0.4+esm1"
+      ],
+      "upstream": [
+       "released",
+       "3.3.0+ds1-3"
+      ],
+      "xenial": [
+       "released",
+       "3.1.1-3ubuntu1.3+esm3"
+      ]
+     }
+    }
+   }
   },
   "CVE-2024-21753": {
    "desc": "A improper limitation of a pathname to a restricted directory ('path traversal') vulnerability in Fortinet FortiClientEMS 7.2.0 through 7.2.4, FortiClientEMS 7.0 all versions, FortiClientEMS 6.4 all versions, FortiClientEMS 06.02 all versions, FortiClientEMS 6.2 all versions, FortiClientEMS 06.00 all versions, FortiClientEMS 6.0 all versions, FortiClientEMS 01.02.02 through 01.02.05 allows attacke",
@@ -1409,7 +1452,11 @@
     "https://github.com/portabilis/i-educar/",
     "https://github.com/portabilis/i-educar/commit/d53365e5656f6499a4deddf89d522814655f769d"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-10035": {
    "desc": "A deserialization vulnerability in the License Servlet of Fortra's GoAnywhere MFT allows an actor with a validly forged license response signature to deserialize an arbitrary actor-controlled object, possibly leading to command injection.",
@@ -1992,7 +2039,11 @@
     "https://fortiguard.fortinet.com/psirt/FG-IR-25-513",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-58034"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-58360": {
    "desc": "GeoServer is an open source server that allows users to share and edit geospatial data. From version 2.26.0 to before 2.26.2 and before 2.25.6, an XML External Entity (XXE) vulnerability was identified. The application accepts XML input through a specific endpoint /geoserver/wms operation GetMap. However, this input is not sufficiently sanitized or restricted, allowing an attacker to define extern",
@@ -2017,7 +2068,11 @@
     "https://osgeo-org.atlassian.net/browse/GEOS-11682",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-58360"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-61624": {
    "desc": "An Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') [CWE-22] vulnerability in Fortinet FortiOS 7.6.0 through 7.6.4, FortiOS 7.4.0 through 7.4.9, FortiOS 7.2 all versions, FortiOS 7.0 all versions, FortiOS 6.4 all versions, FortiPAM 1.7.0, FortiPAM 1.6 all versions, FortiPAM 1.5 all versions, FortiPAM 1.4 all versions, FortiPAM 1.3 all versions, FortiPAM 1.2 all versio",
@@ -2055,7 +2110,11 @@
     "https://unit42.paloaltonetworks.com/fortimanager-cve-2024-47575-peerstitch-malware/#post-188095-_guyq53ar8k05",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-61624"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-62593": {
    "desc": "Ray is an AI compute engine. Prior to version 2.52.0, developers working with Ray as a development tool can be exploited via a critical RCE vulnerability exploitable via Firefox and Safari. This vulnerability is due to an insufficient guard against browser-based attacks, as the current defense uses the User-Agent header starting with the string \"Mozilla\" as a defense mechanism. This defense is ins",
@@ -2076,7 +2135,11 @@
     "https://www.bitsight.com/blog/rondodox-botnet-infrastructure-analysis",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-62593"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-64446": {
    "desc": "A relative path traversal vulnerability in Fortinet FortiWeb 8.0.0 through 8.0.1, FortiWeb 7.6.0 through 7.6.4, FortiWeb 7.4.0 through 7.4.9, FortiWeb 7.2.0 through 7.2.11, FortiWeb 7.0.0 through 7.0.11 may allow an attacker to execute administrative commands on the system via crafted HTTP or HTTPS requests.",
@@ -2116,7 +2179,11 @@
     "https://github.com/watchtowrlabs/watchTowr-vs-Fortiweb-AuthBypass",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-64446"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-66178": {
    "desc": "A improper neutralization of special elements used in an os command ('os command injection') vulnerability in Fortinet FortiWeb 8.0.0 through 8.0.2, FortiWeb 7.6.0 through 7.6.6, FortiWeb 7.4.0 through 7.4.11, FortiWeb 7.2.0 through 7.2.12, FortiWeb 7.0.0 through 7.0.12 may allow an authenticated attacked to execute arbitrary commands via a specialy crafted HTTP request.",
@@ -2154,7 +2221,11 @@
    "refs": [
     "https://fortiguard.fortinet.com/psirt/FG-IR-26-088"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2025-8110": {
    "desc": "Improper Symbolic link handling in the PutContents API in Gogs allows Local Execution of Code.",
@@ -2175,7 +2246,11 @@
     "http://www.openwall.com/lists/oss-security/2025/12/11/4",
     "http://www.openwall.com/lists/oss-security/2026/01/17/4"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-102560": {
    "desc": "A flaw was found in libsoup. When the permessage-deflate WebSocket extension compresses a very large outgoing message, truncated size calculations used for GByteArray growth could wrap, causing zlib to write past the allocated buffer and resulting in a heap buffer overflow.",
@@ -2196,7 +2271,68 @@
     "https://access.redhat.com/security/cve/CVE-2026-102560",
     "https://bugzilla.redhat.com/show_bug.cgi?id=2543296"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "libsoup2.4": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "needed",
+       ""
+      ],
+      "jammy": [
+       "needed",
+       ""
+      ],
+      "noble": [
+       "needed",
+       ""
+      ],
+      "resolute": [
+       "needed",
+       ""
+      ],
+      "stonking": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needed",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     },
+     "libsoup3": {
+      "jammy": [
+       "needed",
+       ""
+      ],
+      "noble": [
+       "needed",
+       ""
+      ],
+      "resolute": [
+       "needed",
+       ""
+      ],
+      "stonking": [
+       "needed",
+       ""
+      ],
+      "upstream": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-102764": {
    "desc": "The vulnerability exists within internal components of BeyondTrust\u2019s Remote Support product. The components did not adequately validate the origin of the messages it received. Under the right conditions, this could allow an attacker to perform file operations on the appliance.",
@@ -2216,7 +2352,11 @@
     "https://www.beyondtrust.com/blog/entry/bt26-05",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-102764"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-104935": {
    "desc": "Authentication bypass by spoofing in ICS before version 25.1.3.0 allows a remote unauthenticated attacker to execute arbitrary commands. This does not impact ICS version 22.7R2.14 or prior.",
@@ -2240,7 +2380,11 @@
     "https://hub.ivanti.com/s/article/Security-Advisory-Ivanti-Connect-Secure-CVE-2026-104935",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-104935"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-105133": {
    "desc": "A vulnerability was detected in Ahsay AhsayCBS up to 10.3.2. This affects the function checkSysPwd of the file com/ahsay/obs/api/ApiStructsAction.java of the component API. Performing a manipulation of the argument random results in improper authentication. It is possible to initiate the attack remotely. The exploit is now public and may be used. Upgrading to version 10.3.4 is able to mitigate thi",
@@ -2261,7 +2405,11 @@
     "https://vuldb.com/vuln/413350",
     "https://vuldb.com/vuln/413350/cti"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-105134": {
    "desc": "A flaw has been found in Ahsay AhsayCBS up to 10.3.2. This vulnerability affects unknown code of the file /rps/api/json/UpdateReceivers.do of the component Replication Receiver. Executing a manipulation of the argument random can lead to os command injection. It is possible to launch the attack remotely. The exploit has been published and may be used. Upgrading to version 10.3.4 is able to resolve",
@@ -2282,7 +2430,11 @@
     "https://vuldb.com/vuln/413351",
     "https://vuldb.com/vuln/413351/cti"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-10591": {
    "desc": "Insufficient access control restrictions in the file write tool in Amazon Kiro IDE before version 0.11 might allow remote unauthenticated actors to execute arbitrary commands via crafted instructions that cause writes to execution-sensitive paths  (such as .vscode/tasks.json), enabling auto-execution on folder open.\n\n\n\nTo remediate this issue, users should upgrade to Kiro IDE version 0.11 or later",
@@ -2301,7 +2453,11 @@
     "https://aws.amazon.com/security/security-bulletins/2026-037-aws/",
     "https://kiro.dev/changelog/ide/0-11/"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-106462": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 1.54.6, scaffolder source-control actions may not consistently enforce intended credential boundaries. An authenticated user could cause an affected action to fall back to broader integration credentials and perform operations with more access than intended. This issue is fixed in 1.54.6 when operators also enable scaffolder.r",
@@ -2321,7 +2477,11 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-29gx-h2m3-xw44"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-106463": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 0.8.7, the @backstage/plugin-catalog-backend-module-gitlab package is affected by improper authorization in gitlab organizational user ingestion. Deployments that enable GitLab organization event ingestion and rely on scoped catalog users as an access boundary may admit an unintended catalog identity. Depending on sign-in and ",
@@ -2341,7 +2501,11 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-gp6m-x9vw-5c5x"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-106487": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 0.21.10, the @backstage/plugin-kubernetes-backend package is affected by unsupported catalog cluster authentication mode in kubernetes backend. Deployments using catalog cluster discovery may be affected when catalog contributors can create or modify kubernetes-cluster Resource entities. With the required endpoint permissions ",
@@ -2361,7 +2525,11 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-h53x-hjx6-25gr"
    ],
-   "severity": "low"
+   "severity": "low",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-106488": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 0.4.20, the @backstage/plugin-auth-backend-module-oidc-provider package is affected by improper authentication in the oidc provider. Deployments using OIDC email-based identity resolution with a provider that permits unverified email addresses may allow an authenticated provider user to assume another catalog identity. This ma",
@@ -2401,7 +2569,11 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-rg9r-hr7g-5gc2"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-106490": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 2.2.4, the @backstage/plugin-techdocs-backend package is affected by improper input validation in techdocs static content requests. When using the Azure Blob Storage provider, an authenticated Backstage user may be able to read restricted TechDocs content when entity-level permissions are enabled. Deployments that intentionall",
@@ -2421,7 +2593,11 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-7mfx-xg57-53c9"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-106491": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 0.6.17, the @backstage/plugin-proxy-backend package is affected by improper input validation in proxy-backend. An authenticated Backstage user could craft a request URL that causes the proxy-backend to forward the request to a path outside the configured base path on the target server. This is limited to target servers already",
@@ -2467,7 +2643,11 @@
     "https://github.com/backstage/backstage/releases/tag/v1.49.6",
     "https://github.com/backstage/backstage/releases/tag/v1.54.6"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-106493": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 1.54.6, cloud storage catalog providers did not sufficiently validate object paths. A principal able to create or rename objects in a configured Azure Blob Storage or AWS S3 catalog source could cause catalog descriptors to be read from outside the intended storage boundary, limited to locations reachable with the backend's co",
@@ -2487,7 +2667,11 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-xvh9-35w9-42m4"
    ],
-   "severity": "low"
+   "severity": "low",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-106494": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 0.17.8, the @backstage/backend-defaults package is affected by improper input validation in cloud storage url readers. An attacker with write access to a cloud storage bucket used by Backstage could craft object names that could collide with protected files in the output directory. In certain deployment configurations, this co",
@@ -2533,7 +2717,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-m9c7-gf3j-hx6h",
     "https://github.com/ImageMagick/ImageMagick6/commit/82f752927a552cbba1213b1d023b85e76845774c"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "needs-triage",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106567": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-32 and 6.9.13-57, a crafted PSD file can trigger an integer-conversion error in the PSD decoder on 32-bit builds, causing an infinite loop and denial of service. This issue is fixed in versions 7.1.2-32 and 6.9.13-57.",
@@ -2559,7 +2786,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-g6p6-3ggg-3w7j",
     "https://github.com/ImageMagick/ImageMagick6/commit/61024a2677a3c7973a2dd27170877d8e51419473"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "needs-triage",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106568": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-32 and 6.9.13-57, a crafted XMP profile embedded in an image can cause the profile parser to enter an infinite loop, preventing image processing from completing. This issue is fixed in versions 7.1.2-32 and 6.9.13-57.",
@@ -2585,7 +2855,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-9p7q-63hw-mcr4",
     "https://github.com/ImageMagick/ImageMagick6/commit/27e36ca5cb446664bfc284d28d91fced8887b025"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "needs-triage",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106571": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 6.9.13-56 and 7.1.2-31, a crafted local call to the GetVirtualPixels API can trigger an integer calculation error and write beyond a heap buffer, crashing the server process. This issue is fixed in versions 6.9.13-56 and 7.1.2-31.",
@@ -2611,7 +2924,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-jvjm-9f73-fhpq",
     "https://github.com/ImageMagick/ImageMagick6/commit/91f4ed74a1fd8326ade11a1153de110f22d89aa1"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106572": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-30 and 6.9.13-55, a missing recursion-depth check in the CALS decoder allows a crafted CALS image to exhaust the call stack and terminate the process. This issue is fixed in versions 7.1.2-30 and 6.9.13-55.",
@@ -2637,7 +2993,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-wxw6-98rj-hjfr",
     "https://github.com/ImageMagick/ImageMagick6/commit/0ca580238abba18910cfee0fcc3159621fec0dee"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106573": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-31 and 6.9.13-56, a missing limit check in the MVG decoder allows a crafted MVG image to trigger an excessively long-running operation. This issue is fixed in versions 7.1.2-31 and 6.9.13-56.",
@@ -2663,7 +3062,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-qr53-hc3p-fc62",
     "https://github.com/ImageMagick/ImageMagick6/commit/49560a1641f72a127e413b9861eca0997fde2b96"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106577": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-31 and 6.9.13-56, unescaped or untrimmed values can inject code into output generated by PostScript coders. This issue is fixed in versions 7.1.2-31 and 6.9.13-56.",
@@ -2689,7 +3131,50 @@
     "https://github.com/ImageMagick/ImageMagick/releases/tag/7.1.2-31",
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-5rg6-j44q-q892"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106578": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-31 and 6.9.13-56, a crafted image can cause an invalid memory free in the MVG decoder and crash the process. This issue is fixed in versions 7.1.2-31 and 6.9.13-56.",
@@ -2715,7 +3200,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-6xf5-c3jx-rp39",
     "https://github.com/ImageMagick/ImageMagick6/commit/bfe0117fd9742b3970383e000978d64e5e04372d"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106579": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-31 and 6.9.13-56, a crafted image can bypass an ImageMagick security policy that uses coder as its domain, potentially allowing data prohibited by the policy to be read. This issue is fixed in versions 7.1.2-31 and 6.9.13-56.",
@@ -2767,7 +3295,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-r868-pmwh-fv2c",
     "https://github.com/ImageMagick/ImageMagick6/commit/ad178e41fce2afa6be2b91fb4e7f41c4c5448117"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-107208": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-30 and 6.9.13-55, a crafted XMP profile can reach a recursion limit that is handled as a fatal condition instead of an ordinary exception, terminating the image-processing process. This issue is fixed in versions 7.1.2-30 and 6.9.13-55.",
@@ -2793,7 +3364,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-27m9-54jx-fgvq",
     "https://github.com/ImageMagick/ImageMagick6/commit/6ba345f88a14fcce35c723c231914ae054c4281a"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-107209": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-30 and 6.9.13-55, when ImageMagick is built without Cairo support, a crafted RSVG image that reaches a resource limit can cause the RSVG decoder to free image state twice and then use freed memory, crashing the process. This issue is fixed in versions 7.1.2-30 and 6.9.13-55.",
@@ -2819,7 +3433,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-f2r2-qw7g-3c8x",
     "https://github.com/ImageMagick/ImageMagick6/commit/04a4c5b89c034cf2c93bb0a10044332d941b4fa5"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-107210": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-30 and 6.9.13-55, a crafted highly compressed MAT image can make the MAT decoder create temporary files larger than the configured security-policy limit, bypassing resource restrictions and consuming excessive disk space. This issue is fixed in versions 7.1.2-30 and 6.9.13-55.",
@@ -2845,7 +3502,50 @@
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-3j4w-pvxj-fpjc",
     "https://github.com/ImageMagick/ImageMagick6/commit/7d8e0eb11804a5ce5322ea317dfd3557cded4e7b"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-107389": {
    "desc": "music-metadata is a metadata parser for audio and video media files. Prior to 11.16.0, the Matroska and WebM EBML parser decodes an attacker-controlled VINT element length and uses it for string-token or Uint8Array allocation before confirming that the leaf fits within its parent or available input. Crafted WebM, MKV, or MKA inputs can cause disproportionate allocations, out-of-memory denial of se",
@@ -2866,7 +3566,11 @@
     "https://github.com/Borewit/music-metadata/pull/2735",
     "https://github.com/Borewit/music-metadata/releases/tag/v11.16.0"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-109618": {
    "desc": "PHP uses longjmp() for out-of-memory (OOM) errors to exit the current context and abort handling of the request. Some contexts may not properly account for this scenario and leave request memory in an uninitialized state before performing an allocation. The subsequent request cleanup procedure may read or branch on this memory. Multiple OOM strategies can consistently trigger this condition and le",
@@ -2901,7 +3605,86 @@
     "http://www.openwall.com/lists/oss-security/2026/10/21/6",
     "https://www.wiz.io/blog/php2shell-php-rce"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "php5": {
+      "trusty": [
+       "released",
+       "5.5.9+dfsg-1ubuntu4.29+esm18"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php7.0": {
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "released",
+       "7.0.33-0ubuntu0.16.04.16+esm22"
+      ]
+     },
+     "php7.2": {
+      "bionic": [
+       "released",
+       "7.2.24-0ubuntu0.18.04.17+esm14"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php7.4": {
+      "focal": [
+       "released",
+       "7.4.3-4ubuntu2.29+esm5"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php8.1": {
+      "jammy": [
+       "released",
+       "8.1.2-1ubuntu2.28"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php8.3": {
+      "noble": [
+       "released",
+       "8.3.6-0ubuntu0.24.04.13"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php8.5": {
+      "resolute": [
+       "released",
+       "8.5.4-0ubuntu1.5"
+      ],
+      "stonking": [
+       "released",
+       "8.5.9-0ubuntu2.1"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109619": {
    "desc": "PHP has various global state that temporarily points into request memory. In some scenarios, global state may not be correctly reset, or may be repopulated after being reset. The global state may then refer to request memory even after it has been freed. Subsequent requests may read or branch on this stale state before it is fully initialized. Multiple strategies can trigger this condition and pro",
@@ -2937,7 +3720,86 @@
     "http://www.openwall.com/lists/oss-security/2026/10/21/17",
     "http://www.openwall.com/lists/oss-security/2026/10/21/23"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "php5": {
+      "trusty": [
+       "released",
+       "5.5.9+dfsg-1ubuntu4.29+esm18"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php7.0": {
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "released",
+       "7.0.33-0ubuntu0.16.04.16+esm22"
+      ]
+     },
+     "php7.2": {
+      "bionic": [
+       "released",
+       "7.2.24-0ubuntu0.18.04.17+esm14"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php7.4": {
+      "focal": [
+       "released",
+       "7.4.3-4ubuntu2.29+esm5"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php8.1": {
+      "jammy": [
+       "released",
+       "8.1.2-1ubuntu2.28"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php8.3": {
+      "noble": [
+       "released",
+       "8.3.6-0ubuntu0.24.04.13"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "php8.5": {
+      "resolute": [
+       "released",
+       "8.5.4-0ubuntu1.5"
+      ],
+      "stonking": [
+       "released",
+       "8.5.9-0ubuntu2.1"
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109945": {
    "desc": "FreeRDP 3.0.0 before 3.32.0 contains a heap use-after-free vulnerability in smartcard emulation when SCARD_IOCTL_DISCONNECT and SCARD_IOCTL_TRANSMIT operate concurrently on one card handle. A malicious RDP server can overlap these IRPs through separate context workers to free and reuse the SCardHandle, causing client-process heap corruption and termination.",
@@ -2957,7 +3819,66 @@
     "https://www.vulncheck.com/advisories/freerdp-3.0.0-before-3.32.0-smartcard-use-after-free-via-concurrent-disconnect-and-transmit",
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-8rpr-jjjg-5qv6"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109946": {
    "desc": "FreeRDP 3.11.0 before 3.32.0 does not validate that AVC444 and AVC444v2 region widths are even before YUV444 conversion, so an odd width reaches an assertion and aborts the client. A malicious or compromised RDP server can terminate a connected FreeRDP client after RDPGFX AVC444 negotiation by sending an in-bounds region rectangle with an odd width.",
@@ -2977,7 +3898,66 @@
     "https://www.vulncheck.com/advisories/freerdp-3.11.0-before-3.32.0-reachable-assertion-via-avc444-odd-region-width",
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-97pf-pwp3-2wrv"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109947": {
    "desc": "FreeRDP from 3.20.1 before 3.32.0 contains an uncontrolled resource allocation vulnerability that allows malicious RDP servers to exhaust client memory via oversized drive redirection read requests. Attackers can send IRP_MJ_READ with Length 0xffffffff, causing roughly 4 GiB of zeroed allocation on 64-bit builds or an under-reserved buffer on 32-bit builds.",
@@ -2997,7 +3977,66 @@
     "https://www.vulncheck.com/advisories/freerdp-3.20.1-before-3.32.0-unbounded-allocation-via-drive-process-irp-read",
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-q56j-jjh6-38jf"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109948": {
    "desc": "FreeRDP from 3.0.0 before 3.32.0 contains an uninitialized memory disclosure vulnerability in smartcard_Transmit_Call that allows malicious RDP servers to read client memory. Servers can send SCardTransmit requests with an invalid card handle and nonzero receive length, causing smartcard_pack_transmit_return to serialize up to 66,560 uninitialized heap bytes.",
@@ -3017,7 +4056,66 @@
     "https://www.vulncheck.com/advisories/freerdp-3.0.0-before-3.32.0-memory-disclosure-via-scardtransmit-smartcard-redirection",
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-f554-v4xw-5j39"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109949": {
    "desc": "FreeRDP 3.0.0 before 3.32.0 contains an improper restriction of excessive authentication attempts in its virtual smartcard GIDS implementation, which stores the PIN retry counter per-handle. A malicious RDP server can exhaust the counter with VERIFY APDUs, then request a new SCardConnect to reset attempts, enabling unbounded online brute-forcing of the configured smartcard PIN.",
@@ -3036,7 +4134,66 @@
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-chh2-527f-x255",
     "https://www.vulncheck.com/advisories/freerdp-3.0.0-before-3.32.0-pin-brute-force-via-virtual-smartcard"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109950": {
    "desc": "FreeRDP from 3.0.0 before 3.32.0 contains a heap out-of-bounds read vulnerability that allows a malicious RD Gateway to crash clients by sending mismatched message lengths. Attackers controlling the gateway can set MsgBytes far larger than the NDR string ActualCount in consent or service messages, causing UTF-8 conversion to read past the stream allocation and disrupt client availability.",
@@ -3056,7 +4213,66 @@
     "https://www.vulncheck.com/advisories/freerdp-3.0.0-before-3.32.0-heap-out-of-bounds-read-via-rd-gateway-messages",
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-xf45-j844-588v"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109951": {
    "desc": "FreeRDP 3.17.1 before 3.32.0 contains a heap buffer over-read vulnerability in DynvcTrackerHandleCreateBack of the freerdp-proxy DRDYNVC channel handler that allows malicious backend RDP servers to read heap memory out of bounds. Attackers can send a CREATE_REQUEST_PDU whose channel name lacks a NUL byte, causing an unbounded snprintf read that leaks memory into proxy logs or crashes the process.",
@@ -3076,7 +4292,66 @@
     "https://www.vulncheck.com/advisories/freerdp-3.17.1-before-3.32.0-heap-buffer-over-read-via-proxy-drdynvc-channel-name",
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-g4wg-67xq-8q53"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109952": {
    "desc": "The FreeRDP client 3.0.0 before 3.32.0 does not check a server-selected PROTOCOL_RDSTLS or PROTOCOL_HYBRID_EX against its enabled protocol set in nego_process_negotiation_response(), allowing a security protocol downgrade. A malicious server or man-in-the-middle can select RDSTLS to override /sec:nla pinning, complete authentication with an all-zero cookie, and receive the user's cleartext passwor",
@@ -3096,7 +4371,66 @@
     "https://www.vulncheck.com/advisories/freerdp-3.0.0-before-3.32.0-security-protocol-downgrade-via-negotiation-response",
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-qq23-mqmv-pc65"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-109953": {
    "desc": "FreeRDP 3.0.0 before 3.32.0 contains an insufficiently protected credentials vulnerability where the /restricted-admin option fails to suppress CredSSP credential delegation, sending the cleartext password to the RDP server. A compromised or man-in-the-middle destination host can decode TSPasswordCreds and the Client Info PDU to obtain reusable administrative domain, username, and password values.",
@@ -3116,7 +4450,66 @@
     "https://www.vulncheck.com/advisories/freerdp-3.0.0-before-3.32.0-cleartext-credential-disclosure-via-restricted-admin",
     "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-jhxw-3hj9-9hqh"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {
+     "freerdp": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp2": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ]
+     },
+     "freerdp3": {
+      "noble": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.24.04.1"
+      ],
+      "resolute": [
+       "released",
+       "3.32.0+dfsg-0ubuntu0.26.04.1"
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "3.32.0"
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-110936": {
    "desc": "A vulnerability has been identified in Siemens Software Center (All versions < V4.0.9.8). The affected application loads dynamic-link libraries (DLLs) from an uncontrolled search path. This could allow an authenticated local attacker to place a specially crafted DLL in a directory that the application searches, leading to arbitrary code execution with the privileges of the affected application.",
@@ -3136,7 +4529,11 @@
     "https://productcert.siemens.com/news/2026/10/19/active-exploitation-of-cve-2026-110936-in-siemens-software-center/",
     "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-110936"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-112992": {
    "desc": "Memory corruption in Canvas in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3155,7 +4552,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/514422784"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-112993": {
    "desc": "Use after free in Input in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -3174,7 +4575,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/572893186"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-112994": {
    "desc": "Memory corruption in Browser in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3193,7 +4598,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/562962437"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-112995": {
    "desc": "Use after free in Animation in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3212,7 +4621,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/514447367"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-112996": {
    "desc": "Memory corruption in Loader in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3231,7 +4644,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/563015686"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-112997": {
    "desc": "Memory corruption in CSS in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3250,7 +4667,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/560664595"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-112998": {
    "desc": "Memory corruption in Views in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3269,7 +4690,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/553134101"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-112999": {
    "desc": "Use after free in API in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3288,7 +4713,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/513452101"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113000": {
    "desc": "Memory corruption in Paint in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -3307,7 +4736,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/572598342"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113001": {
    "desc": "Use after free in Workers in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3326,7 +4759,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/553144392"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113002": {
    "desc": "Memory corruption in Transactions Platform in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially read memory inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3345,7 +4782,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/562225226"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113003": {
    "desc": "Memory corruption in HID in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3364,7 +4805,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/505024593"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113004": {
    "desc": "Memory corruption in Sync in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3383,7 +4828,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/513394775"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113005": {
    "desc": "Memory corruption in Bluetooth in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3402,7 +4851,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/503584859"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113006": {
    "desc": "Out of bounds read in Navigation in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3421,7 +4874,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/496650333"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113007": {
    "desc": "Memory corruption in Permissions in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3440,7 +4897,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/553394270"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113008": {
    "desc": "Memory corruption in Transactions Platform in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3459,7 +4920,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/563089510"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113009": {
    "desc": "Use after free in WindowControlsOverlay in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3478,7 +4943,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/514066540"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113010": {
    "desc": "Out of bounds read in Extensions in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to read memory inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3497,7 +4966,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/518240362"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113011": {
    "desc": "Use after free in CredentialProvider in Google Chrome on on Windows prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3516,7 +4989,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/498843754"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113012": {
    "desc": "Improper input validation in GPU in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -3535,7 +5012,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/568215670"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113013": {
    "desc": "Memory corruption in DevTools in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3554,7 +5035,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/563814519"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113014": {
    "desc": "Use after free in PerformanceAPIs in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3573,7 +5058,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/502251640"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113015": {
    "desc": "Use after free in Workers in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3592,7 +5081,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/497408124"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113016": {
    "desc": "Improper input validation in Extensions in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3611,7 +5104,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/523237501"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113017": {
    "desc": "Use after free in Views in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3630,7 +5127,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/553132165"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113018": {
    "desc": "Memory corruption in IME in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3649,7 +5150,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/497072295"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113019": {
    "desc": "Use after free in Turbolev in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -3668,7 +5173,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/570003644"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113020": {
    "desc": "Improper input validation in Date in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: High)",
@@ -3687,7 +5196,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/565838017"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113021": {
    "desc": "Use after free in WebAppInstalls in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3706,7 +5219,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/553146562"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113022": {
    "desc": "Memory corruption in PDFium in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3725,7 +5242,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/494352583"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113023": {
    "desc": "Improper input validation in Extensions in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code outside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3744,7 +5265,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/517148875"
    ],
-   "severity": "critical"
+   "severity": "critical",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113024": {
    "desc": "Use after free in WebAppInstalls in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3763,7 +5288,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/533043403"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113025": {
    "desc": "Use after free in Input in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3782,7 +5311,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/533113044"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113026": {
    "desc": "Memory corruption in PDF in Google Chrome on on Android prior to 156.0.8078.47 allowed a remote attacker to potentially read memory inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3801,7 +5334,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/500173014"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113027": {
    "desc": "Memory corruption in WebFonts in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3820,7 +5357,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/505807063"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113028": {
    "desc": "Use after free in Media in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3839,7 +5380,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/560373976"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113029": {
    "desc": "Improper access control in ANGLE in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3858,7 +5403,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/523708661"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113030": {
    "desc": "Improper access control in V8 in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially bypass web origin policy via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3877,7 +5426,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/561660149"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113031": {
    "desc": "Memory corruption in Media in Google Chrome on on Windows prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3896,7 +5449,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/532939000"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113032": {
    "desc": "Memory corruption in Omnibox in Google Chrome on on Android prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3915,7 +5472,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/541604102"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113033": {
    "desc": "Use after free in Streaming in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3934,7 +5495,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/499869964"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113034": {
    "desc": "Memory corruption in FileSystem in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3953,7 +5518,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/497482008"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113035": {
    "desc": "Out of bounds read in API in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially read memory inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -3972,7 +5541,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/498786597"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113036": {
    "desc": "Memory corruption in HTML in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -3991,7 +5564,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/553335083"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113037": {
    "desc": "Use after free in WebSockets in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Medium)",
@@ -4010,7 +5587,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/560939312"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113038": {
    "desc": "Memory corruption in DevTools in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially read memory inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -4029,7 +5610,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/553931056"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113039": {
    "desc": "Use after free in Bookmarks in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: Low)",
@@ -4048,7 +5633,11 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/566069559"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "sources": {}
+   }
   },
   "CVE-2026-113040": {
    "desc": "Improper input validation in Proxy in Google Chrome prior to 156.0.8078.47 allowed a remote attacker to potentially execute arbitrary code inside the sandbox via a crafted HTML page. (Chromium security severity: High)",
