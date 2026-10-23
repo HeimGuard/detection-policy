@@ -67,13 +67,29 @@ generated key, then build the manifest.
 
 ## Nightly CVE rules
 
-`.github/workflows/cve-rules.yml` runs every night (and on demand) `scripts/cve2feed.py`: it asks the NVD for
-CVEs changed in the last 2 days that are on the CISA Known Exploited Vulnerabilities list and have a product with
-a version range, and writes a `software` rule (`Name` contains the product, `Version` in the range) plus a fixture
-for each into `rules/any/org.cve-<year>-<id>-<product>.json`. It bumps the manifest version, runs
-`feed.py check` and opens a pull request (`automation/cve-rules`) for review; existing keys are never
-overwritten. Optional secret `NVD_API_KEY` raises the NVD rate limit. Product names come from CPE and may not
-match every installed name, so check the match in the pull request.
+`.github/workflows/cve-rules.yml` runs every night (and on demand) `scripts/cve2feed.py`: it asks the NVD for the
+CVEs changed in the last 4 days that have a product with a version range, asks the
+[Ubuntu security tracker](https://ubuntu.com/security/cves) what it says about their packages, bumps the manifest
+version, runs `feed.py check` and opens a pull request (`automation/cve-rules`) for review.
+
+`data/cves.json` keeps what the NVD and Ubuntu said of every CVE; the rules (`rules/any/org.cve-*.json`) and their
+fixtures are generated from it, so a CVE the NVD corrects is corrected in its rule, and CI fails when a generated file
+differs from `python scripts/cve2feed.py --offline`. A rule of your own has another key (`org.<source>-<what>`).
+
+- **One rule per product, version ranges and Ubuntu fixes**: 320 Chrome CVEs fixed in one release are one finding
+  (`chrome affected by 320 CVEs`), not 320.
+- **Bounds the server can read**: only numbers and dots (`7.1.2-31` is written `7.1.2.31`, as Debian numbers it);
+  a bound that cannot be written that way (`b7653`, `2.0-rc1`) leaves its range out. A product whose name says nothing
+  (`tools`, `core`, `server`) is left out.
+- **Distribution packages**: a dpkg package is only the product when its name is (`php8.5-cli`, not `php-enum`,
+  `libaccounts-glib0` or the metapackage `php-cli`); the binary packages of a source package come from its name
+  (`glib2.0` is `libglib2.0-0t64` and `gir1.2-glib-2.0`). Ubuntu fixes a vulnerability without changing the upstream
+  version, so a package at or after the version the tracker names as the fix (`dpkg_gte`, server with the `dpkg_*`
+  operators; an older server skips these rules) is not reported, nor is one of a source package the CVE does not
+  touch. A release the tracker has no fix for is judged by the NVD range. A changelog that names the CVE (agents
+  1.23.0+, `FixedCves`) hides it as well.
+
+`--cve CVE-2026-1 ...` takes named CVEs, `--days 120` goes further back (the NVD allows 120 days).
 
 ## Workflow
 
