@@ -88,24 +88,42 @@ class Rules(unittest.TestCase):
         for fixture in fixtures.values():
             self.assertTrue(fixture["positive"] and fixture["negative"])
 
-    def test_cves_with_the_same_ranges_and_fixes_are_one_rule_and_binary_packages_are_told_apart(self):
+    def test_cves_of_a_product_with_the_same_ubuntu_data_are_one_rule_and_binary_packages_are_told_apart(self):
         php = {"php:php": [[None, "8.5.12", None]]}
         fixed = {"php8.5": {"resolute": ["released", "8.5.4-0ubuntu1.5"]}}
         state = {"cves": {"CVE-2026-109618": cve("critical", php, fixed), "CVE-2026-109619": cve("critical", php, fixed, kev=True),
                           "CVE-2026-1": cve("low", {"php:php": [[None, "8.5.13", None]]}, fixed)}}
         rules, _, skipped = cve2feed.generate(state)
         self.assertEqual([], skipped)
-        self.assertEqual(2, len(rules))
-        merged = next(r for r in rules.values() if "2 CVEs" in r["name"])
-        self.assertEqual("critical", merged["severity"])
-        self.assertIn("CVE-2026-109618", merged["message"])
+        self.assertEqual(1, len(rules))
+        rule = next(iter(rules.values()))
+        self.assertEqual("php affected by 3 CVEs", rule["name"])
+        self.assertEqual("critical", rule["severity"])
+        self.assertIn("CVE-2026-109618 (fixed in 8.5.12)", rule["message"])
+        self.assertIn("CVE-2026-1 (fixed in 8.5.13)", rule["message"])
         item = lambda name, version: {"Name": name, "Version": version, "Source": "dpkg", "Publisher": "Ubuntu Developers"}
-        self.assertEqual(2, len(findings(rules, item("php8.5-cli", "8.5.4-0ubuntu1.4"))))
+        self.assertEqual(1, len(findings(rules, item("php8.5-cli", "8.5.4-0ubuntu1.4"))))
         self.assertEqual([], findings(rules, item("php8.5-cli", "8.5.4-0ubuntu1.5")))
         # The metapackage and the PHP libraries are not PHP.
         self.assertEqual([], findings(rules, item("php-cli", "2:8.5+99ubuntu1")))
         self.assertEqual([], findings(rules, item("php-symfony-console", "7.4.7+dfsg-1ubuntu1")))
         self.assertEqual([], findings(rules, item("php-enum", "4.7.2-1")))
+
+    def test_cves_fixed_in_different_versions_are_one_finding_that_tells_which_applies(self):
+        ranges = {30: [[None, "6.9.13-55", None], ["7.0.0-0", "7.1.2-30", None]], 31: [[None, "6.9.13-56", None], ["7.0.0-0", "7.1.2-31", None]],
+                  32: [[None, "6.9.13-57", None], ["7.0.0-0", "7.1.2-32", None]]}
+        state = {"cves": {f"CVE-2026-1{n}": cve("medium", {"imagemagick:imagemagick": r}) for n, r in ranges.items()}}
+        rules, skipped, = cve2feed.generate(state)[::2]
+        self.assertEqual([], skipped)
+        self.assertEqual(1, len(rules))
+        rule = next(iter(rules.values()))
+        self.assertIn("CVE-2026-130 (fixed in 6.9.13.55 / 7.1.2.30)", rule["message"])
+        self.assertIn("CVE-2026-132 (fixed in 6.9.13.57 / 7.1.2.32)", rule["message"])
+        item = lambda version: {"Name": "imagemagick", "Version": version, "Source": "dpkg"}
+        self.assertEqual(1, len(findings(rules, item("8:7.1.2.18+dfsg1-1"))))
+        self.assertEqual(1, len(findings(rules, item("8:7.1.2.31+dfsg1-1"))), "below the newest fix: at least one CVE applies")
+        self.assertEqual([], findings(rules, item("8:7.1.2.32+dfsg1-1")))
+        self.assertEqual(1, len(findings(rules, item("6.9.13.40"))))
 
     def test_a_package_that_only_shares_a_word_is_not_the_product(self):
         state = {"cves": {"CVE-2026-58014": cve("high", {"gnome:glib": [[None, "2.88.1", None]]},

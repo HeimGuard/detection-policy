@@ -345,6 +345,24 @@ def build_when(product, ranges, info, cids, fixes):
     return {"all": conds}
 
 
+def union_ranges(range_lists):
+    """The ranges all the lists cover: of the ranges that start at the same version only the one that ends last stays."""
+    best = {}
+    for ranges in range_lists:
+        for start, end_excl, end_incl in ranges:
+            end = end_excl or end_incl
+            key = (feed.version_tuple(end), bool(end_incl))
+            if start not in best or key > best[start][0]:
+                best[start] = (key, (start, end_excl, end_incl))
+    return sorted((r for _, r in best.values()), key=lambda r: tuple(x or "" for x in r))[:8]
+
+
+def fixed_text(ranges):
+    """'fixed in 6.9.13.57 / 7.1.2.32' of the ends of the ranges of one CVE."""
+    ends = [f"fixed in {e}" if e else f"up to {i}" for _, e, i in ranges]
+    return " / ".join(ends[:1] + [x.removeprefix("fixed in ") for x in ends[1:]]) if all(x.startswith("fixed in ") for x in ends) else "; ".join(ends)
+
+
 def range_text(ranges):
     texts = []
     for start, end_excl, end_incl in ranges:
@@ -367,15 +385,19 @@ def fit(head, items, tail, limit=1000):
 
 
 def build_rule(product, ranges, info, cves, fixes):
-    """cves: [(cid, entry)] of one group. Returns the rule."""
-    cves = sorted(cves, key=lambda c: (-RANK[c[1]["severity"]], not c[1]["kev"], c[0]), reverse=False)
-    cids = [c for c, _ in cves]
-    top_cid, top = cves[0]
+    """cves: [(cid, entry, its ranges)] of one group, `ranges` the ones all of them cover. Returns the rule."""
+    cves = sorted(cves, key=lambda c: (-RANK[c[1]["severity"]], not c[1]["kev"], c[0]))
+    cids = [c for c, _, _ in cves]
+    top_cid, top, _ = cves[0]
     name = re.sub(r"[_\s]+", " ", product).strip()
-    sig = json.dumps([product, ranges, info], sort_keys=True)
+    sig = json.dumps([product, info], sort_keys=True)
     key = re.sub(r"[^a-z0-9.-]+", "-", f"org.cve-{product}".lower()).strip("-")[:48].rstrip("-.")
     key += "-" + hashlib.sha1(sig.encode()).hexdigest()[:8]
-    kev = [c for c, e in cves if e["kev"]]
+    kev = [c for c, e, _ in cves if e["kev"]]
+    # CVEs fixed in different versions are one finding (a package below the newest fix has at least one of them):
+    # each is told with the version that fixed it, so a package between two fixes can see what applies.
+    uniform = len({tuple(r) for _, _, r in cves}) == 1
+    texts = [c if uniform else f"{c} ({fixed_text(r)})" for c, _, r in cves]
     if len(cves) == 1:
         title = f"{name} affected by {top_cid}"
         description = f"{top_cid}{' (CISA Known Exploited Vulnerabilities)' if top['kev'] else ''}: {top['desc']}"[:1000]
@@ -384,17 +406,17 @@ def build_rule(product, ranges, info, cves, fixes):
         title = f"{name} affected by {len(cves)} CVEs"
         exploited = f" Known exploited: {', '.join(kev[:10])}{' ...' if len(kev) > 10 else ''}." if kev else ""
         description = fit(f"{len(cves)} known vulnerabilities of {name} ({range_text(ranges)}), the most severe is "
-                          f"{top_cid} ({top['severity']}).{exploited} CVEs: ", cids, "")
-        message = fit("{Name} {Version} is affected by " + f"{len(cves)} CVEs: ", cids, "")
+                          f"{top_cid} ({top['severity']}).{exploited} CVEs: ", texts, "")
+        message = fit("{Name} {Version} is affected by " + f"{len(cves)} CVEs{'' if uniform else ' (not all of them if it is newer than a fix)'}: ", texts, "")
     links = [f"https://nvd.nist.gov/vuln/detail/{c}" for c in cids[:3]]
-    for _, e in cves[:3]:
+    for _, e, _ in cves[:3]:
         links += e["refs"]
     urls = list(dict.fromkeys(links))[:10]
     return {
         "key": key,
         "name": title[:120],
         "description": description,
-        "severity": max((e["severity"] for _, e in cves), key=RANK.get),
+        "severity": max((e["severity"] for _, e, _ in cves), key=RANK.get),
         "platform": "any",
         "source": "software",
         "when": build_when(product, ranges, info, cids, fixes),
@@ -478,10 +500,11 @@ def generate(state):
                 skipped.append(f"{cid} {product}: no version range that can be written")
                 continue
             info = dpkg_info(product, entry.get("ubuntu"))
-            groups.setdefault((product, json.dumps([ranges, info], sort_keys=True)), (product, ranges, info, {}))[3][cid] = entry
+            groups.setdefault((product, json.dumps(info, sort_keys=True)), (product, info, {}))[2][cid] = (entry, ranges)
     rules, fixtures = {}, {}
-    for product, ranges, info, members in groups.values():
-        cves = list(members.items())
+    for product, info, members in groups.values():
+        cves = [(cid, entry, ranges) for cid, (entry, ranges) in members.items()]
+        ranges = union_ranges([r for _, _, r in cves])
         fixes = sorted(info["fixes"], key=lambda f: (RELEASES.index(f[3]) if f[3] in RELEASES else len(RELEASES), f[2]), reverse=True)
         shown = list(dict.fromkeys((f[1], f[2]) for f in fixes))
         fixes = [next(f for f in fixes if (f[1], f[2]) == s) for s in shown]
@@ -493,7 +516,7 @@ def generate(state):
         if feed.rule_errors(rule, False):
             skipped.append(f"{rule['key']}: {'; '.join(feed.rule_errors(rule, False))}")
             continue
-        fixture = make_fixture(rule, product, ranges, info, [c for c, _ in cves], fixes)
+        fixture = make_fixture(rule, product, ranges, info, [c for c, _, _ in cves], fixes)
         if fixture is None:
             skipped.append(f"{rule['key']}: no valid fixture could be built")
             continue
