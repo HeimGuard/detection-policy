@@ -155,6 +155,10 @@ def build_rule(cve, vendor, product, ranges, kev=True):
     when = {"all": [
         {"field": "Name", "op": "matches", "value": name_pattern(name)},
         ranged[0] if len(ranged) == 1 else {"any": ranged},
+        # The ranges are upstream versions; Debian / Ubuntu / RPM backport fixes without changing them
+        # (8.5.4-0ubuntu1.5 can have the fix of 8.5.12) and ship libraries named after the product
+        # (php-enum), so distro packages are not judged by them.
+        {"field": "Source", "op": "not_in", "value": ["dpkg", "rpm"]},
     ]}
     key = re.sub(r"[^a-z0-9.-]+", "-", f"org.cve-{cid[4:]}-{product}".lower()).strip("-")[:64].rstrip("-.")
     rule = {
@@ -196,6 +200,7 @@ def make_fixture(rule, name, ranges):
             {"Name": name, "Version": negative, "Source": "x"},
             {"Name": "Unrelated tool", "Version": positive, "Source": "x"},
             {"Name": f"lib{name.replace(' ', '')}x", "Version": positive, "Source": "x"},
+            {"Name": name, "Version": positive, "Source": "dpkg"},
         ],
     }
 
