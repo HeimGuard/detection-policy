@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Turn newly published / changed CVEs from the NVD into `software` rules of the feed.
 
-  python scripts/cve2feed.py [--days 2] [--limit 50]
+  python scripts/cve2feed.py [--days 2] [--limit 500]
 
-Only CVEs on the CISA Known Exploited Vulnerabilities list (NVD `hasKev`) are taken, and only those with
-a product and a version range in their CPE configuration (versionEndExcluding / versionEndIncluding).
+Every CVE the NVD changed in the window is taken, whatever its severity: the rule gets the CVSS severity of
+the CVE, and CVEs on the CISA Known Exploited Vulnerabilities list say so in the description. Only CVEs with
+a product and a version range in their CPE configuration (versionEndExcluding / versionEndIncluding)
+produce a rule.
 Each CVE + product becomes rules/any/org.cve-<year>-<id>-<product>.json with a fixture; an existing
 key is never overwritten, so a rule edited by hand stays. Set NVD_API_KEY for a higher rate limit.
 """
@@ -59,8 +61,8 @@ def request(url, headers):
         time.sleep(wait)
 
 
-def fetch(days):
-    """Yield CVEs on the KEV list changed in the last `days` days, newest window first, page by page.
+def fetch(days, extra):
+    """Yield CVEs matching the NVD query `extra` changed in the last `days` days, newest window first, page by page.
 
     Raises NvdError when the NVD stops answering; what was yielded before is still good.
     """
@@ -76,7 +78,7 @@ def fetch(days):
         start = 0
         while True:
             query = urllib.parse.urlencode({"lastModStartDate": begin.strftime(fmt), "lastModEndDate": end.strftime(fmt),
-                                            "resultsPerPage": 200, "startIndex": start}) + "&hasKev"
+                                            "resultsPerPage": 200, "startIndex": start}) + extra
             page = request(f"{API}?{query}", headers)
             yield from page.get("vulnerabilities", [])
             start += page.get("resultsPerPage", 0)
@@ -144,7 +146,7 @@ def range_cond(rng):
     return conds, start, end_excl, end_incl
 
 
-def build_rule(cve, vendor, product, ranges):
+def build_rule(cve, vendor, product, ranges, kev=True):
     cid = cve["id"]
     name = re.sub(r"[_\s]+", " ", product).strip()
     desc = next((d["value"] for d in cve.get("descriptions", []) if d["lang"] == "en"), cid)
@@ -158,7 +160,7 @@ def build_rule(cve, vendor, product, ranges):
     rule = {
         "key": key,
         "name": f"{name} affected by {cid}",
-        "description": f"{cid} (CISA Known Exploited Vulnerabilities): {desc}"[:1000],
+        "description": f"{cid}{' (CISA Known Exploited Vulnerabilities)' if kev else ''}: {desc}"[:1000],
         "severity": severity(cve),
         "platform": "any",
         "source": "software",
@@ -201,13 +203,13 @@ def make_fixture(rule, name, ranges):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=2)
-    ap.add_argument("--limit", type=int, default=50)
+    ap.add_argument("--limit", type=int, default=500)
     args = ap.parse_args()
 
     existing = {p.name for p in (ROOT / "rules").rglob("*.json")}
     added = 0
     failure = None
-    feed_iter = fetch(args.days)
+    feed_iter = fetch(args.days, "")
     while True:
         try:
             v = next(feed_iter, None)
@@ -221,7 +223,7 @@ def main():
             break
         cve = v["cve"]
         for (vendor, product), ranges in sorted(products(cve).items()):
-            rule, fixture = build_rule(cve, vendor, product, ranges)
+            rule, fixture = build_rule(cve, vendor, product, ranges, bool(cve.get("cisaExploitAdd")))
             if f"{rule['key']}.json" in existing:
                 continue
             if added >= args.limit:
