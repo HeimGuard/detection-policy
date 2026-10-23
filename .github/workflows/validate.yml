@@ -18,5 +18,11 @@ jobs:
           pip install pyyaml
           python scripts/sigma2feed.py sigma/*.yml
           git diff --exit-code -- rules parsers
+      - name: CVE rules are generated from data/cves.json
+        run: |
+          python scripts/cve2feed.py --offline
+          test -z "$(git status --porcelain -- rules tests/fixtures)" || { git status --short -- rules tests/fixtures; exit 1; }
+      - name: Unit tests of the generator
+        run: python -m unittest discover -s tests -p 'test_*.py'
       - name: Validate rules, parsers, fixtures and manifest
         run: python scripts/feed.py check

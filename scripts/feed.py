@@ -36,8 +36,9 @@ EVENT_FIELDS = {"type", "user", "source", "message", "count"}
 UNARY = {"exists", "empty", "true", "false"}
 OPS = {"eq", "ne", "contains", "not_contains", "starts_with", "ends_with", "matches", "not_matches",
        "in", "not_in", "gt", "gte", "lt", "lte", "version_lt", "version_lte", "version_gt", "version_gte",
-       "exists", "empty", "true", "false"}
-VERSION_OPS = {"version_lt": "<", "version_lte": "<=", "version_gt": ">", "version_gte": ">="}
+       "dpkg_lt", "dpkg_lte", "dpkg_gt", "dpkg_gte", "exists", "empty", "true", "false"}
+VERSION_OPS = {"version_lt", "version_lte", "version_gt", "version_gte"}
+DPKG_OPS = {"dpkg_lt", "dpkg_lte", "dpkg_gt", "dpkg_gte"}
 
 
 def rx(pattern):
@@ -106,9 +107,56 @@ def version_tuple(value):
 
 
 def version_compare(a, b):
+    """-1 / 0 / 1; a missing part is 0 ("8.5" is "8.5.0"), like the server."""
     n = max(len(a), len(b))
     a, b = a + (0,) * (n - len(a)), b + (0,) * (n - len(b))
     return (a > b) - (a < b)
+
+
+def dpkg_parts(version):
+    """(epoch, upstream, revision) of '[epoch:]upstream[-revision]'."""
+    version = str(version).strip()
+    epoch = 0
+    m = re.match(r"^(\d+):(.*)$", version, re.S)
+    if m:
+        epoch, version = int(m[1]), m[2]
+    upstream, dash, revision = version.rpartition("-")
+    return (epoch, upstream, revision) if dash else (epoch, version, "")
+
+
+def _dpkg_order(ch):
+    if not ch or ch.isdigit():
+        return 0
+    if ch.isalpha() and ch.isascii():
+        return ord(ch)
+    return -1 if ch == "~" else ord(ch) + 256
+
+
+def dpkg_compare_string(a, b):
+    """dpkg's verrevcmp: letters before other characters, "~" before everything, digit runs by number."""
+    i = j = 0
+    while i < len(a) or j < len(b):
+        while (i < len(a) and not a[i].isdigit()) or (j < len(b) and not b[j].isdigit()):
+            d = _dpkg_order(a[i] if i < len(a) else "") - _dpkg_order(b[j] if j < len(b) else "")
+            if d:
+                return (d > 0) - (d < 0)
+            i += 1
+            j += 1
+        si, sj = i, j
+        while i < len(a) and a[i].isdigit():
+            i += 1
+        while j < len(b) and b[j].isdigit():
+            j += 1
+        x, y = int(a[si:i] or 0), int(b[sj:j] or 0)
+        if x != y:
+            return (x > y) - (x < y)
+    return 0
+
+
+def dpkg_compare(a, b):
+    """-1 / 0 / 1 in the order of dpkg, like the server's dpkg_* operators."""
+    (ea, ua, ra), (eb, ub, rb) = dpkg_parts(a), dpkg_parts(b)
+    return (ea > eb) - (ea < eb) or dpkg_compare_string(ua, ub) or dpkg_compare_string(ra, rb)
 
 
 def get(item, field):
@@ -159,12 +207,17 @@ def test(c, item):
         return s in [str(x).lower() for x in val]
     if op == "not_in":
         return s not in [str(x).lower() for x in val]
-    if op in VERSION_OPS:
-        a, b = version_tuple(got), version_tuple(val)
-        if a is None or b is None:
-            return False
-        c = version_compare(a, b)
-        return {"version_lt": c < 0, "version_lte": c <= 0, "version_gt": c > 0, "version_gte": c >= 0}[op]
+    if op in VERSION_OPS or op in DPKG_OPS:
+        if op in DPKG_OPS:
+            if not str(got).strip() or not str(val).strip():
+                return False
+            c = dpkg_compare(got, val)
+        else:
+            a, b = version_tuple(got), version_tuple(val)
+            if a is None or b is None:
+                return False
+            c = version_compare(a, b)
+        return {"lt": c < 0, "lte": c <= 0, "gt": c > 0, "gte": c >= 0}[op.split("_")[1]]
     try:
         n = float(got)
     except (TypeError, ValueError):

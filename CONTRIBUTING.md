@@ -8,3 +8,5 @@
 - After any change to `rules/` or `parsers/`: bump `version` in `manifest.json`, run `python scripts/feed.py build` and `python scripts/feed.py check`.
 - Never commit secrets, credentials, or real customer/production data. Use sanitized samples.
 - Changes go through pull requests; direct pushes to `main` should be avoided.
+- Rules `org.cve-*` (and their fixtures) are generated from `data/cves.json` by `scripts/cve2feed.py`, do not edit them: change the generator
+  or the data and run `python scripts/cve2feed.py --offline`. `python -m unittest discover -s tests -p 'test_*.py'` tests the generator.
