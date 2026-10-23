@@ -26,6 +26,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -550,10 +551,13 @@ def ingest(state, records, limit=None):
     return changed
 
 
-def refresh_ubuntu(state, limit, offline_ok=False):
-    """Ask the Ubuntu tracker about the CVEs it was not asked about for 2 days (14 when everything is settled)."""
+def refresh_ubuntu(state, limit, workers=8):
+    """Ask the Ubuntu tracker about the CVEs it was not asked about for 2 days (14 when everything is settled).
+
+    The tracker answers in under a second for what it knows and in 20 seconds or not at all for much of the rest,
+    so several CVEs are asked at once; one it does not answer stays as it was (unknown) until the next run."""
     today = datetime.now(timezone.utc).date()
-    asked = 0
+    due = []
     for cid, entry in sorted(state["cves"].items(), key=lambda c: (c[1].get("ubuntu", {}).get("checked", ""), c[0])):
         ubuntu = entry.get("ubuntu")
         if ubuntu:
@@ -562,16 +566,15 @@ def refresh_ubuntu(state, limit, offline_ok=False):
                           for status, _ in rel.values())
             if age < (14 if settled else 2):
                 continue
-        if asked >= limit:
-            break
-        found = ubuntu_lookup(cid, entry["products"])
-        asked += 1
-        time.sleep(0.2)
-        if found is not None:
-            entry["ubuntu"] = {"checked": today.isoformat(), "sources": found}
-        if asked % 50 == 0:
-            save_state(state)  # a long run keeps what it has
-    return asked
+        due.append(cid)
+    due = due[:limit]
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for done, (cid, found) in enumerate(pool.map(lambda cid: (cid, ubuntu_lookup(cid, state["cves"][cid]["products"])), due), 1):
+            if found is not None:
+                state["cves"][cid]["ubuntu"] = {"checked": today.isoformat(), "sources": found}
+            if done % 50 == 0:
+                save_state(state)  # a long run keeps what it has
+    return len(due)
 
 
 def main():
