@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.22",
+  "version": "2026.10.23",
   "files": {
     "parsers/linux/org.linux-sshd-accepted.json": "cea4e1f7b7812f126a73e6cd51ef3a4fe7264363186bd6d8eb47ae41ece09755",
     "parsers/linux/org.linux-sudo-auth-failure.json": "4b725b12c90ef8209c4c2004f7cbddf69731458b6e61479f20c14b4e374770d4",
@@ -74,9 +74,7 @@
     "rules/any/org.cve-hugo-15e9162f.json": "b8041bb7d4f103cbc64ba0f4556f1ace73e4080d3da9fe15b4e82e3b6005434a",
     "rules/any/org.cve-human-resources-management-system-765c9a1a.json": "33f3dd57dc8cf05e9204e8bcb06a5fcf2dbb614e842fe2dad89db044c7113e10",
     "rules/any/org.cve-i-educar-d9a0ccae.json": "3e9f412cc4a37cc1004722d201637b9971720228aad5bd892cdcded3fe9fb144",
-    "rules/any/org.cve-imagemagick-0968da3c.json": "a63e78d3fe7770f334ea47515d7243975a170c7585c825c3548b6007b11ce6ea",
-    "rules/any/org.cve-imagemagick-2e89f5ee.json": "9689b54e7059dcbfa133162e3132ac4b4392c9da0f47056fa32919beac337b0d",
-    "rules/any/org.cve-imagemagick-661ee3d9.json": "600803f992d7b0c5f2f201421bb4142d01147e114de1d441ecf135ab1b8cbd88",
+    "rules/any/org.cve-imagemagick-2e89f5ee.json": "9b7d4baffe0c97ad61a5d219d38a9761277d71dba5dac084cce446c91f7a1823",
     "rules/any/org.cve-installed-base-df880e41.json": "27437dd99aad225debf5c8d5d57f2d2c72bc810bcc9651308dd33ef58b21e1dc",
     "rules/any/org.cve-international-components-for-unicode-a8ab89c1.json": "c45c060f874ac9249dbfdb92bdd19ec81922c51ae0466aa13e20e31f644ddc16",
     "rules/any/org.cve-irecruitment-7a795dae.json": "1a85a57901bb56c704c904cb513347191e0e42f8ee58939218991162e755e062",

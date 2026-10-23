@@ -488,7 +488,7 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
 
 def generate(state):
     """(rules, fixtures, skipped): everything the state says as {key: rule}, {key: fixture} and the reasons."""
-    groups, skipped = {}, []
+    rows, skipped = [], []
     for cid, entry in sorted(state["cves"].items()):
         for pkey, raw in entry["products"].items():
             product = pkey.split(":", 1)[1]
@@ -499,8 +499,23 @@ def generate(state):
             if not ranges:
                 skipped.append(f"{cid} {product}: no version range that can be written")
                 continue
-            info = dpkg_info(product, entry.get("ubuntu"))
-            groups.setdefault((product, json.dumps(info, sort_keys=True)), (product, info, {}))[2][cid] = (entry, ranges)
+            rows.append((cid, entry, product, ranges, dpkg_info(product, entry.get("ubuntu"))))
+    # A CVE Ubuntu was not asked about (yet) has the source packages the others of its product have.
+    sources = {}
+    for _, entry, product, _, info in rows:
+        if "ubuntu" in entry and info["names"]:
+            sources.setdefault(product, info["names"])
+    rows = [(c, e, p, r, i if "ubuntu" in e else {"names": sources.get(p, []), "fixes": [], "unaffected": []}) for c, e, p, r, i in rows]
+    # A package below the newest fix has at least one CVE, and one Ubuntu has not fixed applies to it whatever the
+    # others say: CVEs of a product and its source packages are one rule when one of them has no fix, else one per
+    # set of fixes (the package is only fine when it has all of them).
+    open_families = {(p, json.dumps(i["names"]), json.dumps(i["unaffected"])) for _, _, p, _, i in rows if not i["fixes"]}
+    groups = {}
+    for cid, entry, product, ranges, info in rows:
+        family = (product, json.dumps(info["names"]), json.dumps(info["unaffected"]))
+        if family in open_families:
+            info = {"names": info["names"], "fixes": [], "unaffected": info["unaffected"]}
+        groups.setdefault((product, json.dumps(info, sort_keys=True)), (product, info, {}))[2][cid] = (entry, ranges)
     rules, fixtures = {}, {}
     for product, info, members in groups.values():
         cves = [(cid, entry, ranges) for cid, (entry, ranges) in members.items()]
