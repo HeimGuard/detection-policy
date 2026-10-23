@@ -915,7 +915,59 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2024-45778": {
@@ -939,7 +991,59 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2024-45779": {
@@ -963,7 +1067,59 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2024-45780": {
@@ -987,7 +1143,59 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2024-45782": {
@@ -1010,7 +1218,59 @@
    "severity": "high",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2024-47569": {
@@ -1334,7 +1594,59 @@
    "severity": "high",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2025-0684": {
@@ -1358,7 +1670,59 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2025-0685": {
@@ -1382,7 +1746,59 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2025-0686": {
@@ -1406,7 +1822,59 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2025-0689": {
@@ -1430,7 +1898,59 @@
    "severity": "high",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2025-10013": {
@@ -1607,7 +2127,59 @@
    "severity": "high",
    "ubuntu": {
     "checked": "2026-10-23",
-    "sources": {}
+    "relation": 2,
+    "sources": {
+     "grub2": {
+      "bionic": [
+       "not-affected",
+       ""
+      ],
+      "focal": [
+       "not-affected",
+       ""
+      ],
+      "jammy": [
+       "not-affected",
+       ""
+      ],
+      "noble": [
+       "not-affected",
+       ""
+      ],
+      "oracular": [
+       "not-affected",
+       ""
+      ],
+      "plucky": [
+       "not-affected",
+       ""
+      ],
+      "questing": [
+       "not-affected",
+       ""
+      ],
+      "resolute": [
+       "not-affected",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "ignored",
+       ""
+      ],
+      "upstream": [
+       "needs-triage",
+       ""
+      ],
+      "xenial": [
+       "not-affected",
+       ""
+      ]
+     }
+    }
    }
   },
   "CVE-2025-11554": {
@@ -2549,7 +3121,12 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-826h-28h9-65hg"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "relation": 2,
+    "sources": {}
+   }
   },
   "CVE-2026-106489": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 2.2.4, the @backstage/plugin-techdocs-backend package is affected by improper authorization enforcement for techdocs static content. An authenticated user with access to one TechDocs documentation site could craft a URL able to read documentation belonging to a different entity. This only affects deployments using the external",
@@ -2617,7 +3194,12 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-9ghw-48h5-v2w5"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "relation": 2,
+    "sources": {}
+   }
   },
   "CVE-2026-106492": {
    "desc": "Backstage is an open framework for building developer portals. Prior to 0.16.1 and 0.17.8, the @backstage/backend-defaults package is affected by improper preservation of access restrictions during service credential delegation. An external service credential configured with access restrictions (e.g., read-only) could bypass those restrictions by routing requests through plugin delegation paths. T",
@@ -2691,7 +3273,12 @@
     "https://github.com/backstage/backstage/releases/tag/v1.54.6",
     "https://github.com/backstage/backstage/security/advisories/GHSA-7649-wm97-w3j3"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "relation": 2,
+    "sources": {}
+   }
   },
   "CVE-2026-106565": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-32 and 6.9.13-57, a missing end-of-file check while reading bzip2-compressed image data can cause an infinite loop and exhaust processing resources. This issue is fixed in versions 7.1.2-32 and 6.9.13-57.",
@@ -3269,7 +3856,51 @@
     "https://github.com/ImageMagick/ImageMagick/releases/tag/7.1.2-31",
     "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-vcjj-32hg-qpx5"
    ],
-   "severity": "medium"
+   "severity": "medium",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "relation": 2,
+    "sources": {
+     "imagemagick": {
+      "bionic": [
+       "needs-triage",
+       ""
+      ],
+      "focal": [
+       "needs-triage",
+       ""
+      ],
+      "jammy": [
+       "needs-triage",
+       ""
+      ],
+      "noble": [
+       "needs-triage",
+       ""
+      ],
+      "resolute": [
+       "needs-triage",
+       ""
+      ],
+      "stonking": [
+       "not-affected",
+       ""
+      ],
+      "trusty": [
+       "needs-triage",
+       ""
+      ],
+      "upstream": [
+       "released",
+       "8:7.1.2.31+dfsg1-1"
+      ],
+      "xenial": [
+       "needs-triage",
+       ""
+      ]
+     }
+    }
+   }
   },
   "CVE-2026-106580": {
    "desc": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-31 and 6.9.13-56, a missing security-policy check in the CUT encoder allows a crafted local encoding operation to read data that policy should deny and can also cause a crash. This issue is fixed in versions 7.1.2-31 and 6.9.13-56.",
@@ -11913,7 +12544,12 @@
     "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02018666648.html",
     "https://issues.chromium.org/issues/561926123"
    ],
-   "severity": "high"
+   "severity": "high",
+   "ubuntu": {
+    "checked": "2026-10-23",
+    "relation": 2,
+    "sources": {}
+   }
   },
   "CVE-2026-12290": {
    "desc": "Memory safety bug fixed in Thunderbird 152. This vulnerability was fixed in Firefox 152, Firefox ESR 140.12, Firefox ESR 115.37, Thunderbird 152, and Thunderbird 140.12.",
@@ -16125,6 +16761,7 @@
    "severity": "high",
    "ubuntu": {
     "checked": "2026-10-23",
+    "relation": 2,
     "sources": {}
    }
   },
@@ -19388,6 +20025,7 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
+    "relation": 2,
     "sources": {}
    }
   },
@@ -19413,6 +20051,7 @@
    "severity": "medium",
    "ubuntu": {
     "checked": "2026-10-23",
+    "relation": 2,
     "sources": {}
    }
   },
@@ -20028,6 +20667,7 @@
    "severity": "high",
    "ubuntu": {
     "checked": "2026-10-23",
+    "relation": 2,
     "sources": {}
    }
   },
@@ -20228,6 +20868,7 @@
    "severity": "high",
    "ubuntu": {
     "checked": "2026-10-23",
+    "relation": 2,
     "sources": {}
    }
   },

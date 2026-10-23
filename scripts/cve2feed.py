@@ -45,6 +45,8 @@ GENERIC = {"tools", "tool", "core", "server", "client", "agent", "manager", "ser
            "platform", "engine", "framework", "library", "libs", "utils", "utilities", "common", "base", "data",
            "system", "console", "portal", "gateway", "network", "desktop", "web", "app", "application", "plugin",
            "plugins", "extension", "sdk", "api", "cli", "gui", "linux", "windows", "kernel", "mobile", "cloud"}
+# Version of how a source package of the tracker is taken as the product (2: grub2 / grub2 is one, php8.5 / php).
+UBUNTU_RELATION = 2
 # Ubuntu releases, oldest first: when a rule is too big the fixes of the oldest are dropped first.
 RELEASES = ["trusty", "xenial", "bionic", "focal", "jammy", "noble", "oracular", "plucky", "questing", "resolute"]
 MAX_FIXED_CVES = 30  # a group of more CVEs is not hidden by a changelog (the conditions would not fit)
@@ -203,16 +205,17 @@ def generic(product):
 
 
 def related(product, source):
-    """Whether an Ubuntu source package is the product (php8.5 / php, glib2.0 / glib, expat / libexpat)."""
-    flat = lambda s: re.sub(r"[^a-z0-9]", "", s.lower())
-    stem = flat(re.sub(r"[0-9.]+$", "", source.lower()))
+    """Whether an Ubuntu source package is the product (php8.5 / php, glib2.0 / glib, expat / libexpat, grub2 / grub2)."""
+    flat = lambda text: re.sub(r"[^a-z0-9]", "", text.lower())
     prod = flat(product)
-    return len(stem) >= 3 and stem in (prod, "lib" + prod) or (len(prod) >= 3 and prod == "lib" + stem)
+    names = {flat(source), flat(re.sub(r"[0-9.]+$", "", source))} - {""}  # with and without its version (php8.5, php)
+    return any(len(name) >= 3 and (name == prod or "lib" + name == prod or name == "lib" + prod) for name in names)
 
 
 def source_regex(source):
-    """The binary packages of a source package: php8.5 -> php8.5, php8.5-cli, libphp8.5-embed; glib2.0 ->
-    libglib2.0-0t64, gir1.2-glib-2.0; libsoup3 -> libsoup-3.0-0; expat -> libexpat1, libexpat1-dev."""
+    """The binary packages of a source package by their names: php8.5 -> php8.5, php8.5-cli, libphp8.5-embed; glib2.0 ->
+    libglib2.0-0t64; libsoup3 -> libsoup-3.0-0; expat -> libexpat1, libexpat1-dev. Only a guess (gir1.2-glib-2.0 is
+    glib2.0 on one release and gobject-introspection on another), for agents that do not send SourcePackage."""
     core = ""
     for token in re.findall(r"[a-z]+|\d+(?:\.\d+)*|[^a-z\d]+", source.lower()):
         if token[0].isdigit():
@@ -221,7 +224,7 @@ def source_regex(source):
             core += token
         else:
             core += "[-_.]?"
-    return r"^(?:lib|gir1\.2-)?" + core + r"[0-9.]*(?:[-_.+][a-z0-9.+_~-]*)?$"
+    return r"^(?:lib)?" + core + r"[0-9.]*(?:[-_.+][a-z0-9.+_~-]*)?$"
 
 
 def ubuntu_lookup(cid, found):
@@ -252,7 +255,10 @@ def dpkg_info(product, ubuntu):
         if not related(product, source):
             continue
         pattern = source_regex(source)
-        if all(status == "not-affected" for status, _ in rel.values()):
+        # "upstream" is the project, not a release, and a release that ended ("ignored") says nothing any more: the
+        # releases that are left decide whether the CVE touches the package.
+        releases = [status for release, (status, _) in rel.items() if release != "upstream" and status != "ignored"]
+        if releases and all(status == "not-affected" for status in releases):
             info["unaffected"].append([source, pattern])
             continue
         info["names"].append([source, pattern])
@@ -303,17 +309,32 @@ def fix_prefix(version):
     return head + "-" if dash else version
 
 
+def by_source(sources, pattern):
+    """A binary package is one of these source packages: by its SourcePackage (agents 1.24.0+, dpkg) when it has one,
+    else (an older agent, or a package that is its own source) by its name."""
+    return {"any": [{"field": "SourcePackage", "op": "in", "value": sources},
+                    {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": pattern}]}]}
+
+
 def build_when(product, ranges, info, cids, fixes):
     ranged = [range_cond(r) for r in ranges]
-    patterns = [name_pattern(product)] + [p for _, p in info["names"]]
+    sources = [source for source, _ in info["names"]]
+    loose = alternatives([name_pattern(product)] + [p for _, p in info["names"]])
     dpkg_names = alternatives([p for _, p in info["names"]]) if info["names"] else dpkg_name_pattern(product)
     conds = [
-        {"field": "Name", "op": "matches", "value": alternatives(patterns)},
+        # What a package is the product by its source package when it says (libssl3t64 is openssl, gir1.2-glib-2.0 is
+        # gobject-introspection or glib2.0, by the release), else by its name.
+        {"any": [{"field": "SourcePackage", "op": "in", "value": sources},
+                 {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": loose}]}]}
+        if sources else {"field": "Name", "op": "matches", "value": loose},
         ranged[0] if len(ranged) == 1 else {"any": ranged},
         # rpm packages are not read for backported fixes yet, so they stay out of the CVE rules.
         {"field": "Source", "op": "not_in", "value": ["rpm"]},
         # A dpkg package is the product itself, not a library named after it.
-        {"any": [{"field": "Source", "op": "ne", "value": "dpkg"}, {"field": "Name", "op": "matches", "value": dpkg_names}]},
+        {"any": [{"field": "Source", "op": "ne", "value": "dpkg"}] + (
+            [{"field": "SourcePackage", "op": "in", "value": sources},
+             {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": dpkg_names}]}]
+            if sources else [{"field": "Name", "op": "matches", "value": dpkg_names}])},
     ]
     # Debian / Ubuntu backport fixes without changing the upstream version: a changelog that names the CVE (the agent
     # sends the ids as ",CVE-1,CVE-2,") says the package is fixed.
@@ -322,19 +343,38 @@ def build_when(product, ranges, info, cids, fixes):
         conds.append({"not": named[0] if len(named) == 1 else {"all": named}})
     # What the Ubuntu tracker says: a package at or after the version that fixed it is fine, and so is one of a
     # source package the CVE does not touch. A Debian revision (+deb12u1) is not comparable with an Ubuntu one.
-    skip = [{"all": [
-        {"field": "Source", "op": "eq", "value": "dpkg"},
-        {"field": "Name", "op": "matches", "value": pattern},
-        {"field": "Version", "op": "starts_with", "value": fix_prefix(version)},
-        {"field": "Version", "op": "dpkg_gte", "value": version},
-        {"field": "Version", "op": "not_matches", "value": r"[+~]deb\d"},
-    ]} for _, pattern, version, _ in fixes]
+    # (The conditions are nested at most 6 deep, so the choice of the source package is spelled out per fix.)
+    fixed = []
+    for source, pattern, version, _ in fixes:
+        after = [{"field": "Version", "op": "starts_with", "value": fix_prefix(version)}, {"field": "Version", "op": "dpkg_gte", "value": version}]
+        fixed.append({"all": [{"field": "SourcePackage", "op": "eq", "value": source}] + after})
+        fixed.append({"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": pattern}] + after})
+    if fixed:
+        conds.append({"not": {"all": [{"field": "Source", "op": "eq", "value": "dpkg"},
+                                      {"field": "Version", "op": "not_matches", "value": r"[+~]deb\d"},
+                                      fixed[0] if len(fixed) == 1 else {"any": fixed}]}})
     if info["unaffected"]:
-        skip.append({"all": [{"field": "Source", "op": "eq", "value": "dpkg"},
-                             {"field": "Name", "op": "matches", "value": alternatives([p for _, p in info["unaffected"]])}]})
-    if skip:
-        conds.append({"not": skip[0] if len(skip) == 1 else {"any": skip}})
+        conds.append({"not": {"all": [{"field": "Source", "op": "eq", "value": "dpkg"},
+                                      by_source([s for s, _ in info["unaffected"]], alternatives([p for _, p in info["unaffected"]]))]}})
     return {"all": conds}
+
+
+def union_ranges(range_lists):
+    """The ranges all the lists cover: of the ranges that start at the same version only the one that ends last stays."""
+    best = {}
+    for ranges in range_lists:
+        for start, end_excl, end_incl in ranges:
+            end = end_excl or end_incl
+            key = (feed.version_tuple(end), bool(end_incl))
+            if start not in best or key > best[start][0]:
+                best[start] = (key, (start, end_excl, end_incl))
+    return sorted((r for _, r in best.values()), key=lambda r: tuple(x or "" for x in r))[:8]
+
+
+def fixed_text(ranges):
+    """'fixed in 6.9.13.57 / 7.1.2.32' of the ends of the ranges of one CVE."""
+    ends = [f"fixed in {e}" if e else f"up to {i}" for _, e, i in ranges]
+    return " / ".join(ends[:1] + [x.removeprefix("fixed in ") for x in ends[1:]]) if all(x.startswith("fixed in ") for x in ends) else "; ".join(ends)
 
 
 def range_text(ranges):
@@ -359,15 +399,19 @@ def fit(head, items, tail, limit=1000):
 
 
 def build_rule(product, ranges, info, cves, fixes):
-    """cves: [(cid, entry)] of one group. Returns the rule."""
-    cves = sorted(cves, key=lambda c: (-RANK[c[1]["severity"]], not c[1]["kev"], c[0]), reverse=False)
-    cids = [c for c, _ in cves]
-    top_cid, top = cves[0]
+    """cves: [(cid, entry, its ranges)] of one group, `ranges` the ones all of them cover. Returns the rule."""
+    cves = sorted(cves, key=lambda c: (-RANK[c[1]["severity"]], not c[1]["kev"], c[0]))
+    cids = [c for c, _, _ in cves]
+    top_cid, top, _ = cves[0]
     name = re.sub(r"[_\s]+", " ", product).strip()
-    sig = json.dumps([product, ranges, info], sort_keys=True)
+    sig = json.dumps([product, info], sort_keys=True)
     key = re.sub(r"[^a-z0-9.-]+", "-", f"org.cve-{product}".lower()).strip("-")[:48].rstrip("-.")
     key += "-" + hashlib.sha1(sig.encode()).hexdigest()[:8]
-    kev = [c for c, e in cves if e["kev"]]
+    kev = [c for c, e, _ in cves if e["kev"]]
+    # CVEs fixed in different versions are one finding (a package below the newest fix has at least one of them):
+    # each is told with the version that fixed it, so a package between two fixes can see what applies.
+    uniform = len({tuple(r) for _, _, r in cves}) == 1
+    texts = [c if uniform else f"{c} ({fixed_text(r)})" for c, _, r in cves]
     if len(cves) == 1:
         title = f"{name} affected by {top_cid}"
         description = f"{top_cid}{' (CISA Known Exploited Vulnerabilities)' if top['kev'] else ''}: {top['desc']}"[:1000]
@@ -376,17 +420,17 @@ def build_rule(product, ranges, info, cves, fixes):
         title = f"{name} affected by {len(cves)} CVEs"
         exploited = f" Known exploited: {', '.join(kev[:10])}{' ...' if len(kev) > 10 else ''}." if kev else ""
         description = fit(f"{len(cves)} known vulnerabilities of {name} ({range_text(ranges)}), the most severe is "
-                          f"{top_cid} ({top['severity']}).{exploited} CVEs: ", cids, "")
-        message = fit("{Name} {Version} is affected by " + f"{len(cves)} CVEs: ", cids, "")
+                          f"{top_cid} ({top['severity']}).{exploited} CVEs: ", texts, "")
+        message = fit("{Name} {Version} is affected by " + f"{len(cves)} CVEs{'' if uniform else ' (not all of them if it is newer than a fix)'}: ", texts, "")
     links = [f"https://nvd.nist.gov/vuln/detail/{c}" for c in cids[:3]]
-    for _, e in cves[:3]:
+    for _, e, _ in cves[:3]:
         links += e["refs"]
     urls = list(dict.fromkeys(links))[:10]
     return {
         "key": key,
         "name": title[:120],
         "description": description,
-        "severity": max((e["severity"] for _, e in cves), key=RANK.get),
+        "severity": max((e["severity"] for _, e, _ in cves), key=RANK.get),
         "platform": "any",
         "source": "software",
         "when": build_when(product, ranges, info, cids, fixes),
@@ -439,11 +483,15 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
     if len(cids) <= MAX_FIXED_CVES:
         negative.append({"Name": dpkg_name, "Version": v, "Source": "dpkg", "FixedCves": "," + ",".join(cids) + ","})
     for source, _, version, _ in fixes[:1]:
-        # Just before the fix is a finding, the fix itself and the later revisions are not.
+        # Just before the fix is a finding, the fix itself and the later revisions are not; the source package
+        # of a binary one with a name nobody could guess (SourcePackage, agents 1.24.0+) says the same.
         revision = fix_prefix(version) + "0"
         positive.append({"Name": source, "Version": revision, "Source": "dpkg"})
+        positive.append({"Name": "libweird-binary0", "Version": revision, "Source": "dpkg", "SourcePackage": source})
         negative.append({"Name": source, "Version": version, "Source": "dpkg"})
         negative.append({"Name": source, "Version": version + ".1", "Source": "dpkg"})
+        negative.append({"Name": "libweird-binary0", "Version": version, "Source": "dpkg", "SourcePackage": source})
+        negative.append({"Name": source, "Version": revision, "Source": "dpkg", "SourcePackage": "some-other-source"})
     if info["unaffected"]:
         negative.append({"Name": info["unaffected"][0][0], "Version": v, "Source": "dpkg"})
     positive = [i for i in positive if hit(i)]
@@ -455,7 +503,7 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
 
 def generate(state):
     """(rules, fixtures, skipped): everything the state says as {key: rule}, {key: fixture} and the reasons."""
-    groups, skipped = {}, []
+    rows, skipped = [], []
     for cid, entry in sorted(state["cves"].items()):
         for pkey, raw in entry["products"].items():
             product = pkey.split(":", 1)[1]
@@ -466,11 +514,27 @@ def generate(state):
             if not ranges:
                 skipped.append(f"{cid} {product}: no version range that can be written")
                 continue
-            info = dpkg_info(product, entry.get("ubuntu"))
-            groups.setdefault((product, json.dumps([ranges, info], sort_keys=True)), (product, ranges, info, {}))[3][cid] = entry
+            rows.append((cid, entry, product, ranges, dpkg_info(product, entry.get("ubuntu"))))
+    # A CVE Ubuntu was not asked about (yet) has the source packages the others of its product have.
+    sources = {}
+    for _, entry, product, _, info in rows:
+        if "ubuntu" in entry and info["names"]:
+            sources.setdefault(product, info["names"])
+    rows = [(c, e, p, r, i if "ubuntu" in e else {"names": sources.get(p, []), "fixes": [], "unaffected": []}) for c, e, p, r, i in rows]
+    # A package below the newest fix has at least one CVE, and one Ubuntu has not fixed applies to it whatever the
+    # others say: CVEs of a product and its source packages are one rule when one of them has no fix, else one per
+    # set of fixes (the package is only fine when it has all of them).
+    open_families = {(p, json.dumps(i["names"]), json.dumps(i["unaffected"])) for _, _, p, _, i in rows if not i["fixes"]}
+    groups = {}
+    for cid, entry, product, ranges, info in rows:
+        family = (product, json.dumps(info["names"]), json.dumps(info["unaffected"]))
+        if family in open_families:
+            info = {"names": info["names"], "fixes": [], "unaffected": info["unaffected"]}
+        groups.setdefault((product, json.dumps(info, sort_keys=True)), (product, info, {}))[2][cid] = (entry, ranges)
     rules, fixtures = {}, {}
-    for product, ranges, info, members in groups.values():
-        cves = list(members.items())
+    for product, info, members in groups.values():
+        cves = [(cid, entry, ranges) for cid, (entry, ranges) in members.items()]
+        ranges = union_ranges([r for _, _, r in cves])
         fixes = sorted(info["fixes"], key=lambda f: (RELEASES.index(f[3]) if f[3] in RELEASES else len(RELEASES), f[2]), reverse=True)
         shown = list(dict.fromkeys((f[1], f[2]) for f in fixes))
         fixes = [next(f for f in fixes if (f[1], f[2]) == s) for s in shown]
@@ -482,7 +546,7 @@ def generate(state):
         if feed.rule_errors(rule, False):
             skipped.append(f"{rule['key']}: {'; '.join(feed.rule_errors(rule, False))}")
             continue
-        fixture = make_fixture(rule, product, ranges, info, [c for c, _ in cves], fixes)
+        fixture = make_fixture(rule, product, ranges, info, [c for c, _, _ in cves], fixes)
         if fixture is None:
             skipped.append(f"{rule['key']}: no valid fixture could be built")
             continue
@@ -560,6 +624,8 @@ def refresh_ubuntu(state, limit, workers=8):
     due = []
     for cid, entry in sorted(state["cves"].items(), key=lambda c: (c[1].get("ubuntu", {}).get("checked", ""), c[0])):
         ubuntu = entry.get("ubuntu")
+        if ubuntu and not ubuntu["sources"] and ubuntu.get("relation", 1) < UBUNTU_RELATION and any(re.search(r"\d", p) for p in entry["products"]):
+            ubuntu = None  # answered with no source of the product while names with a digit (grub2) were not matched
         if ubuntu:
             age = (today - datetime.strptime(ubuntu["checked"], "%Y-%m-%d").date()).days
             settled = all(status in ("released", "not-affected", "ignored") for rel in ubuntu["sources"].values()
@@ -571,7 +637,7 @@ def refresh_ubuntu(state, limit, workers=8):
     with ThreadPoolExecutor(max_workers=workers) as pool:
         for done, (cid, found) in enumerate(pool.map(lambda cid: (cid, ubuntu_lookup(cid, state["cves"][cid]["products"])), due), 1):
             if found is not None:
-                state["cves"][cid]["ubuntu"] = {"checked": today.isoformat(), "sources": found}
+                state["cves"][cid]["ubuntu"] = {"checked": today.isoformat(), "sources": found, "relation": UBUNTU_RELATION}
             if done % 50 == 0:
                 save_state(state)  # a long run keeps what it has
     return len(due)
