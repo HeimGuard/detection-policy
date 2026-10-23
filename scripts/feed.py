@@ -19,7 +19,7 @@ PATH = re.compile(r"^(rules|parsers)/[\w.-]+(/[\w.-]+)*\.json$")
 SEVERITIES = {"critical", "high", "medium", "low", "info"}
 PLATFORMS = {"any", "windows", "linux"}
 SOURCES = {
-    "software": ["Name", "Version", "Publisher", "Source", "FixedCves"],
+    "software": ["Name", "Version", "Publisher", "Source", "FixedCves", "SourcePackage"],
     "processes": ["Name", "Path", "CommandLine", "User", "Count"],
     "listening": ["Protocol", "Address", "Port", "Process", "Path"],
     "startup": ["Name", "Command", "Location", "User"],
