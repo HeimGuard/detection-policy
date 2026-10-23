@@ -92,6 +92,29 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
 
 `--cve CVE-2026-1 ...` takes named CVEs, `--days 120` goes further back (the NVD allows 120 days).
 
+## Security updates of Microsoft
+
+`.github/workflows/msrc-rules.yml` runs every night (and on demand) `scripts/msrc2feed.py`, apart from the NVD rules:
+it reads the latest monthly security updates of the MSRC (CVRF API, `api.msrc.microsoft.com`) and writes `org.msrc-*`
+rules for what the inventory can tell, opening a pull request (`automation/msrc-rules`) for review.
+
+**A rule is a missing update**: the CVEs a build fixes (`10.0.19045.7807`) are one rule and "older than that build" is its
+condition, so a host sees exactly the updates it lacks and the CVEs each of them fixes (three cumulative updates behind: three
+findings; the newest one installed: none). Its severity is that of what the update fixes. A CVE that two monthly updates list
+counts once, for the newer one.
+
+- **Windows 10 / 11 / Server 2016 and later** (the builds `10.0.x`), one family per build of the operating system: the rules
+  are of the `os` source, agents 1.27.0+ list the operating system there (`Id` `windows`, its build with the revision as the
+  `Version`, `10.0.19045.5555`); client and server with the same build share the fixes.
+- **Microsoft Edge** (`Microsoft Edge` on Windows, `microsoft-edge-*` on Linux) and **Visual Studio Code**, software.
+- Not here: Windows 7 to 8.1 and Server 2012 (security-only updates and monthly rollups have builds of their own, ESU), Hotpatch
+  builds, .NET, Office, SQL Server and Exchange. The names and versions of the last ones in Programs and Features, and the bands
+  of the .NET SDK (whose fixed builds are not comparable with the runtime's), were not checked on a device.
+
+`data/msrc.json` keeps, per monthly update, the CVEs each family fixes by build (not the 30 MB documents); the rules are
+generated from it (`python scripts/msrc2feed.py --offline`, CI checks that nothing changes). A rule of your own has another
+key (`org.<source>-<what>`).
+
 ## Workflow
 
 1. Add or change a rule / parser and a fixture in `tests/fixtures/`.

@@ -1,0 +1,38 @@
+{
+  "key": "org.msrc-windows-10-0-20348-5761",
+  "name": "Windows Server 2022 (build 10.0.20348): the update 10.0.20348.5761 is missing (977 CVEs)",
+  "description": "Microsoft's security update 10.0.20348.5761 of Windows Server 2022 (build 10.0.20348) fixes 977 CVEs (2026-Oct). CVEs: CVE-2026-100202, CVE-2026-100215, CVE-2026-100219, CVE-2026-100220, CVE-2026-102211, CVE-2026-102214, CVE-2026-102225, CVE-2026-105016, CVE-2026-105733, CVE-2026-108131, CVE-2026-108399, CVE-2026-108457, CVE-2026-108460, CVE-2026-108467, CVE-2026-69802, CVE-2026-70147, CVE-2026-70153, CVE-2026-70187, CVE-2026-70229, CVE-2026-70250, CVE-2026-83917, CVE-2026-83934, CVE-2026-88117, CVE-2026-88119, CVE-2026-88120, CVE-2026-88171, CVE-2026-88174, CVE-2026-96222, CVE-2026-96913, CVE-2026-96914, CVE-2026-96934, CVE-2026-96952, CVE-2026-97814, CVE-2026-100201, CVE-2026-100203, CVE-2026-100216, CVE-2026-100217, CVE-2026-100218, CVE-2026-100222, CVE-2026-100225, CVE-2026-102186, CVE-2026-102187, CVE-2026-102188, CVE-2026-102189, CVE-2026-102191, CVE-2026-102192, CVE-2026-102194, CVE-2026-102198, CVE-2026-102199, CVE-2026-102202, CVE-2026-102203, CVE-2026-102205 and 925 more",
+  "severity": "critical",
+  "platform": "windows",
+  "source": "os",
+  "when": {
+    "all": [
+      {
+        "field": "Id",
+        "op": "eq",
+        "value": "windows"
+      },
+      {
+        "field": "Version",
+        "op": "starts_with",
+        "value": "10.0.20348."
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "10.0.20348.5761"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 10.0.20348.5761, the update that fixes 977 CVEs: CVE-2026-100202, CVE-2026-100215, CVE-2026-100219, CVE-2026-100220, CVE-2026-102211, CVE-2026-102214, CVE-2026-102225, CVE-2026-105016, CVE-2026-105733, CVE-2026-108131, CVE-2026-108399, CVE-2026-108457, CVE-2026-108460, CVE-2026-108467, CVE-2026-69802, CVE-2026-70147, CVE-2026-70153, CVE-2026-70187, CVE-2026-70229, CVE-2026-70250, CVE-2026-83917, CVE-2026-83934, CVE-2026-88117, CVE-2026-88119, CVE-2026-88120, CVE-2026-88171, CVE-2026-88174, CVE-2026-96222, CVE-2026-96913, CVE-2026-96914, CVE-2026-96934, CVE-2026-96952, CVE-2026-97814, CVE-2026-100201, CVE-2026-100203, CVE-2026-100216, CVE-2026-100217, CVE-2026-100218, CVE-2026-100222, CVE-2026-100225, CVE-2026-102186, CVE-2026-102187, CVE-2026-102188, CVE-2026-102189, CVE-2026-102191, CVE-2026-102192, CVE-2026-102194, CVE-2026-102198, CVE-2026-102199, CVE-2026-102202, CVE-2026-102203, CVE-2026-102205, CVE-2026-102206, CVE-2026-102207 and 923 more",
+  "remediation": "Install the latest cumulative update (Windows Update).",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100202",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100215",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100219",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-100220",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102211",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102214",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}

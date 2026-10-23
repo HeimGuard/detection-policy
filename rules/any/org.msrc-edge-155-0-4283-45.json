@@ -1,0 +1,60 @@
+{
+  "key": "org.msrc-edge-155-0-4283-45",
+  "name": "Microsoft Edge: the update 155.0.4283.45 is missing (213 CVEs)",
+  "description": "Microsoft's security update 155.0.4283.45 of Microsoft Edge fixes 213 CVEs (2026-Oct). CVEs: CVE-2026-106197, CVE-2026-106347, CVE-2026-106358, CVE-2026-106382, CVE-2026-102322, CVE-2026-106184, CVE-2026-106190, CVE-2026-106193, CVE-2026-106200, CVE-2026-106202, CVE-2026-106203, CVE-2026-106204, CVE-2026-106211, CVE-2026-106214, CVE-2026-106215, CVE-2026-106227, CVE-2026-106231, CVE-2026-106233, CVE-2026-106235, CVE-2026-106239, CVE-2026-106240, CVE-2026-106243, CVE-2026-106245, CVE-2026-106248, CVE-2026-106255, CVE-2026-106257, CVE-2026-106258, CVE-2026-106268, CVE-2026-106273, CVE-2026-106278, CVE-2026-106281, CVE-2026-106293, CVE-2026-106308, CVE-2026-106318, CVE-2026-106327, CVE-2026-106329, CVE-2026-106332, CVE-2026-106346, CVE-2026-106349, CVE-2026-106357, CVE-2026-106364, CVE-2026-106369, CVE-2026-106376, CVE-2026-106377, CVE-2026-106379, CVE-2026-106383, CVE-2026-106393, CVE-2026-106396, CVE-2026-106411, CVE-2026-106412, CVE-2026-106421, CVE-2026-106423 and 161 more",
+  "severity": "critical",
+  "platform": "any",
+  "source": "software",
+  "when": {
+    "all": [
+      {
+        "any": [
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "ne",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft edge$"
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "eq",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft-edge(-stable|-beta|-dev)?$"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "155.0.4283.45"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 155.0.4283.45, the update that fixes 213 CVEs: CVE-2026-106197, CVE-2026-106347, CVE-2026-106358, CVE-2026-106382, CVE-2026-102322, CVE-2026-106184, CVE-2026-106190, CVE-2026-106193, CVE-2026-106200, CVE-2026-106202, CVE-2026-106203, CVE-2026-106204, CVE-2026-106211, CVE-2026-106214, CVE-2026-106215, CVE-2026-106227, CVE-2026-106231, CVE-2026-106233, CVE-2026-106235, CVE-2026-106239, CVE-2026-106240, CVE-2026-106243, CVE-2026-106245, CVE-2026-106248, CVE-2026-106255, CVE-2026-106257, CVE-2026-106258, CVE-2026-106268, CVE-2026-106273, CVE-2026-106278, CVE-2026-106281, CVE-2026-106293, CVE-2026-106308, CVE-2026-106318, CVE-2026-106327, CVE-2026-106329, CVE-2026-106332, CVE-2026-106346, CVE-2026-106349, CVE-2026-106357, CVE-2026-106364, CVE-2026-106369, CVE-2026-106376, CVE-2026-106377, CVE-2026-106379, CVE-2026-106383, CVE-2026-106393, CVE-2026-106396, CVE-2026-106411, CVE-2026-106412, CVE-2026-106421, CVE-2026-106423, CVE-2026-106426 and 160 more",
+  "remediation": "Update Microsoft Edge.",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-106197",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-106347",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-106358",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-106382",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102322",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-106184",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}
