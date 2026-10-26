@@ -274,7 +274,9 @@ def rule_errors(r, parser):
         for f in ("description", "message", "remediation"):
             if f in r and (not isinstance(r[f], str) or len(r[f]) > 1000):
                 errs.append(f"bad {f}")
-        if "when" not in r:
+        # A rule of a tracker names its packages in "select" and its CVEs in "cves" and has no "when": only servers that know
+        # them read it (an older one skips it as invalid instead of reading a condition that would report everything).
+        if "when" not in r and not (r.get("select") is not None and isinstance(r.get("cves"), list)):
             errs.append("when missing")
         # A rule whose CVEs a server evaluates one by one (server: SecurityRules::cvesValid): the packages it is about
         # in "select" (the "when" is for servers that do not know it) and the CVEs.
@@ -310,18 +312,21 @@ def selector_keys(condition, out=None):
 
 
 def cve_duplicates(definitions):
-    """A CVE is one entry for a package: the same CVE in two rules about the same source package or name is an error."""
+    """A CVE is one entry for a package (and release): the same CVE in two rules about the same source package or name is an error."""
     seen, errors = {}, []
     for d in sorted(definitions, key=lambda d: d.get("key", "")):
         if not isinstance(d.get("cves"), list):
             continue
-        keys = selector_keys(d.get("select"))
+        rule_keys = selector_keys(d.get("select"))
         for cve in d["cves"]:
             cid = cve.get("id")
-            for other_key, other_keys in seen.get(cid, []):
-                if keys & other_keys:
+            # What the CVE is about: the source packages its tracker data names, else what the rule selects.
+            about = {f"{s.lower()}@{release}" for t in ("ubuntu", "debian") for names, lines in (cve.get(t) or {}).items()
+                     for s in names.split(",") for release in lines} or rule_keys
+            for other_key, other_about in seen.get(cid, []):
+                if about & other_about:
                     errors.append(f"{cid} is in {other_key} and in {d['key']}, which are about the same package")
-            seen.setdefault(cid, []).append((d["key"], keys))
+            seen.setdefault(cid, []).append((d["key"], about))
     return errors
 
 
@@ -395,6 +400,12 @@ def check():
             for i, item in enumerate(fx.get(kind, [])):
                 if parser:
                     ok = matches_parser(d, item)
+                elif "when" not in d:
+                    # A rule of a tracker: the packages in "select", then the CVEs one by one (scripts/cves.py), for the
+                    # release and the distribution the fixture says.
+                    import cves
+                    context = fx.get("context", {})
+                    ok = test(d["select"], item) and bool(cves.affecting(d["cves"], item, context.get("release"), context.get("os")))
                 else:
                     ok = test(d["when"], item)
                 if ok != expect:

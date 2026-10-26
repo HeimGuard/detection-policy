@@ -1,0 +1,36 @@
+{
+ "key": "org.distro-ubuntu-02",
+ "context": {
+  "release": "noble",
+  "os": "ubuntu"
+ },
+ "positive": [
+  {
+   "Name": "redis",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Ubuntu"
+  }
+ ],
+ "negative": [
+  {
+   "Name": "not-a-package-of-this-rule",
+   "Version": "1.0",
+   "Source": "dpkg",
+   "Origin": "Ubuntu"
+  },
+  {
+   "Name": "redis",
+   "Version": "0.0.1",
+   "Source": "snap",
+   "Origin": "Ubuntu"
+  },
+  {
+   "Name": "redis",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Ubuntu",
+   "FixedCves": ",CVE-2024-31449,CVE-2025-49844,"
+  }
+ ]
+}

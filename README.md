@@ -112,6 +112,27 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
 
 `--cve CVE-2026-1 ...` takes named CVEs, `--days 120` goes further back (the NVD allows 120 days).
 
+## Rules of the Ubuntu and Debian trackers
+
+The CVE rules above start from the NVD, which has no product for a third of the new CVEs yet and none at all for the kernel.
+`.github/workflows/distro-rules.yml` runs every night `scripts/distro2feed.py`: it reads the
+[Ubuntu CVE tracker](https://ubuntu.com/security/cves) (critical and high CVEs that `focal`, `jammy`, `noble`, `questing` or
+`resolute` has not fixed, and the ones it fixed in the last year) and the [Debian Security Tracker](https://security-tracker.debian.org/tracker/data/json)
+(open CVEs of urgency medium and up, and the fixes of this and last year), and writes `org.distro-ubuntu-NN` and `org.distro-debian-NN`
+rules (`rules/linux`), opening a pull request (`automation/distro-rules`).
+
+- **Same format**: `select` (the source packages of the rule, as dpkg packages) and `cves` (id, severity, no ranges, `ubuntu` or
+  `debian`: per source package and release `[status, fixed version]`), no `when` (an older server skips the rule as invalid).
+  The server judges every CVE alone: installed < fixed, the changelog of the package counts as a fix, `linux-signed*` is judged by
+  the tracker of `linux*`.
+- **One entry per CVE**: a CVE a rule of the NVD already judges for a source package (with the word of the tracker) is left out
+  here; `feed.py check` fails when a CVE is in two rules about the same package.
+- **Stable keys**: the source packages are spread over 32 rules by a hash of the name, so a rule keeps its key and its findings
+  their acknowledgements when a package comes or goes. The rules fit 1.8 MB per distribution (the server takes 8 MB of the whole
+  feed): open CVEs go first, the more severe, the newer.
+- Fixtures say the release and the distribution (`"context": {"release": "noble", "os": "ubuntu"}`) and are checked by
+  `scripts/cves.py`, the Python twin of the server's `SecurityCves`.
+
 ## Security updates of Microsoft
 
 `.github/workflows/msrc-rules.yml` runs every night (and on demand) `scripts/msrc2feed.py`, apart from the NVD rules:

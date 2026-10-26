@@ -1,0 +1,36 @@
+{
+ "key": "org.distro-ubuntu-16",
+ "context": {
+  "release": "jammy",
+  "os": "ubuntu"
+ },
+ "positive": [
+  {
+   "Name": "golang-1.24",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Ubuntu"
+  }
+ ],
+ "negative": [
+  {
+   "Name": "not-a-package-of-this-rule",
+   "Version": "1.0",
+   "Source": "dpkg",
+   "Origin": "Ubuntu"
+  },
+  {
+   "Name": "golang-1.24",
+   "Version": "0.0.1",
+   "Source": "snap",
+   "Origin": "Ubuntu"
+  },
+  {
+   "Name": "golang-1.24",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Ubuntu",
+   "FixedCves": ",CVE-2026-39821,"
+  }
+ ]
+}
