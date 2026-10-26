@@ -276,6 +276,18 @@ def rule_errors(r, parser):
                 errs.append(f"bad {f}")
         if "when" not in r:
             errs.append("when missing")
+        # A rule whose CVEs a server evaluates one by one (server: SecurityRules::cvesValid): the packages it is about
+        # in "select" (the "when" is for servers that do not know it) and the CVEs.
+        cves = r.get("cves")
+        if cves is not None and (not isinstance(cves, list) or not 1 <= len(cves) <= 3000 or not all(
+                isinstance(c, dict) and re.match(r"^CVE-\d{4}-\d+$", str(c.get("id", "")))
+                and c.get("severity", "medium") in SEVERITIES
+                and isinstance(c.get("ranges", []), list) and isinstance(c.get("ubuntu", {}), dict) for c in cves)):
+            errs.append("cves: a list of 1 to 3000 CVEs (id, severity, ranges, ubuntu)")
+        if "select" in r and cves is None:
+            errs.append("select needs cves")
+        if "select" in r:
+            cond_errors(r["select"], "select", 1, [0], errs)
     if "when" in r:
         cond_errors(r["when"], "when", 1, [0], errs)
     return errs

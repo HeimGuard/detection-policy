@@ -316,7 +316,9 @@ def by_source(sources, pattern):
                     {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": pattern}]}]}
 
 
-def build_when(product, ranges, info, cids, fixes):
+def build_when(product, ranges, info, cids, fixes, select=False):
+    """The condition of a rule. With `select` only which packages the rule is about (the name, the source package, not rpm,
+    a dpkg package that is the product itself): a server that knows "cves" decides the versions CVE by CVE, see cve_list."""
     ranged = [range_cond(r) for r in ranges]
     sources = [source for source, _ in info["names"]]
     loose = alternatives([name_pattern(product)] + [p for _, p in info["names"]])
@@ -327,7 +329,7 @@ def build_when(product, ranges, info, cids, fixes):
         {"any": [{"field": "SourcePackage", "op": "in", "value": sources},
                  {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": loose}]}]}
         if sources else {"field": "Name", "op": "matches", "value": loose},
-        ranged[0] if len(ranged) == 1 else {"any": ranged},
+        *([] if select else [ranged[0] if len(ranged) == 1 else {"any": ranged}]),
         # rpm packages are not read for backported fixes yet, so they stay out of the CVE rules.
         {"field": "Source", "op": "not_in", "value": ["rpm"]},
         # A dpkg package is the product itself, not a library named after it.
@@ -336,6 +338,8 @@ def build_when(product, ranges, info, cids, fixes):
              {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": dpkg_names}]}]
             if sources else [{"field": "Name", "op": "matches", "value": dpkg_names}])},
     ]
+    if select:
+        return {"all": conds}
     # Debian / Ubuntu backport fixes without changing the upstream version: a changelog that names the CVE (the agent
     # sends the ids as ",CVE-1,CVE-2,") says the package is fixed.
     if len(cids) <= MAX_FIXED_CVES:
@@ -357,6 +361,26 @@ def build_when(product, ranges, info, cids, fixes):
         conds.append({"not": {"all": [{"field": "Source", "op": "eq", "value": "dpkg"},
                                       by_source([s for s, _ in info["unaffected"]], alternatives([p for _, p in info["unaffected"]]))]}})
     return {"all": conds}
+
+
+def cve_list(product, cves):
+    """The CVEs of a rule for a server that evaluates them one by one (SecurityCves on the server): each with its severity,
+    the versions of the project the NVD says are vulnerable (installed < the end of a range, never equal) and what the
+    Ubuntu tracker says of the source packages of the product per release ([status, fixed version]): the word of the
+    distribution counts for its packages, the ranges for the rest (and for a package Ubuntu does not know)."""
+    out = []
+    for cid, entry, ranges in cves:
+        item = {"id": cid, "severity": entry["severity"], "ranges": [list(r) for r in ranges]}
+        tracker = {}
+        for source, rel in sorted(((entry.get("ubuntu") or {}).get("sources") or {}).items()):
+            if related(product, source):
+                lines = {release: [status, version if status == "released" else ""] for release, (status, version) in sorted(rel.items()) if release != "upstream"}
+                if lines:
+                    tracker[source] = lines
+        if tracker:
+            item["ubuntu"] = tracker
+        out.append(item)
+    return out
 
 
 def union_ranges(range_lists):
@@ -421,7 +445,7 @@ def build_rule(product, ranges, info, cves, fixes):
         exploited = f" Known exploited: {', '.join(kev[:10])}{' ...' if len(kev) > 10 else ''}." if kev else ""
         description = fit(f"{len(cves)} known vulnerabilities of {name} ({range_text(ranges)}), the most severe is "
                           f"{top_cid} ({top['severity']}).{exploited} CVEs: ", texts, "")
-        message = fit("{Name} {Version} is affected by " + f"{len(cves)} CVEs{'' if uniform else ' (not all of them if it is newer than a fix)'}: ", texts, "")
+        message = fit("{Name} {Version} is affected by " + f"{len(cves)} CVEs: ", texts, "")
     links = [f"https://nvd.nist.gov/vuln/detail/{c}" for c in cids[:3]]
     for _, e, _ in cves[:3]:
         links += e["refs"]
@@ -433,7 +457,11 @@ def build_rule(product, ranges, info, cves, fixes):
         "severity": max((e["severity"] for _, e, _ in cves), key=RANK.get),
         "platform": "any",
         "source": "software",
+        # "when" is what a server that does not know "cves" evaluates (a package below the newest fix has at least one CVE);
+        # one that does selects the packages with "select" and evaluates the CVEs one by one (installed < fixed, per CVE).
         "when": build_when(product, ranges, info, cids, fixes),
+        "select": build_when(product, ranges, info, cids, fixes, select=True),
+        "cves": cve_list(product, cves),
         "message": message[:1000],
         "remediation": "Update the software to a fixed version, see the vendor advisory.",
         "urls": urls,

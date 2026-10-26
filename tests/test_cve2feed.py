@@ -67,6 +67,59 @@ class Names(unittest.TestCase):
             self.assertFalse(cve2feed.related(product, source), f"{product} / {source}")
 
 
+class PerCve(unittest.TestCase):
+    """A1, A2: a rule lists its CVEs with their own fixed versions and Ubuntu's word, for a server that judges them one by one."""
+
+    def chrome_rule(self):
+        state = {"cves": {
+            "CVE-2026-1": cve("high", {"google:chrome": [[None, "156.0.8078.47", None]]}),
+            "CVE-2026-2": cve("critical", {"google:chrome": [[None, "156.0.8087.47", None]]}),
+        }}
+        rules, _, skipped = cve2feed.generate(state)
+        self.assertEqual([], skipped)
+        self.assertEqual(1, len(rules))
+        return next(iter(rules.values()))
+
+    def test_every_cve_keeps_its_own_range(self):
+        rule = self.chrome_rule()
+        self.assertEqual([], feed.rule_errors(rule, False))
+        by_id = {c["id"]: c for c in rule["cves"]}
+        self.assertEqual([[None, "156.0.8078.47", None]], by_id["CVE-2026-1"]["ranges"])
+        self.assertEqual([[None, "156.0.8087.47", None]], by_id["CVE-2026-2"]["ranges"])
+        self.assertEqual("critical", by_id["CVE-2026-2"]["severity"])
+
+    def test_the_message_no_longer_claims_it_may_be_wrong(self):
+        rule = self.chrome_rule()
+        self.assertNotIn("not all of them", rule["message"])
+        self.assertNotIn("newer than a fix", rule["message"])
+        self.assertNotIn("not all of them", rule["description"])
+
+    def test_the_selection_has_no_version_so_the_server_can_judge_each_cve(self):
+        rule = self.chrome_rule()
+        item = {"Name": "google-chrome-stable", "Version": "156.0.8078.47-1", "Source": "dpkg"}
+        self.assertTrue(feed.test(rule["select"], item), "the package is selected, its CVEs decide")
+        self.assertTrue(feed.test(rule["when"], item), "the old condition (newest fix) is what an older server reads")
+        self.assertFalse(feed.test(rule["select"], {"Name": "node-chrome-trace-event", "Version": "1.0.3-2", "Source": "dpkg"}))
+        self.assertFalse(feed.test(rule["select"], {"Name": "google-chrome-stable", "Version": "1", "Source": "rpm"}))
+        self.assertNotIn("Version", repr(rule["select"]).replace("SourcePackage", ""))
+
+    def test_the_word_of_ubuntu_is_kept_per_release_for_the_source_packages_of_the_product(self):
+        ubuntu = {"imagemagick": {"resolute": ["needed", ""], "noble": ["released", "8:6.9.12.98+dfsg1-5.2ubuntu0.1"], "upstream": ["needed", ""]},
+                  "unrelated": {"noble": ["released", "1"]}}
+        state = {"cves": {"CVE-2026-9": cve("medium", {"imagemagick:imagemagick": [[None, "7.1.2.30", None]]}, ubuntu)}}
+        rules = cve2feed.generate(state)[0]
+        cves = next(iter(rules.values()))["cves"]
+        self.assertEqual({"imagemagick": {"noble": ["released", "8:6.9.12.98+dfsg1-5.2ubuntu0.1"], "resolute": ["needed", ""]}}, cves[0]["ubuntu"])
+
+    def test_a_cve_list_with_a_bad_id_is_refused(self):
+        rule = self.chrome_rule()
+        rule["cves"][0]["id"] = "not-a-cve"
+        self.assertTrue(feed.rule_errors(rule, False))
+        rule = self.chrome_rule()
+        del rule["cves"]
+        self.assertIn("select needs cves", feed.rule_errors(rule, False))
+
+
 class Rules(unittest.TestCase):
     def test_what_ubuntu_fixed_is_not_reported_and_what_it_did_not_is(self):
         state = {"cves": {"CVE-2026-19654": cve("high", {"rsyslog:rsyslog": [["8.36.0", "8.2608.0", None]]}, {"rsyslog": {
