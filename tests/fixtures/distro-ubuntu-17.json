@@ -1,0 +1,36 @@
+{
+ "key": "org.distro-ubuntu-17",
+ "context": {
+  "release": "focal",
+  "os": "ubuntu"
+ },
+ "positive": [
+  {
+   "Name": "snapd",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Ubuntu"
+  }
+ ],
+ "negative": [
+  {
+   "Name": "not-a-package-of-this-rule",
+   "Version": "1.0",
+   "Source": "dpkg",
+   "Origin": "Ubuntu"
+  },
+  {
+   "Name": "snapd",
+   "Version": "0.0.1",
+   "Source": "snap",
+   "Origin": "Ubuntu"
+  },
+  {
+   "Name": "snapd",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Ubuntu",
+   "FixedCves": ",CVE-2026-15226,CVE-2026-3888,CVE-2026-8933,"
+  }
+ ]
+}

@@ -36,7 +36,10 @@ import feed  # noqa: E402  (the same rule checks and matching as CI)
 ROOT = Path(__file__).resolve().parent.parent
 API = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 UBUNTU_API = "https://ubuntu.com/security/cves/{}.json"
+DEBIAN_API = "https://security-tracker.debian.org/tracker/data/json"
 STATE = ROOT / "data" / "cves.json"
+# Corrections of the NVD ranges by hand (data/overrides.json), see apply_override.
+OVERRIDES = ROOT / "data" / "overrides.json"
 TARGET_SW = {"*", "-", "windows", "linux", "debian", "ubuntu"}
 SEVERITY = {"CRITICAL": "critical", "HIGH": "high", "MEDIUM": "medium", "LOW": "low"}
 RANK = {"critical": 4, "high": 3, "medium": 2, "low": 1}
@@ -49,6 +52,8 @@ GENERIC = {"tools", "tool", "core", "server", "client", "agent", "manager", "ser
 UBUNTU_RELATION = 2
 # Ubuntu releases, oldest first: when a rule is too big the fixes of the oldest are dropped first.
 RELEASES = ["trusty", "xenial", "bionic", "focal", "jammy", "noble", "oracular", "plucky", "questing", "resolute"]
+# Debian releases, oldest first (sid is no release: it has no fixed version a package could be compared with).
+DEBIAN_RELEASES = ["buster", "bullseye", "bookworm", "trixie", "forky"]
 MAX_FIXED_CVES = 30  # a group of more CVEs is not hidden by a changelog (the conditions would not fit)
 
 
@@ -195,6 +200,55 @@ def norm_ranges(ranges):
     return sorted(out, key=lambda r: tuple(x or "" for x in r))[:8]
 
 
+def load_overrides():
+    """data/overrides.json: {"CVE-2025-1": {"lxd": {"fixed_in": ["5.0.5"], "not_affected": [["4.0.0", "4.0.12"]]}}}.
+
+    The NVD gives one range for what a vendor fixed per release series (lxd: 4.0.0 up to 5.21.4, while 5.0.5 and later 5.0.x
+    are fixed): "fixed_in" says the versions at which a series got its fix (what is at or after one, up to the next minor
+    series, is not vulnerable), "not_affected" ranges [start, end excluding] that are not vulnerable whatever the NVD says."""
+    return json.loads(OVERRIDES.read_text()) if OVERRIDES.exists() else {}
+
+
+def _tuple(version):
+    return feed.version_tuple(version)
+
+
+def subtract(ranges, low, high):
+    """The ranges without [low, high): versions at or after low and below high. Ranges are (start, end_excl, end_incl)."""
+    out = []
+    for start, end_excl, end_incl in ranges:
+        end = end_excl or end_incl
+        lo_t, end_t = (_tuple(start) if start else None), _tuple(end)
+        cmp = feed.version_compare
+        # no overlap
+        if cmp(end_t, _tuple(low)) < 0 or (end_excl and cmp(end_t, _tuple(low)) == 0) or (lo_t is not None and cmp(lo_t, _tuple(high)) >= 0):
+            out.append((start, end_excl, end_incl))
+            continue
+        if lo_t is None or cmp(lo_t, _tuple(low)) < 0:  # what is below low stays
+            out.append((start, low, None))
+        if cmp(end_t, _tuple(high)) > 0 or (end_incl and cmp(end_t, _tuple(high)) == 0):  # what is at or after high stays
+            out.append((high, end_excl, end_incl))
+    return out
+
+
+def bump_minor(version):
+    """5.0.5 -> 5.1: the end of the series a fixed version belongs to."""
+    parts = _tuple(version) or (0,)
+    return f"{parts[0]}.{(parts[1] if len(parts) > 1 else 0) + 1}"
+
+
+def apply_override(overrides, cid, product, ranges):
+    """The ranges after the corrections of data/overrides.json for this CVE and product."""
+    rule = (overrides.get(cid) or {}).get(product)
+    if not rule:
+        return ranges
+    for version in rule.get("fixed_in", []):
+        ranges = subtract(ranges, version, bump_minor(version))
+    for low, high in rule.get("not_affected", []):
+        ranges = subtract(ranges, low, high)
+    return sorted(set(ranges), key=lambda r: tuple(x or "" for x in r))
+
+
 def generic(product):
     words = [w for w in re.split(r"[\s_-]+", product.lower()) if w]
     return not words or all(w in GENERIC or len(w) < 3 for w in words)
@@ -266,6 +320,57 @@ def dpkg_info(product, ubuntu):
             if status == "released" and version:
                 info["fixes"].append([source, pattern, version, release])
     return info
+
+
+def debian_line(info):
+    """What the Debian Security Tracker says of a source package in one release, in the words of the Ubuntu one
+    ([status, fixed version]): resolved with a version is released, with 0 not affected, open is needed (urgency
+    unimportant: not affected, end-of-life: ignored), undetermined needs triage. None when it says nothing useful."""
+    status, fixed, urgency = info.get("status"), str(info.get("fixed_version") or ""), str(info.get("urgency") or "")
+    if status == "resolved":
+        return ["not-affected", ""] if fixed in ("0", "") else ["released", fixed]
+    if status == "open":
+        return ["not-affected", ""] if urgency.startswith("unimportant") else ["ignored", ""] if urgency.startswith("end-of-life") else ["needed", ""]
+    if status == "undetermined":
+        return ["needs-triage", ""]
+    return None
+
+
+def debian_sources(product, records):
+    """{source package: {release: [status, fixed version]}} of the sources of the Debian tracker that are the product;
+    records: [(source package, {release: info})] of one CVE."""
+    out = {}
+    for source, releases in records:
+        if not related(product, source):
+            continue
+        lines = {release: line for release, info in releases.items() if release in DEBIAN_RELEASES
+                 for line in [debian_line(info)] if line}
+        if lines:
+            out[source] = dict(sorted(lines.items()))
+    return out
+
+
+def refresh_debian(state, data):
+    """Put what the Debian Security Tracker says into the CVEs of the state (data: its JSON, {source: {CVE: record}}).
+    Returns how many CVEs changed. The whole file is read every run, so there is no date: a CVE changes when its answer does."""
+    index = {}
+    for source, cves in data.items():
+        for cid, record in cves.items():
+            if cid in state["cves"]:
+                index.setdefault(cid, []).append((source, record.get("releases", {})))
+    changed = 0
+    for cid, entry in state["cves"].items():
+        found = {}
+        for pkey in entry["products"]:
+            found.update(debian_sources(pkey.split(":", 1)[1], index.get(cid, [])))
+        new = {"sources": dict(sorted(found.items()))} if found else None
+        if new != entry.get("debian"):
+            changed += 1
+            if new is None:
+                entry.pop("debian", None)
+            else:
+                entry["debian"] = new
+    return changed
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -366,8 +471,9 @@ def build_when(product, ranges, info, cids, fixes, select=False):
 def cve_list(product, cves):
     """The CVEs of a rule for a server that evaluates them one by one (SecurityCves on the server): each with its severity,
     the versions of the project the NVD says are vulnerable (installed < the end of a range, never equal) and what the
-    Ubuntu tracker says of the source packages of the product per release ([status, fixed version]): the word of the
-    distribution counts for its packages, the ranges for the rest (and for a package Ubuntu does not know)."""
+    Ubuntu tracker ("ubuntu") and the Debian Security Tracker ("debian") say of the source packages of the product per
+    release ([status, fixed version]): the word of the tracker of the device's distribution counts for its packages, the
+    ranges for the rest (and for a package the tracker does not know)."""
     out = []
     for cid, entry, ranges in cves:
         item = {"id": cid, "severity": entry["severity"], "ranges": [list(r) for r in ranges]}
@@ -379,6 +485,10 @@ def cve_list(product, cves):
                     tracker[source] = lines
         if tracker:
             item["ubuntu"] = tracker
+        debian = {source: lines for source, lines in sorted(((entry.get("debian") or {}).get("sources") or {}).items())
+                  if related(product, source)}
+        if debian:
+            item["debian"] = debian
         out.append(item)
     return out
 
@@ -533,6 +643,8 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
 def generate(state):
     """(rules, fixtures, skipped): everything the state says as {key: rule}, {key: fixture} and the reasons."""
     rows, skipped = [], []
+    overrides = load_overrides()
+    claimed = {}  # CVE -> the products and source packages a rule has it for: one CVE is one entry for a package
     for cid, entry in sorted(state["cves"].items()):
         for pkey, raw in entry["products"].items():
             product = pkey.split(":", 1)[1]
@@ -543,7 +655,19 @@ def generate(state):
             if not ranges:
                 skipped.append(f"{cid} {product}: no version range that can be written")
                 continue
-            rows.append((cid, entry, product, ranges, dpkg_info(product, entry.get("ubuntu"))))
+            ranges = apply_override(overrides, cid, product, ranges)
+            if not ranges:
+                skipped.append(f"{cid} {product}: every vulnerable version is fixed (data/overrides.json)")
+                continue
+            info = dpkg_info(product, entry.get("ubuntu"))
+            # The same CVE under two names of one product (the NVD lists a product by several CPE names) is one entry:
+            # a package that is both would be reported twice.
+            keys = {re.sub(r"[^a-z0-9]", "", product.lower())} | {source for source, _ in info["names"]}
+            if claimed.get(cid, set()) & keys:
+                skipped.append(f"{cid} {product}: already in the rule of {sorted(claimed[cid] & keys)[0]}")
+                continue
+            claimed.setdefault(cid, set()).update(keys)
+            rows.append((cid, entry, product, ranges, info))
     # A CVE Ubuntu was not asked about (yet) has the source packages the others of its product have.
     sources = {}
     for _, entry, product, _, info in rows:
@@ -680,6 +804,8 @@ def main():
     ap.add_argument("--import-nvd", help="take the NVD records of this JSON file ({id: record} or a list)")
     ap.add_argument("--offline", action="store_true", help="only regenerate from data/cves.json")
     ap.add_argument("--no-ubuntu", action="store_true", help="do not ask the Ubuntu security tracker")
+    ap.add_argument("--no-debian", action="store_true", help="do not read the Debian Security Tracker")
+    ap.add_argument("--import-debian", help="take the Debian tracker data of this JSON file instead of downloading it")
     ap.add_argument("--ubuntu-limit", type=int, default=1500)
     args = ap.parse_args()
 
@@ -698,6 +824,13 @@ def main():
             failure = e
         if not args.no_ubuntu:
             print(f"{refresh_ubuntu(state, args.ubuntu_limit)} CVE(s) asked at the Ubuntu security tracker")
+        if not args.no_debian:
+            try:
+                data = json.loads(Path(args.import_debian).read_text()) if args.import_debian else request(DEBIAN_API, {"User-Agent": "detection-policy-cve2feed"}, timeout=300, attempts=3)
+                print(f"{refresh_debian(state, data)} CVE(s) changed by the Debian Security Tracker")
+            except (NvdError, OSError, ValueError) as e:
+                # The Debian data stays as it was; the next night asks again.
+                print(f"::warning::Debian Security Tracker: {e}", file=sys.stderr)
         save_state(state)
 
     rules, fixtures, skipped = generate(state)

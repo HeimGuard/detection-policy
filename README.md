@@ -98,7 +98,40 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
   *update available*, *no fix yet*, *via Ubuntu Pro*). Only the CVEs that apply are in the finding, none left means no finding.
   The binary packages of one source package are one finding. The text "not all of them if it is newer than a fix" is gone.
 
+- **Debian and Ubuntu trackers**: next to `ubuntu` every CVE carries `debian`, what the Debian Security Tracker says of its source
+  packages per release (`bullseye`, `bookworm`, `trixie`, ...), in the words of the Ubuntu one. A server judges a package by the
+  tracker of the device's distribution (Ubuntu, Debian); another one (Mint, ...) by the NVD ranges. The Debian data is downloaded
+  whole every night (`--no-debian` skips it, `--import-debian FILE` takes a file); when it is not reachable the data stays as it was.
+- **One entry per CVE**: the same CVE under two names of one product (or two rules about the same source package) is one entry,
+  `feed.py check` fails when a CVE is in two rules about the same package.
+- **Corrections of the NVD ranges** go to `data/overrides.json`, never into a generated file:
+  `{"CVE-2025-54289": {"lxd": {"fixed_in": ["5.0.5"], "not_affected": [["4.0.0", "4.0.12"]]}}}`. The NVD gives one range for what a
+  vendor fixed per release series; `fixed_in` lists the versions at which a series got its fix (what is at or after one, up to the next
+  minor series, is not vulnerable), `not_affected` ranges (start, end excluding) are not vulnerable whatever the NVD says. A CVE
+  that nothing is left of produces no rule.
+
 `--cve CVE-2026-1 ...` takes named CVEs, `--days 120` goes further back (the NVD allows 120 days).
+
+## Rules of the Ubuntu and Debian trackers
+
+The CVE rules above start from the NVD, which has no product for a third of the new CVEs yet and none at all for the kernel.
+`.github/workflows/distro-rules.yml` runs every night `scripts/distro2feed.py`: it reads the
+[Ubuntu CVE tracker](https://ubuntu.com/security/cves) (critical and high CVEs that `focal`, `jammy`, `noble`, `questing` or
+`resolute` has not fixed, and the ones it fixed in the last year) and the [Debian Security Tracker](https://security-tracker.debian.org/tracker/data/json)
+(open CVEs of urgency medium and up, and the fixes of this and last year), and writes `org.distro-ubuntu-NN` and `org.distro-debian-NN`
+rules (`rules/linux`), opening a pull request (`automation/distro-rules`).
+
+- **Same format**: `select` (the source packages of the rule, as dpkg packages) and `cves` (id, severity, no ranges, `ubuntu` or
+  `debian`: per source package and release `[status, fixed version]`), no `when` (an older server skips the rule as invalid).
+  The server judges every CVE alone: installed < fixed, the changelog of the package counts as a fix, `linux-signed*` is judged by
+  the tracker of `linux*`.
+- **One entry per CVE**: a CVE a rule of the NVD already judges for a source package (with the word of the tracker) is left out
+  here; `feed.py check` fails when a CVE is in two rules about the same package.
+- **Stable keys**: the source packages are spread over 32 rules by a hash of the name, so a rule keeps its key and its findings
+  their acknowledgements when a package comes or goes. The rules fit 1.8 MB per distribution (the server takes 8 MB of the whole
+  feed): open CVEs go first, the more severe, the newer.
+- Fixtures say the release and the distribution (`"context": {"release": "noble", "os": "ubuntu"}`) and are checked by
+  `scripts/cves.py`, the Python twin of the server's `SecurityCves`.
 
 ## Security updates of Microsoft
 

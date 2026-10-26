@@ -120,6 +120,98 @@ class PerCve(unittest.TestCase):
         self.assertIn("select needs cves", feed.rule_errors(rule, False))
 
 
+class Debian(unittest.TestCase):
+    """The Debian Security Tracker as a second word of a distribution next to Ubuntu's."""
+
+    DATA = {
+        "libfoo": {"CVE-2026-5": {"releases": {
+            "bookworm": {"status": "resolved", "fixed_version": "1.0-2+deb12u1", "urgency": "medium"},
+            "trixie": {"status": "open", "urgency": "medium"},
+            "forky": {"status": "undetermined"},
+            "bullseye": {"status": "resolved", "fixed_version": "0"},
+            "buster": {"status": "open", "urgency": "end-of-life"},
+            "sid": {"status": "open"},
+        }}},
+        "unrelated": {"CVE-2026-5": {"releases": {"bookworm": {"status": "open"}}}},
+        "libbar": {"CVE-2026-6": {"releases": {"bookworm": {"status": "open", "urgency": "unimportant"}}}},
+    }
+
+    def test_the_words_of_the_tracker_are_the_ones_of_the_ubuntu_tracker(self):
+        rel = cve2feed.debian_sources("foo", [("libfoo", self.DATA["libfoo"]["CVE-2026-5"]["releases"])])
+        self.assertEqual({"libfoo": {
+            "bookworm": ["released", "1.0-2+deb12u1"], "trixie": ["needed", ""], "forky": ["needs-triage", ""],
+            "bullseye": ["not-affected", ""], "buster": ["ignored", ""]}}, rel)
+        self.assertEqual({}, cve2feed.debian_sources("foo", [("unrelated", {"bookworm": {"status": "open"}})]))
+
+    def test_the_state_takes_it_and_changes_only_when_the_answer_does(self):
+        state = {"cves": {"CVE-2026-5": cve("high", {"vendor:foo": [[None, "2.0", None]]}), "CVE-2026-6": cve("low", {"vendor:bar": [[None, "2.0", None]]})}}
+        self.assertEqual(2, cve2feed.refresh_debian(state, self.DATA))
+        self.assertEqual(["libfoo"], list(state["cves"]["CVE-2026-5"]["debian"]["sources"]))
+        self.assertEqual("not-affected", state["cves"]["CVE-2026-6"]["debian"]["sources"]["libbar"]["bookworm"][0])
+        self.assertEqual(0, cve2feed.refresh_debian(state, self.DATA), "the same answer is no change")
+        self.assertEqual(1, cve2feed.refresh_debian(state, {}) - 1, "the answer is gone with the data")
+
+    def test_the_rule_carries_it_per_cve(self):
+        entry = cve("high", {"vendor:foo": [[None, "2.0", None]]})
+        state = {"cves": {"CVE-2026-5": entry}}
+        cve2feed.refresh_debian(state, self.DATA)
+        rules = cve2feed.generate(state)[0]
+        cves = next(iter(rules.values()))["cves"]
+        self.assertEqual({"libfoo": {"bookworm": ["released", "1.0-2+deb12u1"], "bullseye": ["not-affected", ""], "buster": ["ignored", ""],
+                                     "forky": ["needs-triage", ""], "trixie": ["needed", ""]}}, cves[0]["debian"])
+        self.assertEqual([], feed.rule_errors(next(iter(rules.values())), False))
+
+
+class Overrides(unittest.TestCase):
+    """The NVD gives one range for what a vendor fixed per release series: data/overrides.json corrects it."""
+
+    def test_a_series_fixed_earlier_is_cut_out_of_the_range(self):
+        # NVD: 4.0.0 up to 5.21.4; the vendor fixed 5.0.5 and the 5.21 series at 5.21.4.
+        ranges = [("4.0.0", "5.21.4", None)]
+        cut = cve2feed.apply_override({"CVE-1": {"lxd": {"fixed_in": ["5.0.5"]}}}, "CVE-1", "lxd", ranges)
+        self.assertEqual([("4.0.0", "5.0.5", None), ("5.1", "5.21.4", None)], cut)
+        vulnerable = lambda v: any(feed.version_compare(feed.version_tuple(v), feed.version_tuple(a or "0")) >= 0
+                                   and feed.version_compare(feed.version_tuple(v), feed.version_tuple(b)) < 0 for a, b, _ in cut)
+        self.assertTrue(vulnerable("5.0.4"))
+        self.assertFalse(vulnerable("5.0.10"), "a later release of the fixed series is fine")
+        self.assertTrue(vulnerable("5.2.0"))
+        self.assertFalse(vulnerable("5.21.4"))
+
+    def test_explicit_ranges_that_are_not_affected(self):
+        cut = cve2feed.apply_override({"CVE-1": {"x": {"not_affected": [["1.5", "1.8"]]}}}, "CVE-1", "x", [(None, "3.0", None)])
+        self.assertEqual([("1.8", "3.0", None), (None, "1.5", None)], sorted(cut, key=lambda r: tuple(x or "" for x in r), reverse=True))
+        self.assertEqual([(None, "3.0", None)], cve2feed.apply_override({}, "CVE-1", "x", [(None, "3.0", None)]))
+        self.assertEqual([(None, "3.0", None)], cve2feed.apply_override({"CVE-2": {"x": {"fixed_in": ["1.0"]}}}, "CVE-1", "x", [(None, "3.0", None)]))
+
+    def test_a_cve_fixed_everywhere_makes_no_rule(self):
+        state = {"cves": {"CVE-2026-9": cve("high", {"vendor:widget": [["1.0.0", "1.0.5", None]]})}}
+        original = cve2feed.load_overrides
+        cve2feed.load_overrides = lambda: {"CVE-2026-9": {"widget": {"not_affected": [["1.0.0", "1.0.5"]]}}}
+        try:
+            rules, _, skipped = cve2feed.generate(state)
+        finally:
+            cve2feed.load_overrides = original
+        self.assertEqual({}, rules)
+        self.assertTrue(any("data/overrides.json" in reason for reason in skipped))
+
+
+class OneEntryPerCve(unittest.TestCase):
+    def test_a_cve_under_two_names_of_a_product_is_one_entry(self):
+        state = {"cves": {"CVE-2026-7": cve("high", {"vendor:widget": [[None, "2.0", None]], "other:widget": [[None, "2.0", None]]})}}
+        rules, _, skipped = cve2feed.generate(state)
+        self.assertEqual(1, len(rules))
+        self.assertEqual(1, len(next(iter(rules.values()))["cves"]))
+        self.assertTrue(any("already in the rule" in reason for reason in skipped))
+
+    def test_the_check_refuses_a_cve_in_two_rules_about_the_same_package(self):
+        select = {"field": "Name", "op": "matches", "value": "widget"}
+        rule = lambda key, cid: {"key": key, "select": select, "cves": [{"id": cid}]}
+        self.assertEqual([], feed.cve_duplicates([rule("org.cve-a", "CVE-1"), rule("org.cve-b", "CVE-2")]))
+        self.assertEqual(1, len(feed.cve_duplicates([rule("org.cve-a", "CVE-1"), rule("org.cve-b", "CVE-1")])))
+        other = dict(rule("org.cve-c", "CVE-1"), select={"field": "Name", "op": "matches", "value": "gadget"})
+        self.assertEqual([], feed.cve_duplicates([rule("org.cve-a", "CVE-1"), other]), "another package may have the same CVE")
+
+
 class Rules(unittest.TestCase):
     def test_what_ubuntu_fixed_is_not_reported_and_what_it_did_not_is(self):
         state = {"cves": {"CVE-2026-19654": cve("high", {"rsyslog:rsyslog": [["8.36.0", "8.2608.0", None]]}, {"rsyslog": {
