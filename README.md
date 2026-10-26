@@ -98,6 +98,18 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
   *update available*, *no fix yet*, *via Ubuntu Pro*). Only the CVEs that apply are in the finding, none left means no finding.
   The binary packages of one source package are one finding. The text "not all of them if it is newer than a fix" is gone.
 
+- **Debian and Ubuntu trackers**: next to `ubuntu` every CVE carries `debian`, what the Debian Security Tracker says of its source
+  packages per release (`bullseye`, `bookworm`, `trixie`, ...), in the words of the Ubuntu one. A server judges a package by the
+  tracker of the device's distribution (Ubuntu, Debian); another one (Mint, ...) by the NVD ranges. The Debian data is downloaded
+  whole every night (`--no-debian` skips it, `--import-debian FILE` takes a file); when it is not reachable the data stays as it was.
+- **One entry per CVE**: the same CVE under two names of one product (or two rules about the same source package) is one entry,
+  `feed.py check` fails when a CVE is in two rules about the same package.
+- **Corrections of the NVD ranges** go to `data/overrides.json`, never into a generated file:
+  `{"CVE-2025-54289": {"lxd": {"fixed_in": ["5.0.5"], "not_affected": [["4.0.0", "4.0.12"]]}}}`. The NVD gives one range for what a
+  vendor fixed per release series; `fixed_in` lists the versions at which a series got its fix (what is at or after one, up to the next
+  minor series, is not vulnerable), `not_affected` ranges (start, end excluding) are not vulnerable whatever the NVD says. A CVE
+  that nothing is left of produces no rule.
+
 `--cve CVE-2026-1 ...` takes named CVEs, `--days 120` goes further back (the NVD allows 120 days).
 
 ## Security updates of Microsoft

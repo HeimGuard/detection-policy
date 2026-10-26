@@ -293,6 +293,38 @@ def rule_errors(r, parser):
     return errs
 
 
+def selector_keys(condition, out=None):
+    """What a `select` is about: the source packages and the name patterns in it."""
+    out = set() if out is None else out
+    if isinstance(condition, dict):
+        if condition.get("field") == "SourcePackage" and condition.get("op") == "in":
+            out.update(condition.get("value", []))
+        elif condition.get("field") == "Name" and condition.get("op") == "matches":
+            out.add(condition.get("value"))
+        for child in ("all", "any"):
+            for sub in condition.get(child, []):
+                selector_keys(sub, out)
+        if "not" in condition:
+            selector_keys(condition["not"], out)
+    return out
+
+
+def cve_duplicates(definitions):
+    """A CVE is one entry for a package: the same CVE in two rules about the same source package or name is an error."""
+    seen, errors = {}, []
+    for d in sorted(definitions, key=lambda d: d.get("key", "")):
+        if not isinstance(d.get("cves"), list):
+            continue
+        keys = selector_keys(d.get("select"))
+        for cve in d["cves"]:
+            cid = cve.get("id")
+            for other_key, other_keys in seen.get(cid, []):
+                if keys & other_keys:
+                    errors.append(f"{cid} is in {other_key} and in {d['key']}, which are about the same package")
+            seen.setdefault(cid, []).append((d["key"], keys))
+    return errors
+
+
 def load_definitions():
     out = []
     for f in sorted(list((ROOT / "rules").rglob("*.json")) + list((ROOT / "parsers").rglob("*.json"))):
@@ -343,6 +375,8 @@ def check():
                 errors.append(f"{p}: path not allowed by the server")
         if m.get("files") != files:
             errors.append("manifest.json is out of date (run: python scripts/feed.py build)")
+
+    errors.extend(cve_duplicates(d for _, parser, d in defs if not parser and isinstance(d, dict)))
 
     by_key = {d["key"]: (rel, parser, d) for rel, parser, d in defs if isinstance(d, dict) and "key" in d}
     covered = set()
