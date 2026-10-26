@@ -90,6 +90,14 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
   touch. A release the tracker has no fix for is judged by the NVD range. A changelog that names the CVE (agents
   1.23.0+, `FixedCves`) hides it as well.
 
+- **CVE by CVE (servers with `cves`)**: a rule still has one `when` (the newest fix, for a server that does not know the
+  rest), and next to it `select` (which packages the rule is about, without versions) and `cves`: each CVE with its
+  severity, its own `ranges` and what the Ubuntu tracker says per release. A server judges every CVE alone: **installed < fixed**
+  (never equal; Debian versions as `dpkg --compare-versions`, the epoch and the revision taken off for a comparison with the
+  project's version), a CVE the changelog names is fixed, and for an Ubuntu / Debian package the tracker decides (*fixed*,
+  *update available*, *no fix yet*, *via Ubuntu Pro*). Only the CVEs that apply are in the finding, none left means no finding.
+  The binary packages of one source package are one finding. The text "not all of them if it is newer than a fix" is gone.
+
 `--cve CVE-2026-1 ...` takes named CVEs, `--days 120` goes further back (the NVD allows 120 days).
 
 ## Security updates of Microsoft
