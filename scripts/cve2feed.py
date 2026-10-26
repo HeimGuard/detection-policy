@@ -441,7 +441,8 @@ def build_rule(product, ranges, info, cves, fixes):
         description = f"{top_cid}{' (CISA Known Exploited Vulnerabilities)' if top['kev'] else ''}: {top['desc']}"[:1000]
         message = f"{{Name}} {{Version}} is affected by {top_cid}"
     else:
-        title = f"{name} affected by {len(cves)} CVEs"
+        # Not the number: a server that judges the CVEs one by one reports the ones that apply to a package, fewer than the rule has.
+        title = f"{name} has known vulnerabilities"
         exploited = f" Known exploited: {', '.join(kev[:10])}{' ...' if len(kev) > 10 else ''}." if kev else ""
         description = fit(f"{len(cves)} known vulnerabilities of {name} ({range_text(ranges)}), the most severe is "
                           f"{top_cid} ({top['severity']}).{exploited} CVEs: ", texts, "")

@@ -77,7 +77,7 @@ fixtures are generated from it, so a CVE the NVD corrects is corrected in its ru
 differs from `python scripts/cve2feed.py --offline`. A rule of your own has another key (`org.<source>-<what>`).
 
 - **One rule per product, version ranges and Ubuntu fixes**: 320 Chrome CVEs fixed in one release are one finding
-  (`chrome affected by 320 CVEs`), not 320.
+  (`chrome has known vulnerabilities`), not 320; the finding names the CVEs that apply to the package.
 - **Bounds the server can read**: only numbers and dots (`7.1.2-31` is written `7.1.2.31`, as Debian numbers it);
   a bound that cannot be written that way (`b7653`, `2.0-rc1`) leaves its range out. A product whose name says nothing
   (`tools`, `core`, `server`) is left out.

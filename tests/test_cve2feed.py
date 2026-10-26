@@ -150,7 +150,7 @@ class Rules(unittest.TestCase):
         self.assertEqual([], skipped)
         self.assertEqual(1, len(rules))
         rule = next(iter(rules.values()))
-        self.assertEqual("php affected by 3 CVEs", rule["name"])
+        self.assertEqual("php has known vulnerabilities", rule["name"])
         self.assertEqual("critical", rule["severity"])
         self.assertIn("CVE-2026-109618 (fixed in 8.5.12)", rule["message"])
         self.assertIn("CVE-2026-1 (fixed in 8.5.13)", rule["message"])
