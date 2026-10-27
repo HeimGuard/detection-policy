@@ -1,0 +1,60 @@
+{
+  "key": "org.msrc-edge-154-0-4258-53",
+  "name": "Microsoft Edge: the update 154.0.4258.53 is missing (31 CVEs)",
+  "description": "Microsoft's security update 154.0.4258.53 of Microsoft Edge fixes 31 CVEs (2026-Oct). CVEs: CVE-2026-102331, CVE-2026-102299, CVE-2026-102300, CVE-2026-102301, CVE-2026-102302, CVE-2026-102303, CVE-2026-102304, CVE-2026-102306, CVE-2026-102307, CVE-2026-102308, CVE-2026-102309, CVE-2026-102311, CVE-2026-102312, CVE-2026-102313, CVE-2026-102315, CVE-2026-102316, CVE-2026-102317, CVE-2026-102318, CVE-2026-102319, CVE-2026-102321, CVE-2026-102323, CVE-2026-102324, CVE-2026-102325, CVE-2026-102326, CVE-2026-102328, CVE-2026-102329, CVE-2026-102320, CVE-2026-102305, CVE-2026-102310, CVE-2026-102314, CVE-2026-102330",
+  "severity": "critical",
+  "platform": "any",
+  "source": "software",
+  "when": {
+    "all": [
+      {
+        "any": [
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "ne",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft edge$"
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "eq",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft-edge(-stable|-beta|-dev)?$"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "154.0.4258.53"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 154.0.4258.53, the update that fixes 31 CVEs: CVE-2026-102331, CVE-2026-102299, CVE-2026-102300, CVE-2026-102301, CVE-2026-102302, CVE-2026-102303, CVE-2026-102304, CVE-2026-102306, CVE-2026-102307, CVE-2026-102308, CVE-2026-102309, CVE-2026-102311, CVE-2026-102312, CVE-2026-102313, CVE-2026-102315, CVE-2026-102316, CVE-2026-102317, CVE-2026-102318, CVE-2026-102319, CVE-2026-102321, CVE-2026-102323, CVE-2026-102324, CVE-2026-102325, CVE-2026-102326, CVE-2026-102328, CVE-2026-102329, CVE-2026-102320, CVE-2026-102305, CVE-2026-102310, CVE-2026-102314, CVE-2026-102330",
+  "remediation": "Update Microsoft Edge.",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102331",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102299",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102300",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102301",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102302",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-102303",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}

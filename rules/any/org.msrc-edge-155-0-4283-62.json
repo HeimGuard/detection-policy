@@ -1,0 +1,60 @@
+{
+  "key": "org.msrc-edge-155-0-4283-62",
+  "name": "Microsoft Edge: the update 155.0.4283.62 is missing (10 CVEs)",
+  "description": "Microsoft's security update 155.0.4283.62 of Microsoft Edge fixes 10 CVEs (2026-Oct). CVEs: CVE-2026-110922, CVE-2026-110913, CVE-2026-110917, CVE-2026-110918, CVE-2026-110919, CVE-2026-110920, CVE-2026-110921, CVE-2026-110914, CVE-2026-110915, CVE-2026-110916",
+  "severity": "critical",
+  "platform": "any",
+  "source": "software",
+  "when": {
+    "all": [
+      {
+        "any": [
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "ne",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft edge$"
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "eq",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft-edge(-stable|-beta|-dev)?$"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "155.0.4283.62"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 155.0.4283.62, the update that fixes 10 CVEs: CVE-2026-110922, CVE-2026-110913, CVE-2026-110917, CVE-2026-110918, CVE-2026-110919, CVE-2026-110920, CVE-2026-110921, CVE-2026-110914, CVE-2026-110915, CVE-2026-110916",
+  "remediation": "Update Microsoft Edge.",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-110922",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-110913",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-110917",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-110918",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-110919",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-110920",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}

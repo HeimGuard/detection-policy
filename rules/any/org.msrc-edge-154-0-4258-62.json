@@ -1,0 +1,60 @@
+{
+  "key": "org.msrc-edge-154-0-4258-62",
+  "name": "Microsoft Edge: the update 154.0.4258.62 is missing (12 CVEs)",
+  "description": "Microsoft's security update 154.0.4258.62 of Microsoft Edge fixes 12 CVEs (2026-Oct). CVEs: CVE-2026-103621, CVE-2026-103622, CVE-2026-103623, CVE-2026-103624, CVE-2026-103625, CVE-2026-103626, CVE-2026-103627, CVE-2026-103628, CVE-2026-103629, CVE-2026-103630, CVE-2026-103631, CVE-2026-88077",
+  "severity": "high",
+  "platform": "any",
+  "source": "software",
+  "when": {
+    "all": [
+      {
+        "any": [
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "ne",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft edge$"
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "field": "Source",
+                "op": "eq",
+                "value": "dpkg"
+              },
+              {
+                "field": "Name",
+                "op": "matches",
+                "value": "^microsoft-edge(-stable|-beta|-dev)?$"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "field": "Version",
+        "op": "version_lt",
+        "value": "154.0.4258.62"
+      }
+    ]
+  },
+  "message": "{Name} {Version} is older than 154.0.4258.62, the update that fixes 12 CVEs: CVE-2026-103621, CVE-2026-103622, CVE-2026-103623, CVE-2026-103624, CVE-2026-103625, CVE-2026-103626, CVE-2026-103627, CVE-2026-103628, CVE-2026-103629, CVE-2026-103630, CVE-2026-103631, CVE-2026-88077",
+  "remediation": "Update Microsoft Edge.",
+  "urls": [
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-103621",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-103622",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-103623",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-103624",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-103625",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-103626",
+    "https://msrc.microsoft.com/update-guide"
+  ]
+}
