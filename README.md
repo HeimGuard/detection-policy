@@ -65,12 +65,19 @@ Modifiers `contains`, `startswith`, `endswith`, `re`, `all`, wildcards and `and`
 `parsers/` are overwritten by the converter; CI fails when they differ from `sigma/`. Add a fixture for every
 generated key, then build the manifest.
 
+## Nightly update of the feed
+
+`.github/workflows/update-feed.yml` runs the three generators below one after another every night at midnight UTC (and on demand
+from the **Actions** tab, with the number of days of the NVD and of months of the MSRC), then bumps the manifest version, runs
+`feed.py check` and opens one pull request (`automation/feed-update`) for review. A generator that fails does not stop the others;
+the run ends red and says which one failed.
+
 ## Nightly CVE rules
 
-`.github/workflows/cve-rules.yml` runs every night (and on demand) `scripts/cve2feed.py`: it asks the NVD for the
+`scripts/cve2feed.py` asks the NVD for the
 CVEs changed in the last 4 days that have a product with a version range, asks the
 [Ubuntu security tracker](https://ubuntu.com/security/cves) what it says about their packages, bumps the manifest
-version, runs `feed.py check` and opens a pull request (`automation/cve-rules`) for review.
+version of the CVEs it changed.
 
 `data/cves.json` keeps what the NVD and Ubuntu said of every CVE; the rules (`rules/any/org.cve-*.json`) and their
 fixtures are generated from it, so a CVE the NVD corrects is corrected in its rule, and CI fails when a generated file
@@ -115,11 +122,11 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
 ## Rules of the Ubuntu and Debian trackers
 
 The CVE rules above start from the NVD, which has no product for a third of the new CVEs yet and none at all for the kernel.
-`.github/workflows/distro-rules.yml` runs every night `scripts/distro2feed.py`: it reads the
+`scripts/distro2feed.py` reads the
 [Ubuntu CVE tracker](https://ubuntu.com/security/cves) (critical and high CVEs that `focal`, `jammy`, `noble`, `questing` or
 `resolute` has not fixed, and the ones it fixed in the last year) and the [Debian Security Tracker](https://security-tracker.debian.org/tracker/data/json)
 (open CVEs of urgency medium and up, and the fixes of this and last year), and writes `org.distro-ubuntu-NN` and `org.distro-debian-NN`
-rules (`rules/linux`), opening a pull request (`automation/distro-rules`).
+rules (`rules/linux`).
 
 - **Same format**: `select` (the source packages of the rule, as dpkg packages) and `cves` (id, severity, no ranges, `ubuntu` or
   `debian`: per source package and release `[status, fixed version]`), no `when` (an older server skips the rule as invalid).
@@ -135,9 +142,8 @@ rules (`rules/linux`), opening a pull request (`automation/distro-rules`).
 
 ## Security updates of Microsoft
 
-`.github/workflows/msrc-rules.yml` runs every night (and on demand) `scripts/msrc2feed.py`, apart from the NVD rules:
-it reads the latest monthly security updates of the MSRC (CVRF API, `api.msrc.microsoft.com`) and writes `org.msrc-*`
-rules for what the inventory can tell, opening a pull request (`automation/msrc-rules`) for review.
+`scripts/msrc2feed.py` reads the latest monthly security updates of the MSRC (CVRF API, `api.msrc.microsoft.com`) and writes `org.msrc-*`
+rules for what the inventory can tell.
 
 **A rule is a missing update**: the CVEs a build fixes (`10.0.19045.7807`) are one rule and "older than that build" is its
 condition, so a host sees exactly the updates it lacks and the CVEs each of them fixes (three cumulative updates behind: three
