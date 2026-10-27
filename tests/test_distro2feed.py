@@ -132,6 +132,28 @@ class Rules(unittest.TestCase):
         self.assertIn(("CVE-2026-2", "linux"), pairs)
         self.assertIn(("CVE-2026-2", "openssl"), pairs)
 
+    def test_a_cve_of_arm_cores_is_found_only_on_an_arm_device(self):
+        arm = ("Arm C1-Ultra, C1-Premium, Neoverse V3 & V3AE, Cortex-X925, Cortex-A76 & A76A may allow writes to resources "
+               "owned by a higher exception level.")
+        self.assertEqual(["arm64"], d2f.arch_of(arm))
+        self.assertIsNone(d2f.arch_of("A heap overflow in the Linux kernel's netfilter, no Arm here"))
+        self.assertIsNone(d2f.arch_of(None))
+        packages = {"linux": {"resolute": ["released", "7.0.0-31.31"]}}
+        rec = {"priority": "high", "published": "2026-06-09", "description": arm,
+               "packages": [{"name": "linux", "statuses": [{"release_codename": "resolute", "status": "released", "description": "7.0.0-31.31"}]}]}
+        entry = d2f.ubuntu_record(rec)
+        self.assertEqual(["arm64"], entry["arch"])
+        rules, _ = d2f.build("ubuntu", {"CVE-2025-10263": entry})
+        rule = rules["org.distro-ubuntu-kernel-resolute"]
+        self.assertEqual(["arm64"], rule["cves"][0]["arch"])
+        old = {"Name": "linux-image-7.0.0-22-generic", "Version": "7.0.0-22.22", "SourcePackage": "linux-signed", "Source": "dpkg", "Origin": "Ubuntu"}
+        self.assertEqual(["CVE-2025-10263"], list(cves.affecting(rule["cves"], old, "resolute", "ubuntu")), "no architecture known: as before")
+        self.assertEqual(["CVE-2025-10263"], list(cves.affecting(rule["cves"], old, "resolute", "ubuntu", "aarch64")))
+        self.assertEqual({}, cves.affecting(rule["cves"], old, "resolute", "ubuntu", "x86_64"))
+        self.assertEqual({}, cves.affecting(rule["cves"], old, "resolute", "ubuntu", "amd64"))
+        other = d2f.ubuntu_record({**rec, "description": "Use after free in netfilter"})
+        self.assertNotIn("arch", other)
+
     def test_the_kernels_are_a_rule_per_release_and_a_cve_names_the_sources_that_have_the_same_lines(self):
         same = {"noble": ["needed", ""], "jammy": ["needed", ""]}
         state = {"CVE-2026-1": {"severity": "critical", "published": "2026-10-01", "packages": {"linux": same, "linux-aws": same, "linux-gcp": {"noble": ["released", "6.8.0-1.1"]}, "openssl": same}}}
