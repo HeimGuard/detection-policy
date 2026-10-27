@@ -67,9 +67,10 @@ generated key, then build the manifest.
 
 ## Nightly update of the feed
 
-`.github/workflows/update-feed.yml` runs the three generators below one after another every night at midnight UTC (and on demand
-from the **Actions** tab, with the number of days of the NVD and of months of the MSRC), then bumps the manifest version, runs
-`feed.py check` and opens one pull request (`automation/feed-update`) for review. A generator that fails does not stop the others;
+`.github/workflows/update-feed.yml` runs the three generators below every night at midnight UTC (and on demand
+from the **Actions** tab, with the number of days of the NVD and of months of the MSRC), each as a job of its own (`generate (cve)`,
+`generate (distro)`, `generate (msrc)`, in parallel). The last job, `pull-request`, applies what they made, bumps the manifest version,
+runs `feed.py check` and opens one pull request (`automation/feed-update`) for review. A generator that fails does not stop the others;
 the run ends red and says which one failed.
 
 ## Nightly CVE rules

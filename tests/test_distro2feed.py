@@ -154,6 +154,22 @@ class Rules(unittest.TestCase):
         other = d2f.ubuntu_record({**rec, "description": "Use after free in netfilter"})
         self.assertNotIn("arch", other)
 
+    def test_a_rule_that_is_full_leaves_out_the_least_urgent_cves(self):
+        open_line = {"noble": ["needed", ""]}
+        state = {f"CVE-2026-{n}": {"severity": "critical" if n < 3 else "high", "published": "2026-10-01", "packages": {"openssl": open_line}}
+                 for n in range(8)}
+        old, d2f.MAX_CVES = d2f.MAX_CVES, 5  # feed.py takes 3000 CVEs of one rule; the Debian tracker has more than that in a bucket
+        try:
+            rules, _ = d2f.build("ubuntu", state)
+        finally:
+            d2f.MAX_CVES = old
+        rule = rules[f"org.distro-ubuntu-{d2f.bucket('openssl')}"]
+        ids = [c["id"] for c in rule["cves"]]
+        self.assertEqual(5, len(ids))
+        self.assertEqual(ids, sorted(ids), "by id, as the files always were")
+        self.assertTrue({"CVE-2026-0", "CVE-2026-1", "CVE-2026-2"} <= set(ids), "the critical ones stay")
+        self.assertEqual([], feed.rule_errors(rule, False))
+
     def test_the_kernels_are_a_rule_per_release_and_a_cve_names_the_sources_that_have_the_same_lines(self):
         same = {"noble": ["needed", ""], "jammy": ["needed", ""]}
         state = {"CVE-2026-1": {"severity": "critical", "published": "2026-10-01", "packages": {"linux": same, "linux-aws": same, "linux-gcp": {"noble": ["released", "6.8.0-1.1"]}, "openssl": same}}}

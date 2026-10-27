@@ -1,6 +1,7 @@
 name: update-feed
 
-# Every feed generator in one run, so that manifest.json is changed by one pull request and not by three that conflict.
+# Every feed generator is a job of its own (in parallel); the last job puts what they made together and opens ONE pull request,
+# so manifest.json is changed once and not by three pull requests that conflict.
 on:
   schedule:
     - cron: '0 0 * * *'   # every night at midnight UTC
@@ -14,37 +15,83 @@ on:
         default: '2'
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
   group: update-feed
   cancel-in-progress: false
 
 jobs:
-  update-feed:
+  generate:
+    name: generate (${{ matrix.generator }})
     runs-on: ubuntu-latest
-    timeout-minutes: 240   # the Ubuntu tracker list is read 20 CVEs at a time (150 minutes of it)
+    timeout-minutes: ${{ matrix.timeout }}
+    strategy:
+      fail-fast: false   # a generator that fails does not stop the others
+      matrix:
+        include:
+          - generator: cve        # the NVD, and what the Ubuntu tracker says of the packages
+            timeout: 60
+            command: python scripts/cve2feed.py --days "$DAYS"
+            paths: data/cves.json rules/any/org.cve-*.json tests/fixtures/cve-*.json
+          - generator: distro     # the Ubuntu CVE tracker (20 CVEs a request) and the Debian Security Tracker
+            timeout: 150
+            command: python scripts/distro2feed.py
+            paths: data/distro.json rules/linux/org.distro-*.json tests/fixtures/distro-*.json
+          - generator: msrc       # the monthly security updates of Microsoft
+            timeout: 30
+            command: python scripts/msrc2feed.py --months "$MONTHS"
+            paths: data/msrc.json rules/*/org.msrc-*.json tests/fixtures/msrc-*.json
+    env:
+      DAYS: ${{ inputs.days || 4 }}
+      MONTHS: ${{ inputs.months || 2 }}
+      NVD_API_KEY: ${{ matrix.generator == 'cve' && secrets.NVD_API_KEY || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      # A generator that fails does not stop the others: what the rest produced is still a pull request, and the job ends red.
-      - name: CVE rules (NVD)
-        id: cve
-        continue-on-error: true
+      - name: Generate
+        run: ${{ matrix.command }}
+      # What the generator changed, as a patch of its own files only (manifest.json is built by the last job).
+      - name: Make a patch
         env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: python scripts/cve2feed.py --days "${{ inputs.days || 4 }}"
-      - name: Rules of the Ubuntu and Debian trackers
-        id: distro
-        continue-on-error: true
-        run: python scripts/distro2feed.py
-      - name: Rules of the security updates of Microsoft
-        id: msrc
-        continue-on-error: true
-        run: python scripts/msrc2feed.py --months "${{ inputs.months || 2 }}"
+          PATHS: ${{ matrix.paths }}
+        run: |
+          set -f   # the patterns are for git, not for the shell
+          git add -A -- $PATHS
+          git diff --cached --binary > "$RUNNER_TEMP/${{ matrix.generator }}.patch"
+          git diff --cached --stat | tail -1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: patch-${{ matrix.generator }}
+          path: ${{ runner.temp }}/${{ matrix.generator }}.patch
+          retention-days: 3
+
+  pull-request:
+    needs: generate
+    if: ${{ !cancelled() }}   # also when a generator failed: what the others made is still a pull request
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: patch-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/patches
+      - name: Apply the patches
+        run: |
+          shopt -s nullglob
+          for patch in "$RUNNER_TEMP"/patches/*.patch; do
+            if [ -s "$patch" ]; then git apply --index "$patch" && echo "applied $(basename "$patch")"; fi
+          done
       - name: Build manifest and validate
         run: |
           python scripts/feed.py build
@@ -73,7 +120,7 @@ jobs:
             manifest.json
           delete-branch: true
       - name: Fail when a generator failed
-        if: always() && (steps.cve.outcome == 'failure' || steps.distro.outcome == 'failure' || steps.msrc.outcome == 'failure')
+        if: ${{ needs.generate.result != 'success' }}
         run: |
-          echo "cve2feed: ${{ steps.cve.outcome }}, distro2feed: ${{ steps.distro.outcome }}, msrc2feed: ${{ steps.msrc.outcome }}"
+          echo "A generator failed: see the jobs 'generate (...)'; the pull request has what the others made."
           exit 1
