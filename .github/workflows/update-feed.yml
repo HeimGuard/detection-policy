@@ -1,6 +1,6 @@
 name: update-feed
 
-# Every feed generator is a job of its own (in parallel); the last job puts what they made together and opens ONE pull request,
+# Every feed generator is a job of its own (cve and msrc in parallel, distro after them); the last job puts what they made together and opens ONE pull request,
 # so manifest.json is changed once and not by three pull requests that conflict.
 on:
   schedule:
@@ -34,10 +34,6 @@ jobs:
             timeout: 60
             command: python scripts/cve2feed.py --days "$DAYS"
             paths: data/cves.json rules/any/org.cve-*.json tests/fixtures/cve-*.json
-          - generator: distro     # the Ubuntu CVE tracker (20 CVEs a request) and the Debian Security Tracker
-            timeout: 150
-            command: python scripts/distro2feed.py
-            paths: data/distro.json rules/linux/org.distro-*.json tests/fixtures/distro-*.json
           - generator: msrc       # the monthly security updates of Microsoft
             timeout: 30
             command: python scripts/msrc2feed.py --months "$MONTHS"
@@ -68,8 +64,45 @@ jobs:
           path: ${{ runner.temp }}/${{ matrix.generator }}.patch
           retention-days: 3
 
-  pull-request:
+  # The Ubuntu / Debian rules leave out what the rules of the NVD already judge (covered() of distro2feed.py), and feed.py check
+  # refuses a CVE in both: so this one runs on top of what the jobs above made, not on the rules of main.
+  distro:
     needs: generate
+    if: ${{ !cancelled() }}   # also when one of them failed: the rules of main are then what it leaves out
+    runs-on: ubuntu-latest
+    timeout-minutes: 150   # the Ubuntu tracker list is read 20 CVEs at a time
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: patch-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/patches
+      - name: Apply the patches
+        run: |
+          shopt -s nullglob
+          for patch in "$RUNNER_TEMP"/patches/*.patch; do
+            if [ -s "$patch" ]; then git apply --index "$patch" && echo "applied $(basename "$patch")"; fi
+          done
+      - name: Generate
+        run: python scripts/distro2feed.py
+      - name: Make a patch
+        run: |
+          git reset -q   # the patches of the jobs above were applied to the index: only what this one changes
+          git add -A -- data/distro.json 'rules/linux/org.distro-*.json' 'tests/fixtures/distro-*.json'
+          git diff --cached --binary > "$RUNNER_TEMP/distro.patch"
+          git diff --cached --stat | tail -1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: patch-distro
+          path: ${{ runner.temp }}/distro.patch
+          retention-days: 3
+
+  pull-request:
+    needs: [generate, distro]
     if: ${{ !cancelled() }}   # also when a generator failed: what the others made is still a pull request
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -120,7 +153,7 @@ jobs:
             manifest.json
           delete-branch: true
       - name: Fail when a generator failed
-        if: ${{ needs.generate.result != 'success' }}
+        if: ${{ needs.generate.result != 'success' || needs.distro.result != 'success' }}
         run: |
           echo "A generator failed: see the jobs 'generate (...)'; the pull request has what the others made."
           exit 1
