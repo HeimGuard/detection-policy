@@ -40,6 +40,7 @@ BUCKETS = 32
 RELEASED_DAYS = 365  # what a release fixed this long ago is still reported for a package below the fix
 BYTES = {"ubuntu": 2_000_000, "debian": 1_000_000}  # of the rules of a distribution as written (compact): the server takes 8 MB of the whole feed
 MAX_RULE = 900_000  # of one rule: the server takes 1 MB of one file
+MAX_CVES = 3000  # of one rule: feed.py takes 3000
 SEVERITY = {"critical": "critical", "high": "high", "medium": "medium", "low": "low", "negligible": "low", "untriaged": "medium",
             "not yet assigned": "medium", "unimportant": "low"}
 RANK = {"critical": 4, "high": 3, "medium": 2, "low": 1}
@@ -286,7 +287,7 @@ def build(distro, cves, taken=frozenset()):
 
 def _build(distro, cves, ids):
     buckets = {}
-    for cid in sorted(ids):
+    for cid in ids:  # the order of prioritise(): a rule that is full leaves out the least urgent CVEs
         e = cves[cid]
         for source, lines in e["packages"].items():
             # A kernel CVE has a line per release and flavour: one rule per release keeps the files small (a device is of one release,
@@ -294,6 +295,8 @@ def _build(distro, cves, ids):
             parts = {f"kernel-{release}": {release: line} for release, line in lines.items()} if bucket(source) == "kernel" else {bucket(source): lines}
             for n, part in parts.items():
                 b = buckets.setdefault(n, {"sources": set(), "cves": {}})
+                if cid not in b["cves"] and len(b["cves"]) >= MAX_CVES:
+                    continue
                 b["sources"].add(source)
                 b["cves"].setdefault(cid, {"id": cid, "severity": e["severity"], "ranges": [], **({"arch": e["arch"]} if e.get("arch") else {}), distro: {}})[distro][source] = part
     rules, fixtures = {}, {}
@@ -306,7 +309,7 @@ def _build(distro, cves, ids):
             {"any": [{"field": "SourcePackage", "op": "in", "value": names},
                      {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "in", "value": names}]}]},
         ]}
-        cve_list = [{**c, distro: group(c[distro])} for c in b["cves"].values()]
+        cve_list = [{**c, distro: group(c[distro])} for _, c in sorted(b["cves"].items())]  # by id, as the files always were
         rule = {
             "key": key,
             "name": f"{label} kernel: known vulnerabilities" if n.startswith("kernel") else f"{label} packages: known vulnerabilities",
