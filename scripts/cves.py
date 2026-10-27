@@ -33,6 +33,12 @@ def tracker_source(source):
     return re.sub(r"^linux-signed(?:-(?:amd64|arm64|i386))?", "linux", str(source).strip().lower())
 
 
+def normal_arch(arch):
+    """amd64 for x86_64, arm64 for aarch64: the names of dpkg, whatever `uname -m` says."""
+    arch = str(arch or "").strip().lower()
+    return {"x86_64": "amd64", "x64": "amd64", "aarch64": "arm64", "armv8l": "arm64"}.get(arch, arch)
+
+
 def upstream(version):
     """The version of the project behind a package version: no epoch, no revision, no +dfsg / ~ds suffix."""
     _, up, _ = feed.dpkg_parts(str(version).strip())
@@ -116,7 +122,7 @@ def _other(cve, item):
     return {"status": "update_available", "fixed": fixed}
 
 
-def affecting(cves, item, rel=None, os_id=None):
+def affecting(cves, item, rel=None, os_id=None, arch=None):
     """{CVE id: {id, severity, status, fixed}} of the CVEs of a rule that affect the item."""
     found = {}
     dpkg = str(item.get("Source") or "").lower() == "dpkg"
@@ -126,6 +132,8 @@ def affecting(cves, item, rel=None, os_id=None):
             continue
         if dpkg and changelog and f",{cve['id'].lower()}," in changelog:
             continue
+        if arch and cve.get("arch") and normal_arch(arch) not in [normal_arch(a) for a in cve["arch"]]:
+            continue  # a CVE of the cores of another CPU family
         result = _dpkg(cve, item, rel, os_id) if dpkg else _other(cve, item)
         if result is not None:
             found[cve["id"]] = {"id": cve["id"], "severity": cve.get("severity", "medium"), **result}

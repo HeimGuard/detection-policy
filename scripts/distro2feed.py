@@ -47,6 +47,16 @@ RANK = {"critical": 4, "high": 3, "medium": 2, "low": 1}
 KERNEL = re.compile(r"^linux(?:-(?:aws|azure|gcp|oracle|raspi|lowlatency|kvm|hwe|oem|nvidia|ibm|gke|riscv)(?:-[\d.]+)?)?$")
 
 
+# CVEs of one CPU family: the tracker says nothing of the architecture, the description names the cores ("Arm Neoverse-N1 ... may allow
+# writes to resources owned by a higher exception level"). The server judges such a CVE only on a device of that architecture.
+ARM_CORES = re.compile(r"\b(?:Cortex-[AXR]\d|Neoverse[ -]|C1-(?:Ultra|Premium|Pro|Nano))", re.I)
+
+
+def arch_of(description):
+    """['arm64'] for a CVE of Arm cores, None for the rest (it is not a word that it affects every architecture)."""
+    return ["arm64"] if ARM_CORES.search(str(description or "")) else None
+
+
 class FetchError(Exception):
     pass
 
@@ -95,13 +105,18 @@ def ubuntu_record(rec, releases=UBUNTU_RELEASES):
             packages[name] = dict(sorted(lines.items()))
     if not packages:
         return None
-    return {"severity": SEVERITY.get(str(rec.get("priority", "")).lower(), "medium"),
-            "published": str(rec.get("published", ""))[:10], "packages": dict(sorted(packages.items()))}
+    entry = {"severity": SEVERITY.get(str(rec.get("priority", "")).lower(), "medium"),
+             "published": str(rec.get("published", ""))[:10], "packages": dict(sorted(packages.items()))}
+    if arch_of(rec.get("description")):
+        entry["arch"] = arch_of(rec.get("description"))
+    return entry
 
 
 def merge(state, cid, entry):
     """Take an entry of a CVE; what two releases said of the same package is put together."""
     old = state.setdefault(cid, {"severity": entry["severity"], "published": entry["published"], "packages": {}})
+    if entry.get("arch"):
+        old["arch"] = entry["arch"]
     for name, lines in entry["packages"].items():
         old["packages"].setdefault(name, {}).update(lines)
         old["packages"][name] = dict(sorted(old["packages"][name].items()))
@@ -280,7 +295,7 @@ def _build(distro, cves, ids):
             for n, part in parts.items():
                 b = buckets.setdefault(n, {"sources": set(), "cves": {}})
                 b["sources"].add(source)
-                b["cves"].setdefault(cid, {"id": cid, "severity": e["severity"], "ranges": [], distro: {}})[distro][source] = part
+                b["cves"].setdefault(cid, {"id": cid, "severity": e["severity"], "ranges": [], **({"arch": e["arch"]} if e.get("arch") else {}), distro: {}})[distro][source] = part
     rules, fixtures = {}, {}
     label = distro.capitalize()
     for n, b in sorted(buckets.items()):
