@@ -1,0 +1,36 @@
+{
+ "key": "org.distro-debian-09",
+ "context": {
+  "release": "bookworm",
+  "os": "debian"
+ },
+ "positive": [
+  {
+   "Name": "libelfin",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  }
+ ],
+ "negative": [
+  {
+   "Name": "not-a-package-of-this-rule",
+   "Version": "1.0",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "libelfin",
+   "Version": "0.0.1",
+   "Source": "snap",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "libelfin",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian",
+   "FixedCves": ",CVE-2020-24821,CVE-2020-24822,CVE-2020-24823,CVE-2020-24824,CVE-2020-24825,CVE-2020-24826,CVE-2020-24827,CVE-2023-24180,"
+  }
+ ]
+}

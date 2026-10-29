@@ -1,0 +1,36 @@
+{
+ "key": "org.distro-debian-17",
+ "context": {
+  "release": "bookworm",
+  "os": "debian"
+ },
+ "positive": [
+  {
+   "Name": "gradle",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  }
+ ],
+ "negative": [
+  {
+   "Name": "not-a-package-of-this-rule",
+   "Version": "1.0",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "gradle",
+   "Version": "0.0.1",
+   "Source": "snap",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "gradle",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian",
+   "FixedCves": ",CVE-2021-29428,CVE-2021-29429,CVE-2021-32751,CVE-2023-35946,CVE-2023-35947,CVE-2023-42445,CVE-2023-44387,CVE-2026-22816,CVE-2026-22865,"
+  }
+ ]
+}

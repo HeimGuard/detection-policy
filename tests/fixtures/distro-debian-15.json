@@ -1,0 +1,36 @@
+{
+ "key": "org.distro-debian-15",
+ "context": {
+  "release": "bookworm",
+  "os": "debian"
+ },
+ "positive": [
+  {
+   "Name": "libcatalyst-plugin-authentication-perl",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  }
+ ],
+ "negative": [
+  {
+   "Name": "not-a-package-of-this-rule",
+   "Version": "1.0",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "libcatalyst-plugin-authentication-perl",
+   "Version": "0.0.1",
+   "Source": "snap",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "libcatalyst-plugin-authentication-perl",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian",
+   "FixedCves": ",CVE-2009-10007,"
+  }
+ ]
+}
