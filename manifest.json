@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.29",
+  "version": "2026.10.29.1",
   "files": {
     "parsers/linux/org.linux-passwd-password-changed.json": "517dbd5d01da1db5c0b598039ac66d4ab112a21846515e8a9dc6e6ae7ec800b5",
     "parsers/linux/org.linux-sshd-accepted.json": "cea4e1f7b7812f126a73e6cd51ef3a4fe7264363186bd6d8eb47ae41ece09755",
