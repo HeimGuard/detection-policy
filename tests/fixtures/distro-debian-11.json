@@ -1,0 +1,36 @@
+{
+ "key": "org.distro-debian-11",
+ "context": {
+  "release": "bookworm",
+  "os": "debian"
+ },
+ "positive": [
+  {
+   "Name": "guava-libraries",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  }
+ ],
+ "negative": [
+  {
+   "Name": "not-a-package-of-this-rule",
+   "Version": "1.0",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "guava-libraries",
+   "Version": "0.0.1",
+   "Source": "snap",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "guava-libraries",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian",
+   "FixedCves": ",CVE-2020-8908,CVE-2023-2976,CVE-2026-102554,"
+  }
+ ]
+}

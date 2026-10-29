@@ -1,0 +1,36 @@
+{
+ "key": "org.distro-debian-00",
+ "context": {
+  "release": "bookworm",
+  "os": "debian"
+ },
+ "positive": [
+  {
+   "Name": "qtimageformats-opensource-src",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  }
+ ],
+ "negative": [
+  {
+   "Name": "not-a-package-of-this-rule",
+   "Version": "1.0",
+   "Source": "dpkg",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "qtimageformats-opensource-src",
+   "Version": "0.0.1",
+   "Source": "snap",
+   "Origin": "Debian"
+  },
+  {
+   "Name": "qtimageformats-opensource-src",
+   "Version": "0.0.1",
+   "Source": "dpkg",
+   "Origin": "Debian",
+   "FixedCves": ",CVE-2020-23884,CVE-2025-5683,"
+  }
+ ]
+}
