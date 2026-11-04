@@ -1,0 +1,28 @@
+{
+  "key": "org.web-caddy-probe",
+  "name": "Web server: Probe of a sensitive path (Caddy)",
+  "description": "A request for a file or page attackers look for: .env, .git, backups, wp-admin, phpMyAdmin, actuator and similar, in the Caddy JSON access log of a container (image nginx, httpd, traefik, caddy, ...). The source is the client address the log names (X-Forwarded-For: its last address, what the outer proxy saw; the rest is client-controlled).",
+  "source": "docker.logs",
+  "when": {
+    "field": "Image",
+    "op": "in",
+    "value": [
+      "nginx",
+      "nginx-unprivileged",
+      "openresty",
+      "nginx-proxy",
+      "httpd",
+      "apache",
+      "apache2",
+      "lighttpd",
+      "traefik",
+      "caddy"
+    ]
+  },
+  "pattern": "^\\{.*?\"remote_ip\":\"(?<ip>[^\"]+)\"(?:[^{}]*?\"client_ip\":\"(?<cip>[^\"]+)\")?[^{}]*?\"method\":\"(?<method>[A-Z]+)\"[^{}]*?\"uri\":\"(?<path>(?=[^\"]*(?:\\.env|\\.git(/|\\b)|\\.svn|\\.aws|\\.ssh|\\.DS_Store|\\.htpasswd|\\.sql\\b|\\.bak\\b|\\.old\\b|id_rsa|wp-login|wp-admin|wp-config|xmlrpc\\.php|phpmyadmin|/pma/|adminer|cgi-bin|/actuator|/vendor/phpunit|/server-status|/\\.well-known/\\.\\.|config\\.(json|php|yml|yaml)|credentials|secrets?\\.(json|yml|yaml)))[^\"]+)\".*?\"status\":(?<status>\\d{3})",
+  "event": {
+    "type": "web_probe",
+    "source": "{cip|xff|ip}",
+    "message": "{method} {path} -> {status}"
+  }
+}

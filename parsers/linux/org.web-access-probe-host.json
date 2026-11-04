@@ -1,9 +1,9 @@
 {
   "key": "org.web-access-probe-host",
-  "name": "Web server (host nginx): probe of a sensitive path",
-  "description": "A request (the access logs in /var/log/nginx, combined format) for a file or page attackers look for: .env, .git, backups, wp-admin, phpMyAdmin, actuator and similar. The source is the last address of X-Forwarded-For (what the outer proxy saw, the rest is client-controlled), else the client address.",
-  "source": "nginx.log",
-  "pattern": "^(?<ip>\\S+) \\S+ \\S+ \\[[^\\]]+\\] \"(?<method>[A-Z]+) (?<path>(?=\\S*(?:\\.env|\\.git(/|\\b)|\\.svn|\\.aws|\\.ssh|\\.DS_Store|\\.htpasswd|\\.sql\\b|\\.bak\\b|\\.old\\b|id_rsa|wp-login|wp-admin|wp-config|xmlrpc\\.php|phpmyadmin|/pma/|adminer|cgi-bin|/actuator|/vendor/phpunit|/server-status|/\\.well-known/\\.\\.|config\\.(json|php|yml|yaml)|credentials|secrets?\\.(json|yml|yaml)))\\S+)(?: [^\\\"]*)?\\\" (?<status>\\d{3}) \\d+ \\\"[^\\\"]*\\\" \\\"[^\\\"]*\\\"(?: \\\"(?:[^\\\",]*,\\s*)*(?<xff>[^\\\",\\s]+)\\\")?\\s*$",
+  "name": "Web server (host): Probe of a sensitive path",
+  "description": "A request for a file or page attackers look for: .env, .git, backups, wp-admin, phpMyAdmin, actuator and similar, in the nginx / Apache / OpenResty / lighttpd / Traefik access log in the common or combined format of the host (*.log in /var/log/nginx, apache2, httpd, lighttpd, caddy, traefik). The source is the client address the log names (X-Forwarded-For: its last address, what the outer proxy saw; the rest is client-controlled).",
+  "source": "web.log",
+  "pattern": "^(?<ip>\\S+) \\S+ \\S+ \\[[^\\]]+\\] \"(?<method>[A-Z]+) (?<path>(?=\\S*(?:\\.env|\\.git(/|\\b)|\\.svn|\\.aws|\\.ssh|\\.DS_Store|\\.htpasswd|\\.sql\\b|\\.bak\\b|\\.old\\b|id_rsa|wp-login|wp-admin|wp-config|xmlrpc\\.php|phpmyadmin|/pma/|adminer|cgi-bin|/actuator|/vendor/phpunit|/server-status|/\\.well-known/\\.\\.|config\\.(json|php|yml|yaml)|credentials|secrets?\\.(json|yml|yaml)))\\S+)(?: [^\"]*)?\" (?<status>\\d{3}) (?:\\d+|-)(?: \"[^\"]*\" \"[^\"]*\"(?: \"(?:[^\",]*,\\s*)*(?<xff>[^\",\\s]+)\")?)?.*$",
   "event": {
     "type": "web_probe",
     "source": "{xff|ip}",

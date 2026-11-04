@@ -11,21 +11,17 @@
     },
     {
       "File": "access.log",
-      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /wp-login.php HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"-\""
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /wp-login.php HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
     }
   ],
   "negative": [
     {
       "File": "access.log",
-      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /index.html HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /static/app.js HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
     },
     {
       "File": "access.log",
       "Message": "[error] 22#22: *52985 open() \"/usr/share/nginx/html/assets../.env\" failed (2: No such file or directory), client: 172.21.0.19, server: localhost, request: \"GET /assets../.env HTTP/1.1\", host: \"internal.steelants.cz\""
-    },
-    {
-      "File": "access.log",
-      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /static/app.js HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
     }
   ]
 }

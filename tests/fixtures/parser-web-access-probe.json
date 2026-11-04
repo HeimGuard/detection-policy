@@ -14,19 +14,24 @@
     {
       "Image": "nginx",
       "Container": "web",
-      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /wp-login.php HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"-\""
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /wp-login.php HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
     },
     {
       "Image": "httpd",
-      "Container": "web",
-      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.env.config HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+      "Container": "apache",
+      "Message": "192.0.2.9 - - [04/Nov/2026:10:23:40 +0000] \"GET /.env HTTP/1.1\" 404 -"
+    },
+    {
+      "Image": "traefik",
+      "Container": "edge",
+      "Message": "192.0.2.9 - - [04/Nov/2026:10:23:40 +0000] \"GET /.env HTTP/1.1\" 404 19 \"-\" \"-\" 1 \"web@docker\" \"http://172.18.0.5:80\" 3ms"
     }
   ],
   "negative": [
     {
       "Image": "nginx",
       "Container": "web",
-      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /index.html HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /static/app.js HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
     },
     {
       "Image": "nginx",
@@ -35,13 +40,8 @@
     },
     {
       "Image": "redis",
-      "Container": "web",
+      "Container": "db",
       "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.env HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
-    },
-    {
-      "Image": "nginx",
-      "Container": "web",
-      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /static/app.js HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
     }
   ]
 }
