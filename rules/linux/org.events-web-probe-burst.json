@@ -1,0 +1,28 @@
+{
+  "key": "org.events-web-probe-burst",
+  "name": "Web server probed for sensitive files",
+  "description": "Several requests since the last collection for files and pages attackers look for (.env, .git, backups, admin panels) from one address, seen in the log of a web server container.",
+  "severity": "medium",
+  "platform": "linux",
+  "source": "events",
+  "when": {
+    "all": [
+      {
+        "field": "Type",
+        "op": "eq",
+        "value": "web_probe"
+      },
+      {
+        "field": "Count",
+        "op": "gte",
+        "value": 5
+      }
+    ]
+  },
+  "message": "{Count} probes of sensitive paths from {Source} (last: {Message})",
+  "remediation": "Check that no such file is reachable (a 200 or 403 instead of 404 in the access log is the interesting part), block the address or rate-limit it at the proxy, and rotate any secret that was exposed.",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1595/002/",
+    "https://attack.mitre.org/techniques/T1190/"
+  ]
+}

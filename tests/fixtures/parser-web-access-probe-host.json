@@ -1,0 +1,155 @@
+{
+  "key": "org.web-access-probe-host",
+  "positive": [
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.bashrc HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /server.key HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /rclone.conf HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /values.yaml HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /docker-compose.yml HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.git-credentials HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /storage/logs/laravel.log HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /_debugbar/open HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /telescope/requests HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /firebase-adminsdk.json HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.github/workflows/deploy.yml HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.firebaserc HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /terraform.tfstate HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /Dockerfile HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.dockerenv HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /var/run/secrets/kubernetes.io/serviceaccount/token HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /serviceAccountKey.json HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /sa.json HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /auth.json HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.npmrc HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /wrangler.toml HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /supabase/config.toml HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.env.production.local HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /wp-config.php.old HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /key.pem HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.//.env HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET //.env HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /api%2F.env HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.env%3Ffoo=bar HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    }
+  ],
+  "negative": [
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /settings/security HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /dashboard HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /index.html HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /build/manifest.json HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /static../.env HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /cache/original/%2e%2e/.env HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /index.html HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "File": "access.log",
+      "Message": "[error] 22#22: *52985 open() \"/usr/share/nginx/html/assets../.env\" failed (2: No such file or directory), client: 172.21.0.19, server: localhost, request: \"GET /assets../.env HTTP/1.1\", host: \"internal.steelants.cz\""
+    }
+  ]
+}

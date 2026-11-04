@@ -1,0 +1,19 @@
+{
+  "key": "org.events-web-404-flood",
+  "positive": [
+    {
+      "Type": "web_not_found",
+      "Count": 300
+    }
+  ],
+  "negative": [
+    {
+      "Type": "web_not_found",
+      "Count": 10
+    },
+    {
+      "Type": "web_probe",
+      "Count": 300
+    }
+  ]
+}

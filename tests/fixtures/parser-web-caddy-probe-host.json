@@ -1,0 +1,155 @@
+{
+  "key": "org.web-caddy-probe-host",
+  "positive": [
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.bashrc\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/server.key\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/rclone.conf\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/values.yaml\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/docker-compose.yml\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.git-credentials\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/storage/logs/laravel.log\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/_debugbar/open\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/telescope/requests\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/firebase-adminsdk.json\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.github/workflows/deploy.yml\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.firebaserc\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/terraform.tfstate\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/Dockerfile\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.dockerenv\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/var/run/secrets/kubernetes.io/serviceaccount/token\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/serviceAccountKey.json\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/sa.json\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/auth.json\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.npmrc\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/wrangler.toml\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/supabase/config.toml\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.env.production.local\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/wp-config.php.old\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/key.pem\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.//.env\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"//.env\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/api%2F.env\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/.env%3Ffoo=bar\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    }
+  ],
+  "negative": [
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/settings/security\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/dashboard\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/index.html\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/build/manifest.json\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/static../.env\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/cache/original/%2e%2e/.env\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":404}"
+    },
+    {
+      "File": "access.log",
+      "Message": "{\"level\":\"info\",\"ts\":1793874220.1,\"logger\":\"http.log.access.log0\",\"msg\":\"handled request\",\"request\":{\"remote_ip\":\"172.21.0.19\",\"remote_port\":\"4711\",\"client_ip\":\"34.124.194.107\",\"proto\":\"HTTP/2.0\",\"method\":\"GET\",\"host\":\"example.org\",\"uri\":\"/index.html\",\"headers\":{\"User-Agent\":[\"x\"]}},\"bytes_read\":0,\"duration\":0.001,\"size\":153,\"status\":200}"
+    },
+    {
+      "File": "access.log",
+      "Message": "[error] 22#22: *52985 open() \"/usr/share/nginx/html/assets../.env\" failed (2: No such file or directory), client: 172.21.0.19, server: localhost, request: \"GET /assets../.env HTTP/1.1\", host: \"internal.steelants.cz\""
+    }
+  ]
+}

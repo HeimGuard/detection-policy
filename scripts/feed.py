@@ -32,7 +32,7 @@ SOURCES = {
     "portscan": ["Ip", "Network", "Port", "Service", "Banner", "Server", "Title",
                  "Tls", "Http", "Hsts", "Csp", "XFrameOptions", "CertSelfSigned", "CertExpired", "TlsFailed"],
 }
-LOG_SOURCES = {"windows.security", "windows.system", "windows.defender", "linux.auth"}
+LOG_SOURCES = {"windows.security", "windows.system", "windows.defender", "linux.auth", "docker.logs", "web.log"}
 EVENT_FIELDS = {"type", "user", "source", "message", "count"}
 UNARY = {"exists", "empty", "true", "false"}
 OPS = {"eq", "ne", "contains", "not_contains", "starts_with", "ends_with", "matches", "not_matches",

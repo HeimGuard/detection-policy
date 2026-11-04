@@ -1,0 +1,12 @@
+{
+  "key": "org.web-caddy-notfound-host",
+  "name": "Web server (host): 404 for a page that does not exist (Caddy)",
+  "description": "A request for a path that is not a known probe and gives 404 (scanners walk through application routes and common file names; one address making many of them is the signal), in the Caddy JSON access log of the host (*.log in /var/log/nginx, apache2, httpd, lighttpd, caddy, traefik). The source is the client address the log names (X-Forwarded-For: its last address, what the outer proxy saw; the rest is client-controlled). A request belongs to one parser only: exploit payload, else probe of a sensitive path, else plain 404.",
+  "source": "web.log",
+  "pattern": "^\\{.*?\"remote_ip\":\"(?<ip>[^\"]+)\"(?:[^{}]*?\"client_ip\":\"(?<cip>[^\"]+)\")?[^{}]*?\"method\":\"(?<method>[A-Z]+)\"[^{}]*?\"uri\":\"(?<path>(?![^\"]*(?:\\.\\./|%2e%2e|%252e|/etc/passwd|/proc/self|union(\\+|%20| )select|<script|%3cscript|\\$\\{jndi:|\\$\\(|%24%28|`|%60|;(\\+|%20| )?(cat|wget|curl|sh|bash)\\b|/bin/(ba)?sh|cmd\\.exe|powershell|\\.env|\\.git(/|-|\\b)|\\.svn|\\.hg/|\\.aws|\\.ssh|\\.docker|\\.bash_history|\\.bashrc|\\.zshrc|\\.profile|\\.npmrc|\\.pypirc|\\.netrc|\\.htpasswd|\\.htaccess|\\.DS_Store|\\.dev\\.vars|\\.firebaserc|\\.amplifyrc|\\.changeset|\\.turbo|\\.github/|\\.gitlab-ci|\\.vite/|\\.sql\\b|\\.bak\\b|\\.old\\b|\\.swp\\b|\\.save\\b|id_rsa|\\.pem\\b|\\.key\\b|\\.p12|\\.pfx|\\.jks|wp-login|wp-admin|wp-config|xmlrpc\\.php|phpmyadmin|/pma/|adminer|cgi-bin|/actuator|/vendor/phpunit|/server-status|_debugbar|/telescope|storage/logs|laravel\\.log|docker-compose|compose\\.ya?ml|Dockerfile|terraform|\\.tfstate|serverless\\.yml|values\\.ya?ml|rclone\\.conf|(credentials|secrets?|service[-_]?account(key)?|auth|firebase[\\w-]*|gcp[\\w-]*|google[\\w-]*|gc-service|push_config|sa|key|admin)\\.(json|ya?ml|env)|(wrangler|fly|vercel|netlify|railway|turbo|nx|lerna|rush)\\.(toml|json)|pnpm-workspace|supabase/config|/var/run/secrets))[^\"]+)\".*?\"status\":(?<status>404)",
+  "event": {
+    "type": "web_not_found",
+    "source": "{cip|xff|ip}",
+    "message": "{method} {path} -> {status}"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "key": "org.events-web-probe-burst",
+  "positive": [
+    {
+      "Type": "web_probe",
+      "Count": 12
+    }
+  ],
+  "negative": [
+    {
+      "Type": "web_probe",
+      "Count": 2
+    },
+    {
+      "Type": "web_attack",
+      "Count": 50
+    }
+  ]
+}
