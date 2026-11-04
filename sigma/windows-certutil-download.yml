@@ -2,7 +2,7 @@ title: Certutil Download Of Remote File
 id: 57b14bc1-e97e-4c1f-a9df-9a020eb284de
 status: test
 description: Detects certutil used to download a file from a URL.
-author: PanoptiPulse
+author: HeimGuard
 date: 2026-10-06
 logsource:
   product: windows

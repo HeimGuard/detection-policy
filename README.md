@@ -1,6 +1,6 @@
 # detection-policy
 
-Security rule feed for [Laravel-MDM-Server](https://github.com/PanoptiPulse/Laravel-MDM-Server):
+Security rule feed for [Laravel-MDM-Server](https://github.com/HeimGuard/Laravel-MDM-Server):
 detection rules and log parsers (Windows, Debian / Ubuntu), versioned, reviewed and tested like software.
 The server pulls this repository once a day and applies it on top of its built-in rules.
 
@@ -9,7 +9,7 @@ The server pulls this repository once a day and applies it on top of its built-i
 On the server set:
 
 ```
-MDM_SECURITY_FEED_URL=https://github.com/PanoptiPulse/detection-policy
+MDM_SECURITY_FEED_URL=https://github.com/HeimGuard/detection-policy
 MDM_SECURITY_FEED_REF=main        # optional: branch or tag
 ```
 
@@ -28,7 +28,7 @@ scripts/feed.py              # validation and manifest generation
 scripts/sigma2feed.py        # Sigma -> server rule converter
 ```
 
-Rule format: see [Security scanner](https://github.com/PanoptiPulse/Laravel-MDM-Server/blob/main/docs/security-scanner.md).
+Rule format: see [Security scanner](https://github.com/HeimGuard/Laravel-MDM-Server/blob/master/docs/security-scanner.md).
 Rules use a `key` prefixed `org.`; the same key as a bundled rule would replace it.
 
 ## Sign-ins
