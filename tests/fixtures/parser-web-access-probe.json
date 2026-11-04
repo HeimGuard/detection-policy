@@ -1,0 +1,47 @@
+{
+  "key": "org.web-access-probe",
+  "positive": [
+    {
+      "Image": "nginx",
+      "Container": "web",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /static../.env HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "Image": "nginx",
+      "Container": "web",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.git/config HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "Image": "nginx",
+      "Container": "web",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /wp-login.php HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"-\""
+    },
+    {
+      "Image": "httpd",
+      "Container": "web",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.env.config HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    }
+  ],
+  "negative": [
+    {
+      "Image": "nginx",
+      "Container": "web",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /index.html HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "Image": "nginx",
+      "Container": "web",
+      "Message": "[error] 22#22: *52985 open() \"/usr/share/nginx/html/assets../.env\" failed (2: No such file or directory), client: 172.21.0.19, server: localhost, request: \"GET /assets../.env HTTP/1.1\", host: \"internal.steelants.cz\""
+    },
+    {
+      "Image": "redis",
+      "Container": "web",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /.env HTTP/1.1\" 404 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    },
+    {
+      "Image": "nginx",
+      "Container": "web",
+      "Message": "172.21.0.19 - - [04/Nov/2026:10:23:40 +0000] \"GET /static/app.js HTTP/1.1\" 200 153 \"-\" \"Mozilla/5.0 (compatible; GPTBot/1.4)\" \"192.168.137.5, 34.124.194.107\""
+    }
+  ]
+}
