@@ -1,0 +1,12 @@
+{
+  "key": "org.web-access-probe-host",
+  "name": "Web server (host nginx): probe of a sensitive path",
+  "description": "A request (the access logs in /var/log/nginx, combined format) for a file or page attackers look for: .env, .git, backups, wp-admin, phpMyAdmin, actuator and similar. The source is the last address of X-Forwarded-For (what the outer proxy saw, the rest is client-controlled), else the client address.",
+  "source": "nginx.log",
+  "pattern": "^(?<ip>\\S+) \\S+ \\S+ \\[[^\\]]+\\] \"(?<method>[A-Z]+) (?<path>(?=\\S*(?:\\.env|\\.git(/|\\b)|\\.svn|\\.aws|\\.ssh|\\.DS_Store|\\.htpasswd|\\.sql\\b|\\.bak\\b|\\.old\\b|id_rsa|wp-login|wp-admin|wp-config|xmlrpc\\.php|phpmyadmin|/pma/|adminer|cgi-bin|/actuator|/vendor/phpunit|/server-status|/\\.well-known/\\.\\.|config\\.(json|php|yml|yaml)|credentials|secrets?\\.(json|yml|yaml)))\\S+)(?: [^\\\"]*)?\\\" (?<status>\\d{3}) \\d+ \\\"[^\\\"]*\\\" \\\"[^\\\"]*\\\"(?: \\\"(?:[^\\\",]*,\\s*)*(?<xff>[^\\\",\\s]+)\\\")?\\s*$",
+  "event": {
+    "type": "web_probe",
+    "source": "{xff|ip}",
+    "message": "{method} {path} -> {status}"
+  }
+}
