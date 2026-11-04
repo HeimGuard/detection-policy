@@ -1,0 +1,28 @@
+{
+  "key": "org.events-web-404-flood",
+  "name": "Many pages not found from one address",
+  "description": "An address that asks a web server container or a web server of the host for many pages that do not exist (404) since the last collection: a scanner walking through routes and common file names. Requests for sensitive files and exploit payloads are judged by their own rules.",
+  "severity": "medium",
+  "platform": "linux",
+  "source": "events",
+  "when": {
+    "all": [
+      {
+        "field": "Type",
+        "op": "eq",
+        "value": "web_not_found"
+      },
+      {
+        "field": "Count",
+        "op": "gte",
+        "value": 50
+      }
+    ]
+  },
+  "message": "{Count} requests for pages that do not exist from {Source} (last: {Message})",
+  "remediation": "Rate-limit or block the address at the proxy / firewall, and check that nothing the scanner asked for is reachable (the access log shows 200 instead of 404 for it).",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1595/003/",
+    "https://attack.mitre.org/techniques/T1595/"
+  ]
+}
