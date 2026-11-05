@@ -1,0 +1,10 @@
+{
+  "key": "org.syslog-sudo-auth-failure",
+  "positive": [
+    {"App": "sudo", "Message": "pam_unix(sudo:auth): authentication failure; logname=alice uid=1000 euid=0 tty=/dev/pts/0 ruser=alice rhost=  user=alice"}
+  ],
+  "negative": [
+    {"App": "sudo", "Message": "alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/bin/ls"},
+    {"App": "su", "Message": "pam_unix(sudo:auth): authentication failure; logname=alice uid=1000 euid=0 tty=/dev/pts/0 ruser=alice rhost=  user=alice"}
+  ]
+}

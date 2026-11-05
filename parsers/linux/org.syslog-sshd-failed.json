@@ -1,0 +1,9 @@
+{
+  "key": "org.syslog-sshd-failed",
+  "name": "Syslog, sshd: failed sign-in",
+  "description": "A wrong password or an unknown user at sshd in the syslog of another server or device (the source syslog) as a failed sign-in: the user and the address it came from.",
+  "source": "syslog",
+  "when": {"field": "App", "op": "in", "value": ["sshd", "sshd-session"]},
+  "pattern": "^Failed (?:password|keyboard-interactive/pam|none) for (?:invalid user )?(?<user>\\S+) from (?<ip>\\S+) port \\d+",
+  "event": {"type": "failed_logon", "user": "{user}", "source": "{ip}", "message": "Failed SSH sign-in of {user} from {ip}"}
+}
