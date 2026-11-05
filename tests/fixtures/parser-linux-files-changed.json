@@ -1,0 +1,52 @@
+{
+  "key": "org.linux-files-changed",
+  "positive": [
+    {
+      "Path": "/etc/passwd",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    },
+    {
+      "Path": "/etc/shadow",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    },
+    {
+      "Path": "/etc/group",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    },
+    {
+      "Path": "/etc/sudoers",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    },
+    {
+      "Path": "/etc/ssh/sshd_config",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    },
+    {
+      "Path": "/root/.ssh/authorized_keys",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    }
+  ],
+  "negative": [
+    {
+      "Path": "/etc/hosts",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    },
+    {
+      "Path": "/etc/ssh/ssh_config",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    },
+    {
+      "Path": "/home/alice/.ssh/authorized_keys",
+      "Hash": "bbbbbbbbbbbbbbbb",
+      "Previous": "aaaaaaaaaaaaaaaa"
+    }
+  ]
+}

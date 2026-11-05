@@ -1,0 +1,27 @@
+{
+  "key": "org.events-linux-account-files-changed",
+  "positive": [
+    {
+      "Type": "file_changed",
+      "Source": "/etc/passwd"
+    },
+    {
+      "Type": "file_changed",
+      "Source": "/etc/shadow"
+    },
+    {
+      "Type": "file_changed",
+      "Source": "/etc/group"
+    }
+  ],
+  "negative": [
+    {
+      "Type": "file_changed",
+      "Source": "/etc/sudoers"
+    },
+    {
+      "Type": "file_changed",
+      "Source": "/etc/hosts"
+    }
+  ]
+}

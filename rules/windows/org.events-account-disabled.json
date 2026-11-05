@@ -1,0 +1,27 @@
+{
+  "key": "org.events-account-disabled",
+  "name": "A local account was disabled",
+  "description": "A local account was disabled (event 4725). Normal for a leaver; an attacker locks out the people who would react.",
+  "severity": "low",
+  "platform": "windows",
+  "source": "events",
+  "when": {
+    "all": [
+      {
+        "field": "Type",
+        "op": "eq",
+        "value": "account_disabled"
+      },
+      {
+        "field": "Count",
+        "op": "gte",
+        "value": 1
+      }
+    ]
+  },
+  "message": "Account {User} was disabled",
+  "remediation": "Check that it was planned.",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1531/"
+  ]
+}

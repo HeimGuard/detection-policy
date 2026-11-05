@@ -1,0 +1,19 @@
+{
+  "key": "org.posture-linux-ssh-root-key-login",
+  "positive": [
+    {
+      "SshRootLogin": "prohibit-password"
+    }
+  ],
+  "negative": [
+    {
+      "SshRootLogin": "no"
+    },
+    {
+      "SshRootLogin": "yes"
+    },
+    {
+      "SshPasswordAuthentication": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "key": "org.events-account-disabled",
+  "positive": [
+    {
+      "Type": "account_disabled",
+      "Count": 1
+    }
+  ],
+  "negative": [
+    {
+      "Type": "account_deleted",
+      "Count": 1
+    }
+  ]
+}

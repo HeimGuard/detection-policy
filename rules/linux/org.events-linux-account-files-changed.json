@@ -1,0 +1,32 @@
+{
+  "key": "org.events-linux-account-files-changed",
+  "name": "The files of accounts changed",
+  "description": "/etc/passwd, /etc/shadow or /etc/group has another SHA-256 than at the previous collection. useradd, usermod, passwd and userdel do it, so most are expected; a change without a matching account event (password changed, account deleted) is edited by hand.",
+  "severity": "low",
+  "platform": "linux",
+  "source": "events",
+  "when": {
+    "all": [
+      {
+        "field": "Type",
+        "op": "eq",
+        "value": "file_changed"
+      },
+      {
+        "field": "Source",
+        "op": "in",
+        "value": [
+          "/etc/passwd",
+          "/etc/shadow",
+          "/etc/group"
+        ]
+      }
+    ]
+  },
+  "message": "{Source} changed",
+  "remediation": "Check the account events of the same time: a change that is not explained by them was made by hand.",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1136/001/",
+    "https://attack.mitre.org/techniques/T1098/"
+  ]
+}

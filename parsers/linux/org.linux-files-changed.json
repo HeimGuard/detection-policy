@@ -1,0 +1,23 @@
+{
+  "key": "org.linux-files-changed",
+  "name": "Watched file of accounts or access changed",
+  "description": "The agent (1.32.0+) compares the SHA-256 of /etc/passwd, /etc/shadow, /etc/group, /etc/sudoers, /etc/ssh/sshd_config and root's authorized_keys with the previous collection and sends a record when one changed. A change made with the tools of the system (useradd, passwd, visudo) shows too: what matters is a change nobody expected.",
+  "source": "files",
+  "when": {
+    "field": "Path",
+    "op": "in",
+    "value": [
+      "/etc/passwd",
+      "/etc/shadow",
+      "/etc/group",
+      "/etc/sudoers",
+      "/etc/ssh/sshd_config",
+      "/root/.ssh/authorized_keys"
+    ]
+  },
+  "event": {
+    "type": "file_changed",
+    "source": "{Path}",
+    "message": "{Path} changed"
+  }
+}

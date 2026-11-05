@@ -1,0 +1,27 @@
+{
+  "key": "org.events-account-deleted",
+  "name": "A local account was deleted",
+  "description": "A local account was removed (Windows 4726, Linux userdel). Offboarding does it; an attacker covers tracks with it.",
+  "severity": "medium",
+  "platform": "any",
+  "source": "events",
+  "when": {
+    "all": [
+      {
+        "field": "Type",
+        "op": "eq",
+        "value": "account_deleted"
+      },
+      {
+        "field": "Count",
+        "op": "gte",
+        "value": 1
+      }
+    ]
+  },
+  "message": "Account {User} was deleted",
+  "remediation": "Check that the removal was planned and who did it (the audit log of the device).",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1531/"
+  ]
+}

@@ -23,16 +23,16 @@ SOURCES = {
     "processes": ["Name", "Path", "CommandLine", "User", "Count"],
     "listening": ["Protocol", "Address", "Port", "Process", "Path"],
     "startup": ["Name", "Command", "Location", "User"],
-    "admins": ["Name", "Source", "Enabled"],
+    "admins": ["Name", "Source", "Enabled", "Builtin"],
     "posture": ["FirewallEnabled", "AntivirusName", "AntivirusEnabled", "AntivirusUpToDate", "RealTimeProtection",
                 "DiskEncrypted", "SecureBoot", "RdpEnabled", "RdpNla", "Smb1Enabled", "UacEnabled", "GuestEnabled",
-                "AutoLogon", "SshRootLogin", "SshPasswordAuthentication", "AutomaticUpdates", "DaysSinceUpdate"],
+                "AutoLogon", "SshRootLogin", "SshPasswordAuthentication", "AutomaticUpdates", "DaysSinceUpdate", "RootPasswordSet"],
     "events": ["Type", "Count", "User", "Source", "Message", "Last"],
     "os": ["Name", "Version", "Id", "Kernel"],
     "portscan": ["Ip", "Network", "Port", "Service", "Banner", "Server", "Title",
                  "Tls", "Http", "Hsts", "Csp", "XFrameOptions", "CertSelfSigned", "CertExpired", "TlsFailed"],
 }
-LOG_SOURCES = {"windows.security", "windows.system", "windows.defender", "linux.auth", "docker.logs", "web.log"}
+LOG_SOURCES = {"windows.security", "windows.system", "windows.defender", "linux.auth", "docker.logs", "web.log", "files"}
 EVENT_FIELDS = {"type", "user", "source", "message", "count"}
 UNARY = {"exists", "empty", "true", "false"}
 OPS = {"eq", "ne", "contains", "not_contains", "starts_with", "ends_with", "matches", "not_matches",

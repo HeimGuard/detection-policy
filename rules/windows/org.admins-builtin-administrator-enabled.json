@@ -1,0 +1,26 @@
+{
+  "key": "org.admins-builtin-administrator-enabled",
+  "name": "The built-in Administrator account is enabled",
+  "description": "The account with RID 500 (Administrator, renamed or localized) is enabled: it cannot be locked out by failed sign-ins and is the first account an attacker tries. Use a named account with administrator rights and leave this one disabled.",
+  "severity": "medium",
+  "platform": "windows",
+  "source": "admins",
+  "when": {
+    "all": [
+      {
+        "field": "Builtin",
+        "op": "true"
+      },
+      {
+        "field": "Enabled",
+        "op": "true"
+      }
+    ]
+  },
+  "message": "The built-in administrator {Name} is enabled",
+  "remediation": "Disable it: `Disable-LocalUser -SID (Get-LocalUser | Where-Object { $_.SID -like '*-500' }).SID` (keep another administrator first).",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1078/001/",
+    "https://attack.mitre.org/techniques/T1078/003/"
+  ]
+}

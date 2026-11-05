@@ -1,0 +1,36 @@
+{
+  "key": "org.admins-builtin-administrator-enabled",
+  "positive": [
+    {
+      "Name": "PC\\Administrator",
+      "Source": "Local",
+      "Enabled": true,
+      "Builtin": true
+    },
+    {
+      "Name": "PC\\Správce",
+      "Source": "Local",
+      "Enabled": true,
+      "Builtin": true
+    }
+  ],
+  "negative": [
+    {
+      "Name": "PC\\Administrator",
+      "Source": "Local",
+      "Enabled": false,
+      "Builtin": true
+    },
+    {
+      "Name": "PC\\alice",
+      "Source": "Local",
+      "Enabled": true,
+      "Builtin": false
+    },
+    {
+      "Name": "PC\\Administrator",
+      "Source": "Local",
+      "Enabled": true
+    }
+  ]
+}

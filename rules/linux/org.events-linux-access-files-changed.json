@@ -1,0 +1,32 @@
+{
+  "key": "org.events-linux-access-files-changed",
+  "name": "sudo, sshd or the keys of root changed",
+  "description": "/etc/sudoers, /etc/ssh/sshd_config or /root/.ssh/authorized_keys has another SHA-256 than at the previous collection: who may become root and how one gets in. A key or a rule added by an attacker lives here.",
+  "severity": "medium",
+  "platform": "linux",
+  "source": "events",
+  "when": {
+    "all": [
+      {
+        "field": "Type",
+        "op": "eq",
+        "value": "file_changed"
+      },
+      {
+        "field": "Source",
+        "op": "in",
+        "value": [
+          "/etc/sudoers",
+          "/etc/ssh/sshd_config",
+          "/root/.ssh/authorized_keys"
+        ]
+      }
+    ]
+  },
+  "message": "{Source} changed",
+  "remediation": "Compare it with what you expect (the configuration management, the change that was planned) and look at the file.",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1098/004/",
+    "https://attack.mitre.org/techniques/T1548/003/"
+  ]
+}

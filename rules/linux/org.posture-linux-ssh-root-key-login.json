@@ -1,0 +1,19 @@
+{
+  "key": "org.posture-linux-ssh-root-key-login",
+  "name": "SSH allows root to sign in with a key",
+  "description": "sshd accepts root with a public key (PermitRootLogin prohibit-password). Safer than a password, but it is a way in for anyone who gets that key and an account nobody can tell from another in the logs; most systems need only sudo.",
+  "severity": "low",
+  "platform": "linux",
+  "source": "posture",
+  "when": {
+    "field": "SshRootLogin",
+    "op": "eq",
+    "value": "prohibit-password"
+  },
+  "message": "sshd: PermitRootLogin prohibit-password (root signs in with a key)",
+  "remediation": "Set PermitRootLogin no in /etc/ssh/sshd_config and use a named account with sudo; keep it only for a job that needs it (backup, configuration management).",
+  "urls": [
+    "https://attack.mitre.org/techniques/T1021/004/",
+    "https://attack.mitre.org/techniques/T1078/003/"
+  ]
+}

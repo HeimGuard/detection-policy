@@ -1,0 +1,27 @@
+{
+  "key": "org.events-linux-access-files-changed",
+  "positive": [
+    {
+      "Type": "file_changed",
+      "Source": "/etc/sudoers"
+    },
+    {
+      "Type": "file_changed",
+      "Source": "/root/.ssh/authorized_keys"
+    },
+    {
+      "Type": "file_changed",
+      "Source": "/etc/ssh/sshd_config"
+    }
+  ],
+  "negative": [
+    {
+      "Type": "file_changed",
+      "Source": "/etc/passwd"
+    },
+    {
+      "Type": "password_changed",
+      "Source": "/etc/sudoers"
+    }
+  ]
+}
