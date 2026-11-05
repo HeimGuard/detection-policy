@@ -1,0 +1,9 @@
+{
+  "key": "org.syslog-sudo-auth-failure",
+  "name": "Syslog, sudo: PAM authentication failure",
+  "description": "A wrong sudo password as logged by PAM (pam_unix(sudo:auth)) in the syslog of another server or device (the source syslog).",
+  "source": "syslog",
+  "when": {"field": "App", "op": "eq", "value": "sudo"},
+  "pattern": "pam_unix\\(sudo:auth\\): authentication failure;.*\\buser=(?<user>\\S+)",
+  "event": {"type": "sudo_auth_failure", "user": "{user}", "source": "sudo", "message": "sudo: wrong password for {user}"}
+}

@@ -1,0 +1,9 @@
+{
+  "key": "org.syslog-sshd-accepted",
+  "name": "Syslog, sshd: successful sign-in",
+  "description": "A successful SSH sign-in in the syslog of another server or device (received by the portal, the source syslog) as a logon event: the same as the sign-in of a device with an agent.",
+  "source": "syslog",
+  "when": {"field": "App", "op": "in", "value": ["sshd", "sshd-session"]},
+  "pattern": "^Accepted (?<method>\\S+) for (?<user>\\S+) from (?<ip>\\S+) port \\d+",
+  "event": {"type": "logon", "user": "{user}", "source": "{ip}", "message": "SSH sign-in of {user} from {ip} with {method}"}
+}
