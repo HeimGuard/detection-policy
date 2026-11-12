@@ -30,7 +30,7 @@
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu",
-   "FixedCves": ",CVE-2026-15226,CVE-2026-3888,CVE-2026-8933,"
+   "FixedCves": ",CVE-2026-15226,CVE-2026-8933,"
   }
  ]
 }

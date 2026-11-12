@@ -1,7 +1,7 @@
 {
   "key": "org.msrc-windows-10-0-20348-5622",
-  "name": "Windows Server 2022 (build 10.0.20348): the update 10.0.20348.5622 is missing (7 CVEs)",
-  "description": "Microsoft's security update 10.0.20348.5622 of Windows Server 2022 (build 10.0.20348) fixes 7 CVEs (2026-Oct). CVEs: CVE-2026-69789, CVE-2026-69354, CVE-2026-69363, CVE-2026-69521, CVE-2026-70067, CVE-2026-87706, CVE-2026-87707",
+  "name": "Windows Server 2022 (build 10.0.20348): the update 10.0.20348.5622 is missing (10 CVEs)",
+  "description": "Microsoft's security update 10.0.20348.5622 of Windows Server 2022 (build 10.0.20348) fixes 10 CVEs (2026-Nov, 2026-Oct). CVEs: CVE-2026-69789, CVE-2026-69354, CVE-2026-69363, CVE-2026-69521, CVE-2026-70067, CVE-2026-87706, CVE-2026-87707, CVE-2026-88239, CVE-2026-95877, CVE-2026-96127",
   "severity": "critical",
   "platform": "windows",
   "source": "os",
@@ -24,7 +24,7 @@
       }
     ]
   },
-  "message": "{Name} {Version} is older than 10.0.20348.5622, the update that fixes 7 CVEs: CVE-2026-69789, CVE-2026-69354, CVE-2026-69363, CVE-2026-69521, CVE-2026-70067, CVE-2026-87706, CVE-2026-87707",
+  "message": "{Name} {Version} is older than 10.0.20348.5622, the update that fixes 10 CVEs: CVE-2026-69789, CVE-2026-69354, CVE-2026-69363, CVE-2026-69521, CVE-2026-70067, CVE-2026-87706, CVE-2026-87707, CVE-2026-88239, CVE-2026-95877, CVE-2026-96127",
   "remediation": "Install the latest cumulative update (Windows Update).",
   "urls": [
     "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-69789",

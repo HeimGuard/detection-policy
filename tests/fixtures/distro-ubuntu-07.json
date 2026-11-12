@@ -1,12 +1,12 @@
 {
  "key": "org.distro-ubuntu-07",
  "context": {
-  "release": "jammy",
+  "release": "focal",
   "os": "ubuntu"
  },
  "positive": [
   {
-   "Name": "google-osconfig-agent",
+   "Name": "apt",
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu"
@@ -20,17 +20,17 @@
    "Origin": "Ubuntu"
   },
   {
-   "Name": "google-osconfig-agent",
+   "Name": "apt",
    "Version": "0.0.1",
    "Source": "snap",
    "Origin": "Ubuntu"
   },
   {
-   "Name": "google-osconfig-agent",
+   "Name": "apt",
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu",
-   "FixedCves": ",CVE-2026-39821,"
+   "FixedCves": ",CVE-2026-109518,"
   }
  ]
 }
