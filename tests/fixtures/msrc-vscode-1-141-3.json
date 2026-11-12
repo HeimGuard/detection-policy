@@ -1,0 +1,42 @@
+{
+  "key": "org.msrc-vscode-1-141-3",
+  "positive": [
+    {
+      "Name": "Microsoft Visual Studio Code",
+      "Version": "1.141.2",
+      "Source": "registry"
+    },
+    {
+      "Name": "Microsoft Visual Studio Code (User)",
+      "Version": "1.141.2",
+      "Source": "registry (user)"
+    },
+    {
+      "Name": "code",
+      "Version": "1.141.2-1792691907",
+      "Source": "dpkg"
+    }
+  ],
+  "negative": [
+    {
+      "Name": "Microsoft Visual Studio Code",
+      "Version": "1.141.3",
+      "Source": "registry"
+    },
+    {
+      "Name": "code",
+      "Version": "1.141.3-1",
+      "Source": "dpkg"
+    },
+    {
+      "Name": "code",
+      "Version": "1.141.2",
+      "Source": "registry"
+    },
+    {
+      "Name": "Visual Studio Code Insiders",
+      "Version": "1.141.2",
+      "Source": "registry"
+    }
+  ]
+}
