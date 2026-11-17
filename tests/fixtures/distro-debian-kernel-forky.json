@@ -30,7 +30,7 @@
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Debian",
-   "FixedCves": ",CVE-2025-10263,"
+   "FixedCves": ",CVE-2025-10263,CVE-2026-0004,"
   }
  ]
 }

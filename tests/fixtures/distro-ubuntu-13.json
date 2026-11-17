@@ -1,12 +1,12 @@
 {
- "key": "org.distro-ubuntu-17",
+ "key": "org.distro-ubuntu-13",
  "context": {
   "release": "focal",
   "os": "ubuntu"
  },
  "positive": [
   {
-   "Name": "snapd",
+   "Name": "apache2",
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu"
@@ -20,17 +20,17 @@
    "Origin": "Ubuntu"
   },
   {
-   "Name": "snapd",
+   "Name": "apache2",
    "Version": "0.0.1",
    "Source": "snap",
    "Origin": "Ubuntu"
   },
   {
-   "Name": "snapd",
+   "Name": "apache2",
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu",
-   "FixedCves": ",CVE-2026-15226,CVE-2026-8933,"
+   "FixedCves": ",CVE-2026-119618,"
   }
  ]
 }
