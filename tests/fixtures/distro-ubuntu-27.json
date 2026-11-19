@@ -6,7 +6,7 @@
  },
  "positive": [
   {
-   "Name": "golang-1.21",
+   "Name": "openjdk-25",
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu"
@@ -20,17 +20,17 @@
    "Origin": "Ubuntu"
   },
   {
-   "Name": "golang-1.21",
+   "Name": "openjdk-25",
    "Version": "0.0.1",
    "Source": "snap",
    "Origin": "Ubuntu"
   },
   {
-   "Name": "golang-1.21",
+   "Name": "openjdk-25",
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu",
-   "FixedCves": ",CVE-2026-39821,"
+   "FixedCves": ",CVE-2026-114938,"
   }
  ]
 }

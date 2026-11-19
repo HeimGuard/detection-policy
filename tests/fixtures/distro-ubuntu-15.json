@@ -1,12 +1,12 @@
 {
  "key": "org.distro-ubuntu-15",
  "context": {
-  "release": "noble",
+  "release": "focal",
   "os": "ubuntu"
  },
  "positive": [
   {
-   "Name": "golang-golang-x-net",
+   "Name": "nginx",
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu"
@@ -20,17 +20,17 @@
    "Origin": "Ubuntu"
   },
   {
-   "Name": "golang-golang-x-net",
+   "Name": "nginx",
    "Version": "0.0.1",
    "Source": "snap",
    "Origin": "Ubuntu"
   },
   {
-   "Name": "golang-golang-x-net",
+   "Name": "nginx",
    "Version": "0.0.1",
    "Source": "dpkg",
    "Origin": "Ubuntu",
-   "FixedCves": ",CVE-2026-39821,"
+   "FixedCves": ",CVE-2026-113425,CVE-2026-121810,CVE-2026-123007,CVE-2026-123633,CVE-2026-123634,"
   }
  ]
 }
