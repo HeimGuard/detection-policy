@@ -341,6 +341,51 @@ class Rules(unittest.TestCase):
         self.assertEqual({}, rules)
         self.assertEqual(2, len(skipped))
 
+class Watchlist(unittest.TestCase):
+    def record(self, cid, product="f5:nginx"):
+        vendor, name = product.split(":")
+        return {"cve": {"id": cid, "descriptions": [{"lang": "en", "value": "A flaw."}], "references": [], "lastModified": "2026-10-01T00:00:00.000",
+                        "metrics": {"cvssMetricV31": [{"cvssData": {"baseSeverity": "CRITICAL", "baseScore": 9.8}}]},
+                        "configurations": [{"nodes": [{"cpeMatch": [{"vulnerable": True, "criteria": f"cpe:2.3:a:{vendor}:{name}:*:*:*:*:*:*:*:*",
+                                                                     "versionEndExcluding": "1.25.4"}]}]}]}}
+
+    def test_the_watchlist_file_is_valid(self):
+        products = cve2feed.load_watchlist()
+        self.assertGreater(len(products), 10)
+        self.assertIn("f5:nginx", products)
+        self.assertEqual(len(products), len(set(products)))
+
+    def test_the_score_is_kept_in_the_state(self):
+        entry = cve2feed.state_entry(self.record("CVE-2026-1")["cve"])
+        self.assertEqual((9.8, "critical"), (entry["cvss"], entry["severity"]))
+
+    def test_a_product_is_taken_once_and_only_as_many_as_the_limit(self):
+        state = {"cves": {}}
+        asked = []
+
+        def fetcher(product):
+            asked.append(product)
+            return [self.record("CVE-2026-" + str(len(asked)), product)]
+
+        self.assertEqual(2, cve2feed.backfill(state, ["f5:nginx", "apache:http_server", "redis:redis"], 2, fetcher))
+        self.assertEqual(["f5:nginx", "apache:http_server"], asked)
+        self.assertEqual(["apache:http_server", "f5:nginx"], state["watched"])
+        self.assertEqual(1, cve2feed.backfill(state, ["f5:nginx", "apache:http_server", "redis:redis"], 2, fetcher))
+        self.assertEqual(["f5:nginx", "apache:http_server", "redis:redis"], asked, "the ones taken are not asked again")
+
+    def test_a_product_that_failed_is_not_marked(self):
+        state = {"cves": {}}
+
+        def fetcher(product):
+            yield self.record("CVE-2026-7")
+            raise cve2feed.NvdError("the NVD stopped answering")
+
+        with self.assertRaises(cve2feed.NvdError):
+            cve2feed.backfill(state, ["f5:nginx"], 5, fetcher)
+        self.assertEqual([], state.get("watched", []))
+        self.assertIn("CVE-2026-7", state["cves"], "what came before the failure is kept")
+
+
 
 if __name__ == "__main__":
     unittest.main()

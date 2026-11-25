@@ -209,6 +209,39 @@ class Evaluator(unittest.TestCase):
         self.assertEqual("no_fix", cves.affecting([lxd], snap)["CVE-2"]["status"])
         self.assertEqual("update_available", cves.affecting([lxd], {**snap, "Candidate": "5.21.4"})["CVE-2"]["status"])
 
+class Severity(unittest.TestCase):
+    def test_the_band_of_a_score(self):
+        self.assertEqual(["critical", "critical", "high", "high", "medium", "medium", "low", None, None, None],
+                         [d2f.band(x) for x in (10, 9.0, 8.9, 7.0, 6.9, 4.0, 3.9, 0, 11, "9")])
+
+    def test_ubuntu_takes_the_score_when_it_is_worse_than_the_priority(self):
+        rec = {"id": "CVE-2026-1", "priority": "medium", "cvss3": 9.8, "published": "2026-10-01T00:00:00", "packages": [package("openssl", noble="needed")]}
+        entry = d2f.ubuntu_record(rec)
+        self.assertEqual(("critical", 9.8), (entry["severity"], entry["cvss"]))
+        rec["cvss3"] = 3.0
+        self.assertEqual("medium", d2f.ubuntu_record(rec)["severity"], "a low score does not lower the priority")
+        rec["cvss3"] = None
+        self.assertNotIn("cvss", d2f.ubuntu_record(rec))
+
+    def test_a_merge_keeps_the_worse_severity_and_the_higher_score(self):
+        state = {}
+        d2f.merge(state, "CVE-1", {"severity": "medium", "cvss": 5.0, "published": "", "packages": {"foo": {"noble": ["needed", ""]}}})
+        d2f.merge(state, "CVE-1", {"severity": "high", "cvss": 7.5, "published": "", "packages": {"foo": {"jammy": ["needed", ""]}}})
+        self.assertEqual(("high", 7.5), (state["CVE-1"]["severity"], state["CVE-1"]["cvss"]))
+
+    def test_enrich_takes_the_nvd_score_and_the_exploited_flag(self):
+        tracker = {"CVE-1": {"severity": "medium", "published": "", "packages": {}}, "CVE-2": {"severity": "low", "published": "", "packages": {}},
+                   "CVE-3": {"severity": "high", "cvss": 9.1, "published": "", "packages": {}}}
+        nvd = {"CVE-1": {"severity": "critical", "cvss": 9.8, "kev": False}, "CVE-2": {"severity": "low", "kev": True}, "CVE-3": {"severity": "medium", "cvss": 5.0}}
+        out = d2f.enrich(tracker, nvd)
+        self.assertEqual(("critical", 9.8, None), (out["CVE-1"]["severity"], out["CVE-1"]["cvss"], out["CVE-1"].get("kev")))
+        self.assertEqual(("high", True, None), (out["CVE-2"]["severity"], out["CVE-2"]["kev"], out["CVE-2"].get("cvss")), "exploited: at least high")
+        self.assertEqual(("critical", 9.1), (out["CVE-3"]["severity"], out["CVE-3"]["cvss"]), "the score of the tracker wins over the NVD's, the band counts")
+        self.assertEqual("medium", tracker["CVE-1"]["severity"], "the state is not changed")
+        self.assertEqual({}, d2f.enrich({}, nvd))
+        self.assertEqual("low", d2f.enrich({"CVE-9": {"severity": "low", "published": "", "packages": {}}}, None)["CVE-9"]["severity"])
+
+
 
 if __name__ == "__main__":
     unittest.main()
