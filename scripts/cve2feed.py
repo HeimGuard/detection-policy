@@ -125,6 +125,44 @@ def fetch(days, extra):
         end = begin
 
 
+WATCHLIST = ROOT / "data" / "watchlist.json"
+
+
+def load_watchlist():
+    """The products (vendor:product of a CPE) whose whole history is wanted, not only what the NVD changed lately."""
+    if not WATCHLIST.exists():
+        return []
+    return [p for p in json.loads(WATCHLIST.read_text()).get("products", []) if re.match(r"^[a-z0-9_.+~-]+:[a-z0-9_.+~-]+$", str(p))]
+
+
+def fetch_product(product):
+    """Yield every CVE of one product (vendor:product), whatever its age: the nightly window only sees what changed in the last
+    days, so a product that is in no recent CVE (nginx, Apache httpd, OpenSSL) would have no rule at all."""
+    headers, pause = nvd_headers(), nvd_pause()
+    start = 0
+    while True:
+        query = urllib.parse.urlencode({"virtualMatchString": f"cpe:2.3:a:{product}", "noRejected": "", "resultsPerPage": 200, "startIndex": start})
+        page = request(f"{API}?{query}", headers)
+        yield from page.get("vulnerabilities", [])
+        start += page.get("resultsPerPage", 0)
+        time.sleep(pause)
+        if not page.get("resultsPerPage") or start >= page.get("totalResults", 0):
+            break
+
+
+def backfill(state, products, limit, fetcher=None):
+    """The history of up to `limit` products of the watchlist that were not taken yet (state["watched"]); returns the number of CVEs
+    that are new or changed. A product is marked only when all its pages came, so a failure is tried again the next night."""
+    fetcher = fetcher or fetch_product
+    watched = state.setdefault("watched", [])
+    changed = 0
+    for product in [p for p in products if p not in watched][:limit]:
+        changed += ingest(state, fetcher(product))
+        watched.append(product)
+    state["watched"] = sorted(set(watched))
+    return changed
+
+
 def fetch_ids(ids):
     """Yield the NVD records of these CVE ids."""
     headers, pause = nvd_headers(), nvd_pause()
@@ -162,6 +200,16 @@ def severity(cve):
     return "high"  # on the KEV list: exploited in the wild
 
 
+def cvss_score(cve):
+    """The base score of the metric `severity()` takes (the newest version first), None when the NVD gives none."""
+    for kind in ("cvssMetricV31", "cvssMetricV40", "cvssMetricV30", "cvssMetricV2"):
+        for m in cve.get("metrics", {}).get(kind, []):
+            score = m.get("cvssData", {}).get("baseScore")
+            if isinstance(score, (int, float)) and not isinstance(score, bool) and 0 < score <= 10:
+                return round(float(score), 1)
+    return None
+
+
 def state_entry(cve):
     """What the state keeps of an NVD record, None when it gives no product with a version range."""
     found = products(cve)
@@ -170,6 +218,7 @@ def state_entry(cve):
     desc = next((d["value"] for d in cve.get("descriptions", []) if d["lang"] == "en"), cve["id"])
     return {
         "severity": severity(cve),
+        **({"cvss": cvss_score(cve)} if cvss_score(cve) is not None else {}),
         "kev": bool(cve.get("cisaExploitAdd")),
         "desc": desc[:400],
         "refs": [r["url"] for r in cve.get("references", [])
@@ -477,6 +526,10 @@ def cve_list(product, cves):
     out = []
     for cid, entry, ranges in cves:
         item = {"id": cid, "severity": entry["severity"], "ranges": [list(r) for r in ranges]}
+        if entry.get("cvss"):
+            item["cvss"] = entry["cvss"]
+        if entry.get("kev"):
+            item["kev"] = True
         tracker = {}
         for source, rel in sorted(((entry.get("ubuntu") or {}).get("sources") or {}).items()):
             if related(product, source):
@@ -801,6 +854,7 @@ def main():
     ap.add_argument("--days", type=int, default=4, help="take the CVEs the NVD changed in the last N days")
     ap.add_argument("--limit", type=int, default=500, help="at most N new CVEs per run")
     ap.add_argument("--cve", nargs="*", default=[], help="take these CVEs too")
+    ap.add_argument("--watch", type=int, default=0, metavar="N", help="take the whole history of up to N products of data/watchlist.json that were not taken yet")
     ap.add_argument("--import-nvd", help="take the NVD records of this JSON file ({id: record} or a list)")
     ap.add_argument("--offline", action="store_true", help="only regenerate from data/cves.json")
     ap.add_argument("--no-ubuntu", action="store_true", help="do not ask the Ubuntu security tracker")
@@ -818,6 +872,8 @@ def main():
                 print(f"{ingest(state, data.values() if isinstance(data, dict) else data)} CVE(s) imported")
             if args.cve:
                 print(f"{ingest(state, fetch_ids(args.cve))} of the named CVE(s) taken")
+            if args.watch:
+                print(f"{backfill(state, load_watchlist(), args.watch)} CVE(s) of the watched products")
             if args.days:
                 print(f"{ingest(state, fetch(args.days, ''), args.limit)} new or changed CVE(s)")
         except NvdError as e:

@@ -112,6 +112,13 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
   whole every night (`--no-debian` skips it, `--import-debian FILE` takes a file); when it is not reachable the data stays as it was.
 - **One entry per CVE**: the same CVE under two names of one product (or two rules about the same source package) is one entry,
   `feed.py check` fails when a CVE is in two rules about the same package.
+- **Severity like a vulnerability scanner**: a CVE carries `severity`, its CVSS score `cvss` (the NVD, or the `cvss3` of the Ubuntu tracker) and `kev`
+  when it is on the CISA list of the exploited ones. The severity of a CVE of a tracker is the more severe of the priority of the distribution and the
+  band of its score (Debian says *medium* to CVEs the NVD scores 9.8: `distro2feed.enrich` takes what the NVD data says of the same CVE), and a
+  CVE on the KEV list is at least *high*. The server shows the score and the exploited CVEs and never lowers a severity because there is no fix yet.
+- **Watchlist** (`data/watchlist.json`): the nightly run sees only what the NVD changed in the last days, so software that is in no recent CVE (nginx, Apache
+  httpd, OpenSSL, Redis) had no rule at all. `cve2feed.py --watch N` takes the whole history of up to N products of the list that were not taken yet
+  (`state["watched"]`; one that failed is tried again the next night). The CPE is `vendor:product`.
 - **Corrections of the NVD ranges** go to `data/overrides.json`, never into a generated file:
   `{"CVE-2025-54289": {"lxd": {"fixed_in": ["5.0.5"], "not_affected": [["4.0.0", "4.0.12"]]}}}`. The NVD gives one range for what a
   vendor fixed per release series; `fixed_in` lists the versions at which a series got its fix (what is at or after one, up to the next

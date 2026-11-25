@@ -44,6 +44,42 @@ MAX_CVES = 3000  # of one rule: feed.py takes 3000
 SEVERITY = {"critical": "critical", "high": "high", "medium": "medium", "low": "low", "negligible": "low", "untriaged": "medium",
             "not yet assigned": "medium", "unimportant": "low"}
 RANK = {"critical": 4, "high": 3, "medium": 2, "low": 1}
+BY_RANK = {v: k for k, v in RANK.items()}
+
+
+def band(score):
+    """The severity band of a CVSS score (9.0 critical, 7.0 high, 4.0 medium, below low), None for no score."""
+    if not isinstance(score, (int, float)) or isinstance(score, bool) or not 0 < score <= 10:
+        return None
+    return "critical" if score >= 9 else "high" if score >= 7 else "medium" if score >= 4 else "low"
+
+
+def worse(*levels):
+    """The most severe of the severities (None is no word)."""
+    known = [level for level in levels if level in RANK]
+    return max(known, key=RANK.get) if known else "medium"
+
+
+def enrich(cves, nvd):
+    """The CVEs of a tracker with what the NVD (data/cves.json, cve2feed.py) says of the same CVE: its CVSS band counts when it is
+    more severe than the word of the tracker (the priority of a distribution is its own opinion, Debian says "medium" to a CVE
+    the NVD scores 9.8), and a CVE of the CISA list of the exploited ones is at least high. The CVSS score is kept (Ubuntu gives it
+    itself) and "kev" is set when it is on the list. A pure function of the two states, so a regeneration gives the same files."""
+    out = {}
+    for cid, e in cves.items():
+        known = (nvd or {}).get(cid) or {}
+        entry = dict(e)
+        score = entry.get("cvss") if band(entry.get("cvss")) else known.get("cvss")
+        level = worse(entry["severity"], band(score), known.get("severity") if known.get("severity") in RANK else None, "high" if known.get("kev") else None)
+        entry["severity"] = level
+        if band(score):
+            entry["cvss"] = round(float(score), 1)
+        else:
+            entry.pop("cvss", None)
+        if known.get("kev"):
+            entry["kev"] = True
+        out[cid] = entry
+    return out
 # The kernels a CVE lists by the hundred (linux-aws-5.4, linux-azure-fde, ...): the generic and the usual flavours.
 KERNEL = re.compile(r"^linux(?:-(?:aws|azure|gcp|oracle|raspi|lowlatency|kvm|hwe|oem|nvidia|ibm|gke|riscv)(?:-[\d.]+)?)?$")
 
@@ -106,8 +142,11 @@ def ubuntu_record(rec, releases=UBUNTU_RELEASES):
             packages[name] = dict(sorted(lines.items()))
     if not packages:
         return None
-    entry = {"severity": SEVERITY.get(str(rec.get("priority", "")).lower(), "medium"),
+    score = rec.get("cvss3")
+    entry = {"severity": worse(SEVERITY.get(str(rec.get("priority", "")).lower(), "medium"), band(score)),
              "published": str(rec.get("published", ""))[:10], "packages": dict(sorted(packages.items()))}
+    if band(score):
+        entry["cvss"] = round(float(score), 1)
     if arch_of(rec.get("description")):
         entry["arch"] = arch_of(rec.get("description"))
     return entry
@@ -118,6 +157,9 @@ def merge(state, cid, entry):
     old = state.setdefault(cid, {"severity": entry["severity"], "published": entry["published"], "packages": {}})
     if entry.get("arch"):
         old["arch"] = entry["arch"]
+    if entry.get("cvss") and entry["cvss"] > old.get("cvss", 0):
+        old["cvss"] = entry["cvss"]
+    old["severity"] = worse(old["severity"], entry["severity"])
     for name, lines in entry["packages"].items():
         old["packages"].setdefault(name, {}).update(lines)
         old["packages"][name] = dict(sorted(old["packages"][name].items()))
@@ -298,7 +340,9 @@ def _build(distro, cves, ids):
                 if cid not in b["cves"] and len(b["cves"]) >= MAX_CVES:
                     continue
                 b["sources"].add(source)
-                b["cves"].setdefault(cid, {"id": cid, "severity": e["severity"], "ranges": [], **({"arch": e["arch"]} if e.get("arch") else {}), distro: {}})[distro][source] = part
+                b["cves"].setdefault(cid, {"id": cid, "severity": e["severity"], "ranges": [],
+                                           **({"cvss": e["cvss"]} if e.get("cvss") else {}), **({"kev": True} if e.get("kev") else {}),
+                                           **({"arch": e["arch"]} if e.get("arch") else {}), distro: {}})[distro][source] = part
     rules, fixtures = {}, {}
     label = distro.capitalize()
     for n, b in sorted(buckets.items()):
@@ -366,6 +410,12 @@ def write(rules, fixtures):
     return changed
 
 
+def load_nvd():
+    """The CVEs the NVD was asked about (data/cves.json): {CVE id: {severity, cvss, kev, ...}}."""
+    path = ROOT / "data" / "cves.json"
+    return json.loads(path.read_text()).get("cves", {}) if path.exists() else {}
+
+
 def load_state():
     return json.loads(STATE.read_text()) if STATE.exists() else {"ubuntu": {}, "debian": {}}
 
@@ -378,9 +428,10 @@ def save_state(state):
 def generate(state):
     rules, fixtures = {}, {}
     taken = covered()
+    nvd = load_nvd()
     for distro in ("ubuntu", "debian"):
         if state.get(distro):
-            r, f = build(distro, state[distro], taken)
+            r, f = build(distro, enrich(state[distro], nvd), taken)
             rules |= r
             fixtures |= f
     return rules, fixtures

@@ -284,8 +284,10 @@ def rule_errors(r, parser):
         if cves is not None and (not isinstance(cves, list) or not 1 <= len(cves) <= 3000 or not all(
                 isinstance(c, dict) and re.match(r"^CVE-\d{4}-\d+$", str(c.get("id", "")))
                 and c.get("severity", "medium") in SEVERITIES
+                and (c.get("cvss") is None or (isinstance(c["cvss"], (int, float)) and not isinstance(c["cvss"], bool) and 0 <= c["cvss"] <= 10))
+                and isinstance(c.get("kev", False), bool)
                 and isinstance(c.get("ranges", []), list) and isinstance(c.get("ubuntu", {}), dict) for c in cves)):
-            errs.append("cves: a list of 1 to 3000 CVEs (id, severity, ranges, ubuntu)")
+            errs.append("cves: a list of 1 to 3000 CVEs (id, severity, cvss, kev, ranges, ubuntu)")
         if "select" in r and cves is None:
             errs.append("select needs cves")
         if "select" in r:

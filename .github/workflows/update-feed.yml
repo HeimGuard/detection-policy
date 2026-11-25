@@ -32,7 +32,7 @@ jobs:
         include:
           - generator: cve        # the NVD, and what the Ubuntu tracker says of the packages
             timeout: 60
-            command: python scripts/cve2feed.py --days "$DAYS"
+            command: python scripts/cve2feed.py --days "$DAYS" --watch 5
             paths: data/cves.json rules/any/org.cve-*.json tests/fixtures/cve-*.json
           - generator: msrc       # the monthly security updates of Microsoft
             timeout: 30

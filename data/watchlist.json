@@ -1,0 +1,32 @@
+{
+ "_": "vendor:product of the CPE: the whole history of each is taken once (cve2feed.py --watch N), so software that is in no recent CVE (nginx, Apache) is judged too",
+ "products": [
+  "f5:nginx",
+  "nginx:nginx",
+  "apache:http_server",
+  "apache:tomcat",
+  "openssl:openssl",
+  "redis:redis",
+  "postgresql:postgresql",
+  "mysql:mysql",
+  "mariadb:mariadb",
+  "php:php",
+  "nodejs:node.js",
+  "haproxy:haproxy",
+  "traefik:traefik",
+  "grafana:grafana",
+  "memcached:memcached",
+  "mongodb:mongodb",
+  "elastic:elasticsearch",
+  "vmware:rabbitmq",
+  "eclipse:mosquitto",
+  "squid-cache:squid",
+  "openbsd:openssh",
+  "isc:bind",
+  "samba:samba",
+  "sqlite:sqlite",
+  "curl:curl",
+  "gitlab:gitlab",
+  "jenkins:jenkins"
+ ]
+}
