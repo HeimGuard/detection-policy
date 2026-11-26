@@ -100,10 +100,10 @@ def _dpkg(cve, item, rel, os_id):
             return {"status": "not_triaged" if status == "needs-triage" else "no_fix", "fixed": None}
     ranges = cve.get("ranges") or []
     up = upstream(version)
-    if not up or not _in_ranges(ranges, up, feed.dpkg_compare):
+    if not up or not _in_ranges(ranges, up, _loose):
         return None
-    fixed = _fixed_in(ranges, up, feed.dpkg_compare)
-    if candidate and feed.dpkg_compare(candidate, version) > 0 and not _in_ranges(ranges, upstream(candidate), feed.dpkg_compare):
+    fixed = _fixed_in(ranges, up, _loose)
+    if candidate and feed.dpkg_compare(candidate, version) > 0 and not _in_ranges(ranges, upstream(candidate), _loose):
         return {"status": "update_available", "fixed": fixed}
     return {"status": "no_source" if origin == "dpkg/status" else "no_fix", "fixed": fixed}
 

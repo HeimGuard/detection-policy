@@ -40,6 +40,8 @@ DEBIAN_API = "https://security-tracker.debian.org/tracker/data/json"
 STATE = ROOT / "data" / "cves.json"
 # Corrections of the NVD ranges by hand (data/overrides.json), see apply_override.
 OVERRIDES = ROOT / "data" / "overrides.json"
+# What a product is called on a device when that is not its CPE name (data/aliases.json), see load_aliases.
+ALIASES = ROOT / "data" / "aliases.json"
 TARGET_SW = {"*", "-", "windows", "linux", "debian", "ubuntu"}
 SEVERITY = {"CRITICAL": "critical", "HIGH": "high", "MEDIUM": "medium", "LOW": "low"}
 RANK = {"critical": 4, "high": 3, "medium": 2, "low": 1}
@@ -229,13 +231,18 @@ def state_entry(cve):
     }
 
 
+# What may follow the numbers of a bound: letters (1.1.1w, 1.0.2zk, 9.8p1) or a pre-release (2.0-rc1, 1.0b2), the words feed.version_tuple reads.
+BOUND = re.compile(r"\d+(\.\d+)*([a-z]{1,2}\d*|[-_.~]?(%s)[-_.]?\d*)?" % "|".join(feed.PRE_WORDS), re.I)
+
+
 def norm_bound(version):
-    """A bound the server reads right: only numbers and dots ("7.1.2-31" is written 7.1.2.31, the way Debian
-    numbers it). None when there is no bound, False when it cannot be written that way (b7653, 2.0-rc1, 1.1.1w)."""
+    """A bound the server reads right: numbers and dots, and what feed.version_tuple knows after them ("1.1.1w", "9.8p1", "2.0-rc1").
+    "7.1.2-31" is written 7.1.2.31, the way Debian numbers it. None when there is no bound, False when it cannot be written
+    that way (b7653, r81, a date, 2023.q3.1)."""
     if version is None:
         return None
     version = re.sub(r"(?<=\d)-(?=\d)", ".", str(version).strip().lstrip("vV"))
-    return version if re.fullmatch(r"\d+(\.\d+)*", version) else False
+    return version if BOUND.fullmatch(version) and feed.version_tuple(version) is not None else False
 
 
 def norm_ranges(ranges):
@@ -256,6 +263,12 @@ def load_overrides():
     are fixed): "fixed_in" says the versions at which a series got its fix (what is at or after one, up to the next minor
     series, is not vulnerable), "not_affected" ranges [start, end excluding] that are not vulnerable whatever the NVD says."""
     return json.loads(OVERRIDES.read_text()) if OVERRIDES.exists() else {}
+
+
+def load_aliases():
+    """data/aliases.json: {"nodejs:node.js": {"names": [regex], "dpkg": [regex], "examples": [{Name, Source}]}}, without its "_" comment."""
+    data = json.loads(ALIASES.read_text()) if ALIASES.exists() else {}
+    return {k: v for k, v in data.items() if not k.startswith("_") and isinstance(v, dict)}
 
 
 def _tuple(version):
@@ -282,7 +295,7 @@ def subtract(ranges, low, high):
 
 def bump_minor(version):
     """5.0.5 -> 5.1: the end of the series a fixed version belongs to."""
-    parts = _tuple(version) or (0,)
+    parts = (_tuple(version) or ((0,), None))[0] or (0,)
     return f"{parts[0]}.{(parts[1] if len(parts) > 1 else 0) + 1}"
 
 
@@ -470,13 +483,24 @@ def by_source(sources, pattern):
                     {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": pattern}]}]}
 
 
+def alias_of(product):
+    """The alias entry of a product by its name (the vendor does not matter: the same name is the same program for a device)."""
+    entry = {}
+    for key, value in load_aliases().items():
+        if key.split(":", 1)[1] == product:
+            for field in ("names", "dpkg", "examples"):
+                entry.setdefault(field, []).extend(value.get(field, []))
+    return entry
+
+
 def build_when(product, ranges, info, cids, fixes, select=False):
     """The condition of a rule. With `select` only which packages the rule is about (the name, the source package, not rpm,
     a dpkg package that is the product itself): a server that knows "cves" decides the versions CVE by CVE, see cve_list."""
     ranged = [range_cond(r) for r in ranges]
     sources = [source for source, _ in info["names"]]
-    loose = alternatives([name_pattern(product)] + [p for _, p in info["names"]])
-    dpkg_names = alternatives([p for _, p in info["names"]]) if info["names"] else dpkg_name_pattern(product)
+    alias = alias_of(product)
+    loose = alternatives([name_pattern(product)] + [p for _, p in info["names"]] + alias.get("names", []))
+    dpkg_names = alternatives([p for _, p in info["names"]] + alias.get("dpkg", [])) if info["names"] else alternatives([dpkg_name_pattern(product)] + alias.get("dpkg", []))
     conds = [
         # What a package is the product by its source package when it says (libssl3t64 is openssl, gir1.2-glib-2.0 is
         # gobject-introspection or glib2.0, by the release), else by its name.
@@ -670,6 +694,13 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
         {"Name": f"lib{name.replace(' ', '')}x", "Version": v, "Source": "x"},
         {"Name": name, "Version": v, "Source": "rpm"},
     ]
+    for example in alias_of(product).get("examples", []):
+        # What the alias says a device calls the product: the rule must find it (one that does not is not shipped; a dpkg package may be left out).
+        item = {"Name": example["Name"], "Version": v, "Source": example.get("Source", "x")}
+        if hit(item):
+            positive.append(item)
+        elif item["Source"] != "dpkg":  # a package the tracker says is not affected is no finding, so a dpkg example may stay out
+            return None
     if not packages:  # (what Ubuntu names as binary packages of the product is told apart by its own patterns)
         negative.append({"Name": f"{name.replace(' ', '-')}-enum", "Version": v, "Source": "dpkg"})
     if len(cids) <= MAX_FIXED_CVES:
@@ -691,6 +722,16 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
         if hit(item):
             return None  # the rule would report something it must not: leave it out rather than ship it
     return {"key": rule["key"], "positive": positive, "negative": negative}
+
+
+def cve_clashes(definitions):
+    """[(CVE id, key of the later rule)] of feed.cve_duplicates: the same CVE in two rules about the same package."""
+    found = []
+    for message in feed.cve_duplicates(definitions):
+        m = re.match(r"^(CVE-[\d-]+) is in (\S+) and in (\S+), which", message)
+        if m:
+            found.append((m[1], m[3]))
+    return found
 
 
 def generate(state):
@@ -738,26 +779,40 @@ def generate(state):
             info = {"names": info["names"], "fixes": [], "unaffected": info["unaffected"]}
         groups.setdefault((product, json.dumps(info, sort_keys=True)), (product, info, {}))[2][cid] = (entry, ranges)
     rules, fixtures = {}, {}
-    for product, info, members in groups.values():
-        cves = [(cid, entry, ranges) for cid, (entry, ranges) in members.items()]
-        ranges = union_ranges([r for _, _, r in cves])
-        fixes = sorted(info["fixes"], key=lambda f: (RELEASES.index(f[3]) if f[3] in RELEASES else len(RELEASES), f[2]), reverse=True)
-        shown = list(dict.fromkeys((f[1], f[2]) for f in fixes))
-        fixes = [next(f for f in fixes if (f[1], f[2]) == s) for s in shown]
-        while True:  # too many conditions: drop the fixes of the oldest releases
-            rule = build_rule(product, ranges, info, cves, fixes)
-            if not feed.rule_errors(rule, False) or not fixes:
-                break
-            fixes = fixes[:-1]
-        if feed.rule_errors(rule, False):
-            skipped.append(f"{rule['key']}: {'; '.join(feed.rule_errors(rule, False))}")
-            continue
-        fixture = make_fixture(rule, product, ranges, info, [c for c, _, _ in cves], fixes)
-        if fixture is None:
-            skipped.append(f"{rule['key']}: no valid fixture could be built")
-            continue
-        rules[rule["key"]] = rule
-        fixtures[rule["key"]] = fixture
+    group_of = {}
+    for _ in range(6):
+        rules, fixtures, group_of = {}, {}, {}
+        for gkey, (product, info, members) in groups.items():
+            if not members:
+                continue
+            cves = [(cid, entry, ranges) for cid, (entry, ranges) in members.items()]
+            ranges = union_ranges([r for _, _, r in cves])
+            fixes = sorted(info["fixes"], key=lambda f: (RELEASES.index(f[3]) if f[3] in RELEASES else len(RELEASES), f[2]), reverse=True)
+            shown = list(dict.fromkeys((f[1], f[2]) for f in fixes))
+            fixes = [next(f for f in fixes if (f[1], f[2]) == s) for s in shown]
+            while True:  # too many conditions: drop the fixes of the oldest releases
+                rule = build_rule(product, ranges, info, cves, fixes)
+                if not feed.rule_errors(rule, False) or not fixes:
+                    break
+                fixes = fixes[:-1]
+            if feed.rule_errors(rule, False):
+                skipped.append(f"{rule['key']}: {'; '.join(feed.rule_errors(rule, False))}")
+                continue
+            fixture = make_fixture(rule, product, ranges, info, [c for c, _, _ in cves], fixes)
+            if fixture is None:
+                skipped.append(f"{rule['key']}: no valid fixture could be built")
+                continue
+            rules[rule["key"]] = rule
+            fixtures[rule["key"]] = fixture
+            group_of[rule["key"]] = gkey
+        # A CVE is one entry for a package: related products (libssh, libssh2, ssh; git, libgit2) that the NVD lists for the same CVE
+        # can end in rules about the same source package, which feed.py check refuses. The later rule gives the CVE up.
+        clashes = cve_clashes(list(rules.values()))
+        if not clashes:
+            break
+        for cid, later in clashes:
+            groups[group_of[later]][2].pop(cid, None)
+            skipped.append(f"{cid} {later}: already in the rule of another product about the same package")
     return rules, fixtures, skipped
 
 
@@ -765,7 +820,8 @@ def write(rules, fixtures):
     """Replace the generated files by these; True when something changed."""
     changed = False
     rule_dir, fixture_dir = ROOT / "rules" / "any", ROOT / "tests" / "fixtures"
-    wanted = {rule_dir / f"{k}.json": json.dumps(r, indent=2) + "\n" for k, r in rules.items()}
+    # Compact: the server takes the whole feed up to a size limit, and the indentation was most of the size of these files.
+    wanted = {rule_dir / f"{k}.json": json.dumps(r, separators=(",", ":")) + "\n" for k, r in rules.items()}
     wanted |= {fixture_dir / f"{k.removeprefix('org.')}.json": json.dumps(f, indent=2) + "\n" for k, f in fixtures.items()}
     for old in list(rule_dir.glob("org.cve-*.json")) + list(fixture_dir.glob("cve-*.json")):
         if old not in wanted:

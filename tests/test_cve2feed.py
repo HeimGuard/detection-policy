@@ -21,12 +21,33 @@ def findings(rules, item):
     return sorted(r["name"] for r in rules.values() if feed.test(r["when"], item))
 
 
+class Aliases(unittest.TestCase):
+    def test_a_product_is_found_by_the_names_a_device_gives_it(self):
+        info = {"names": [], "fixes": [], "unaffected": []}
+        when = cve2feed.build_when("node.js", [("14.0.0", "14.21.3", None)], info, ["CVE-2000-1"], [])
+        self.assertTrue(feed.test(when, {"Name": "nodejs", "Version": "14.1.0", "Source": "dpkg"}))
+        self.assertTrue(feed.test(when, {"Name": "Node.js", "Version": "14.1.0", "Source": "registry"}))
+        # a library named after it is none of them
+        self.assertFalse(feed.test(when, {"Name": "node-js-yaml", "Version": "14.1.0", "Source": "dpkg"}))
+        self.assertFalse(feed.test(when, {"Name": "nodejs", "Version": "14.21.3", "Source": "dpkg"}))
+
+    def test_the_aliases_are_valid(self):
+        for key, entry in cve2feed.load_aliases().items():
+            self.assertRegex(key, r"^[a-z0-9_.+~-]+:[a-z0-9_.+~-]+$")
+            for pattern in entry.get("names", []) + entry.get("dpkg", []):
+                re.compile(pattern)
+            for example in entry.get("examples", []):
+                self.assertIn("Name", example)
+
+
 class Versions(unittest.TestCase):
     def test_a_bound_is_written_the_way_the_server_reads_it(self):
         self.assertEqual("7.1.2.31", cve2feed.norm_bound("7.1.2-31"))
         self.assertEqual("156.0.8078.47", cve2feed.norm_bound("156.0.8078.47"))
         self.assertIsNone(cve2feed.norm_bound(None))
-        for unreadable in ("b7653", "2.0.0-rc1", "1.1.1w", "9.9p1"):
+        for readable in ("1.1.1w", "9.9p1", "1.0.2zk", "2.0.0-rc1", "1.3.9b"):
+            self.assertEqual(readable, cve2feed.norm_bound(readable))
+        for unreadable in ("b7653", "r81", "2023.q3.1", "6.x-1.4", "2022-07-24t01-54-52z"):
             self.assertIs(False, cve2feed.norm_bound(unreadable), unreadable)
 
     def test_the_ranges_keep_only_what_can_be_written(self):

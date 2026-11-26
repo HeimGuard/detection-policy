@@ -101,16 +101,45 @@ def cond_errors(c, path, depth, count, errs):
             errs.append(f"{path}: bad regex ({e})")
 
 
+# Words that make a version older than the release it is written before: 2.0-rc1 < 2.0 (the order of the words is the order of the ranks).
+PRE_WORDS = ["dev", "snapshot", "nightly", "canary", "alpha", "beta", "preview", "pre", "rc"]
+_PRE = re.compile(r"^(?:[-_.~+ ]?(dev|snapshot|nightly|canary|alpha|beta|preview|pre|rc)|([ab])(?=\d))[-_.]?(\d*)", re.I)
+# Words that make it newer: 2.0-sp1, 2.0-patch2 (other words, 2.0 Update 3, are not read).
+_POST = re.compile(r"^[-_.]?(sp|patch|hotfix|post)[-_.]?(\d+)", re.I)
+# Letters right behind the number: 1.1.1w, 1.0.2zk, 9.8p1, 1.3.9b (at most two, so 1.2.3ubuntu1 is not one).
+_LETTERS = re.compile(r"^([a-z]{1,2})(?![a-z])(\d*)", re.I)
+
+
 def version_tuple(value):
-    """Numeric part of a version ('2:1.2-3ubuntu1' -> (1, 2)), like the server's SecurityRules::version()."""
-    m = re.search(r"(\d+(?:\.\d+)*)", re.sub(r"^\d+:", "", str(value)))
-    return tuple(int(x) for x in m.group(1).split(".")) if m else None
+    """The order key of a version as programs write them, None when it has no number: tuples compare as the versions do.
+
+    '2:1.2-3ubuntu1' is 1.2 (the epoch and what a distribution adds after a dash are not the project's version), '2.0-rc1' is before
+    2.0 (alpha, beta, pre, rc, ~), '1.1.1w', '9.8p1' and '2.0-sp1' are after what they follow, a missing part is 0 ('8.5' is '8.5.0').
+    The same as App\\Services\\VersionService of the server, tests/version-vectors.json is checked by both."""
+    text = re.sub(r"^\d+:", "", str(value))
+    m = re.search(r"(\d+(?:\.\d+)*)", text)
+    if not m:
+        return None
+    numbers = [int(x) for x in m.group(1).split(".")]
+    while numbers and numbers[-1] == 0:
+        numbers.pop()
+    rest = text[m.end():]
+    if pre := _PRE.match(rest):
+        word = (pre.group(1) or {"a": "alpha", "b": "beta"}[pre.group(2).lower()]).lower()
+        tail = (-1, PRE_WORDS.index(word), int(pre.group(3) or 0))
+    elif post := _POST.match(rest):
+        tail = (1, post.group(1).lower(), int(post.group(2)))
+    elif letters := _LETTERS.match(rest):
+        tail = (1, letters.group(1).lower(), int(letters.group(2) or 0))
+    else:
+        tail = (0, "", 0)
+    if rest.startswith("~") and not pre:
+        tail = (-1, PRE_WORDS.index("pre"), 0)
+    return (tuple(numbers), tail)
 
 
 def version_compare(a, b):
-    """-1 / 0 / 1; a missing part is 0 ("8.5" is "8.5.0"), like the server."""
-    n = max(len(a), len(b))
-    a, b = a + (0,) * (n - len(a)), b + (0,) * (n - len(b))
+    """-1 / 0 / 1 of two keys of version_tuple()."""
     return (a > b) - (a < b)
 
 

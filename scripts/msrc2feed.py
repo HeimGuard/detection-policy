@@ -276,7 +276,7 @@ def write(rules, fixtures):
     changed = False
     wanted = {}
     for key, rule in rules.items():
-        wanted[ROOT / "rules" / rule["platform"] / f"{key}.json"] = json.dumps(rule, indent=2) + "\n"
+        wanted[ROOT / "rules" / rule["platform"] / f"{key}.json"] = json.dumps(rule, separators=(",", ":")) + "\n"
         wanted[ROOT / "tests" / "fixtures" / f"{key.removeprefix('org.')}.json"] = json.dumps(fixtures[key], indent=2) + "\n"
     for old in list((ROOT / "rules").glob("*/org.msrc-*.json")) + list((ROOT / "tests" / "fixtures").glob("msrc-*.json")):
         if old not in wanted:

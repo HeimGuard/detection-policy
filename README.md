@@ -86,9 +86,15 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
 
 - **One rule per product, version ranges and Ubuntu fixes**: 320 Chrome CVEs fixed in one release are one finding
   (`chrome has known vulnerabilities`), not 320; the finding names the CVEs that apply to the package.
-- **Bounds the server can read**: only numbers and dots (`7.1.2-31` is written `7.1.2.31`, as Debian numbers it);
-  a bound that cannot be written that way (`b7653`, `2.0-rc1`) leaves its range out. A product whose name says nothing
-  (`tools`, `core`, `server`) is left out.
+- **Bounds the server can read**: numbers and dots, and what `feed.version_tuple` reads after them: letters (`1.1.1w`, `1.0.2zk`, `9.8p1`),
+  `alpha` / `beta` / `rc` / ... (`2.0-rc1`); `7.1.2-31` is written `7.1.2.31`, as Debian numbers it. A bound that is none of these (`b7653`, `r81`,
+  a date) leaves its range out. The order is the same as the server's `VersionService`; `tests/version-vectors.json` is the same file as
+  `tests/fixtures/version-vectors.json` there (change both). A server from before this reads `1.1.1w` as `1.1.1`: it misses what the new bounds find,
+  it does not report more. A product whose name says nothing (`tools`, `core`, `server`) is left out.
+- **Aliases** (`data/aliases.json`): what a device calls a product when that is not its CPE name (`nodejs` is `node.js`, `apache2` is `http_server`,
+  `docker-ce` is `docker`): regular expressions for any software item (`names`) and for dpkg packages (`dpkg`), and `examples` the rule of the product must find
+  (a rule that does not is not shipped). A product without an entry is found by its CPE name. Whether a product is recognised at all depends on the feed having
+  CVEs for it: see `data/watchlist.json` (`--watch N`) and `scripts/coverage.py` for what a real inventory lacks.
 - **Distribution packages**: a dpkg package is only the product when its name is (`php8.5-cli`, not `php-enum`,
   `libaccounts-glib0` or the metapackage `php-cli`); the binary packages of a source package come from its name
   (`glib2.0` is `libglib2.0-0t64` and `gir1.2-glib-2.0`); agents 1.24.0+ also send the source package of a binary one
@@ -143,7 +149,7 @@ rules (`rules/linux`).
 - **One entry per CVE**: a CVE a rule of the NVD already judges for a source package (with the word of the tracker) is left out
   here; `feed.py check` fails when a CVE is in two rules about the same package.
 - **Stable keys**: the source packages are spread over 32 rules by a hash of the name, so a rule keeps its key and its findings
-  their acknowledgements when a package comes or goes. The rules fit 1.8 MB per distribution (the server takes 8 MB of the whole
+  their acknowledgements when a package comes or goes. The rules fit 1.8 MB per distribution (the server takes 16 MB of the whole
   feed): open CVEs go first, the more severe, the newer.
 - Fixtures say the release and the distribution (`"context": {"release": "noble", "os": "ubuntu"}`) and are checked by
   `scripts/cves.py`, the Python twin of the server's `SecurityCves`.
@@ -169,6 +175,14 @@ counts once, for the newer one.
 `data/msrc.json` keeps, per monthly update, the CVEs each family fixes by build (not the 30 MB documents); the rules are
 generated from it (`python scripts/msrc2feed.py --offline`, CI checks that nothing changes). A rule of your own has another
 key (`org.<source>-<what>`).
+
+## Measuring the feed on a real inventory
+
+`python scripts/coverage.py inventory.json [--os ubuntu --release noble]` takes the software items of one or more devices (a JSON list, or `{"software": [...]}`)
+and says how many a software rule of the feed recognises, how many of those have a CVE that applies to their version (judged like the server,
+`scripts/cves.py`), which names **no rule is about** (most common first: what to alias or to write a rule for) and which rules matched nothing.
+It reads the feed only: the rules bundled in the server (7-Zip, WinRAR, PuTTY, ...) are not in it, so those names are listed as unmatched too.
+`tests/coverage-sample.json` is a small inventory to try it on.
 
 ## Workflow
 
