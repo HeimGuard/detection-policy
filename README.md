@@ -149,7 +149,7 @@ rules (`rules/linux`).
 - **One entry per CVE**: a CVE a rule of the NVD already judges for a source package (with the word of the tracker) is left out
   here; `feed.py check` fails when a CVE is in two rules about the same package.
 - **Stable keys**: the source packages are spread over 32 rules by a hash of the name, so a rule keeps its key and its findings
-  their acknowledgements when a package comes or goes. The rules fit 1.8 MB per distribution (the server takes 8 MB of the whole
+  their acknowledgements when a package comes or goes. The rules fit 1.8 MB per distribution (the server takes 16 MB of the whole
   feed): open CVEs go first, the more severe, the newer.
 - Fixtures say the release and the distribution (`"context": {"release": "noble", "os": "ubuntu"}`) and are checked by
   `scripts/cves.py`, the Python twin of the server's `SecurityCves`.

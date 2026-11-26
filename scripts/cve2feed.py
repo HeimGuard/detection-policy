@@ -724,6 +724,16 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
     return {"key": rule["key"], "positive": positive, "negative": negative}
 
 
+def cve_clashes(definitions):
+    """[(CVE id, key of the later rule)] of feed.cve_duplicates: the same CVE in two rules about the same package."""
+    found = []
+    for message in feed.cve_duplicates(definitions):
+        m = re.match(r"^(CVE-[\d-]+) is in (\S+) and in (\S+), which", message)
+        if m:
+            found.append((m[1], m[3]))
+    return found
+
+
 def generate(state):
     """(rules, fixtures, skipped): everything the state says as {key: rule}, {key: fixture} and the reasons."""
     rows, skipped = [], []
@@ -769,26 +779,40 @@ def generate(state):
             info = {"names": info["names"], "fixes": [], "unaffected": info["unaffected"]}
         groups.setdefault((product, json.dumps(info, sort_keys=True)), (product, info, {}))[2][cid] = (entry, ranges)
     rules, fixtures = {}, {}
-    for product, info, members in groups.values():
-        cves = [(cid, entry, ranges) for cid, (entry, ranges) in members.items()]
-        ranges = union_ranges([r for _, _, r in cves])
-        fixes = sorted(info["fixes"], key=lambda f: (RELEASES.index(f[3]) if f[3] in RELEASES else len(RELEASES), f[2]), reverse=True)
-        shown = list(dict.fromkeys((f[1], f[2]) for f in fixes))
-        fixes = [next(f for f in fixes if (f[1], f[2]) == s) for s in shown]
-        while True:  # too many conditions: drop the fixes of the oldest releases
-            rule = build_rule(product, ranges, info, cves, fixes)
-            if not feed.rule_errors(rule, False) or not fixes:
-                break
-            fixes = fixes[:-1]
-        if feed.rule_errors(rule, False):
-            skipped.append(f"{rule['key']}: {'; '.join(feed.rule_errors(rule, False))}")
-            continue
-        fixture = make_fixture(rule, product, ranges, info, [c for c, _, _ in cves], fixes)
-        if fixture is None:
-            skipped.append(f"{rule['key']}: no valid fixture could be built")
-            continue
-        rules[rule["key"]] = rule
-        fixtures[rule["key"]] = fixture
+    group_of = {}
+    for _ in range(6):
+        rules, fixtures, group_of = {}, {}, {}
+        for gkey, (product, info, members) in groups.items():
+            if not members:
+                continue
+            cves = [(cid, entry, ranges) for cid, (entry, ranges) in members.items()]
+            ranges = union_ranges([r for _, _, r in cves])
+            fixes = sorted(info["fixes"], key=lambda f: (RELEASES.index(f[3]) if f[3] in RELEASES else len(RELEASES), f[2]), reverse=True)
+            shown = list(dict.fromkeys((f[1], f[2]) for f in fixes))
+            fixes = [next(f for f in fixes if (f[1], f[2]) == s) for s in shown]
+            while True:  # too many conditions: drop the fixes of the oldest releases
+                rule = build_rule(product, ranges, info, cves, fixes)
+                if not feed.rule_errors(rule, False) or not fixes:
+                    break
+                fixes = fixes[:-1]
+            if feed.rule_errors(rule, False):
+                skipped.append(f"{rule['key']}: {'; '.join(feed.rule_errors(rule, False))}")
+                continue
+            fixture = make_fixture(rule, product, ranges, info, [c for c, _, _ in cves], fixes)
+            if fixture is None:
+                skipped.append(f"{rule['key']}: no valid fixture could be built")
+                continue
+            rules[rule["key"]] = rule
+            fixtures[rule["key"]] = fixture
+            group_of[rule["key"]] = gkey
+        # A CVE is one entry for a package: related products (libssh, libssh2, ssh; git, libgit2) that the NVD lists for the same CVE
+        # can end in rules about the same source package, which feed.py check refuses. The later rule gives the CVE up.
+        clashes = cve_clashes(list(rules.values()))
+        if not clashes:
+            break
+        for cid, later in clashes:
+            groups[group_of[later]][2].pop(cid, None)
+            skipped.append(f"{cid} {later}: already in the rule of another product about the same package")
     return rules, fixtures, skipped
 
 
@@ -796,7 +820,8 @@ def write(rules, fixtures):
     """Replace the generated files by these; True when something changed."""
     changed = False
     rule_dir, fixture_dir = ROOT / "rules" / "any", ROOT / "tests" / "fixtures"
-    wanted = {rule_dir / f"{k}.json": json.dumps(r, indent=2) + "\n" for k, r in rules.items()}
+    # Compact: the server takes the whole feed up to a size limit, and the indentation was most of the size of these files.
+    wanted = {rule_dir / f"{k}.json": json.dumps(r, separators=(",", ":")) + "\n" for k, r in rules.items()}
     wanted |= {fixture_dir / f"{k.removeprefix('org.')}.json": json.dumps(f, indent=2) + "\n" for k, f in fixtures.items()}
     for old in list(rule_dir.glob("org.cve-*.json")) + list(fixture_dir.glob("cve-*.json")):
         if old not in wanted:
