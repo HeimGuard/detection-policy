@@ -229,13 +229,18 @@ def state_entry(cve):
     }
 
 
+# What may follow the numbers of a bound: letters (1.1.1w, 1.0.2zk, 9.8p1) or a pre-release (2.0-rc1, 1.0b2), the words feed.version_tuple reads.
+BOUND = re.compile(r"\d+(\.\d+)*([a-z]{1,2}\d*|[-_.~]?(%s)[-_.]?\d*)?" % "|".join(feed.PRE_WORDS), re.I)
+
+
 def norm_bound(version):
-    """A bound the server reads right: only numbers and dots ("7.1.2-31" is written 7.1.2.31, the way Debian
-    numbers it). None when there is no bound, False when it cannot be written that way (b7653, 2.0-rc1, 1.1.1w)."""
+    """A bound the server reads right: numbers and dots, and what feed.version_tuple knows after them ("1.1.1w", "9.8p1", "2.0-rc1").
+    "7.1.2-31" is written 7.1.2.31, the way Debian numbers it. None when there is no bound, False when it cannot be written
+    that way (b7653, r81, a date, 2023.q3.1)."""
     if version is None:
         return None
     version = re.sub(r"(?<=\d)-(?=\d)", ".", str(version).strip().lstrip("vV"))
-    return version if re.fullmatch(r"\d+(\.\d+)*", version) else False
+    return version if BOUND.fullmatch(version) and feed.version_tuple(version) is not None else False
 
 
 def norm_ranges(ranges):
@@ -282,7 +287,7 @@ def subtract(ranges, low, high):
 
 def bump_minor(version):
     """5.0.5 -> 5.1: the end of the series a fixed version belongs to."""
-    parts = _tuple(version) or (0,)
+    parts = (_tuple(version) or ((0,), None))[0] or (0,)
     return f"{parts[0]}.{(parts[1] if len(parts) > 1 else 0) + 1}"
 
 

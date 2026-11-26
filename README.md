@@ -86,9 +86,11 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
 
 - **One rule per product, version ranges and Ubuntu fixes**: 320 Chrome CVEs fixed in one release are one finding
   (`chrome has known vulnerabilities`), not 320; the finding names the CVEs that apply to the package.
-- **Bounds the server can read**: only numbers and dots (`7.1.2-31` is written `7.1.2.31`, as Debian numbers it);
-  a bound that cannot be written that way (`b7653`, `2.0-rc1`) leaves its range out. A product whose name says nothing
-  (`tools`, `core`, `server`) is left out.
+- **Bounds the server can read**: numbers and dots, and what `feed.version_tuple` reads after them: letters (`1.1.1w`, `1.0.2zk`, `9.8p1`),
+  `alpha` / `beta` / `rc` / ... (`2.0-rc1`); `7.1.2-31` is written `7.1.2.31`, as Debian numbers it. A bound that is none of these (`b7653`, `r81`,
+  a date) leaves its range out. The order is the same as the server's `VersionService`; `tests/version-vectors.json` is the same file as
+  `tests/fixtures/version-vectors.json` there (change both). A server from before this reads `1.1.1w` as `1.1.1`: it misses what the new bounds find,
+  it does not report more. A product whose name says nothing (`tools`, `core`, `server`) is left out.
 - **Distribution packages**: a dpkg package is only the product when its name is (`php8.5-cli`, not `php-enum`,
   `libaccounts-glib0` or the metapackage `php-cli`); the binary packages of a source package come from its name
   (`glib2.0` is `libglib2.0-0t64` and `gir1.2-glib-2.0`); agents 1.24.0+ also send the source package of a binary one

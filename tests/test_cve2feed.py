@@ -26,7 +26,9 @@ class Versions(unittest.TestCase):
         self.assertEqual("7.1.2.31", cve2feed.norm_bound("7.1.2-31"))
         self.assertEqual("156.0.8078.47", cve2feed.norm_bound("156.0.8078.47"))
         self.assertIsNone(cve2feed.norm_bound(None))
-        for unreadable in ("b7653", "2.0.0-rc1", "1.1.1w", "9.9p1"):
+        for readable in ("1.1.1w", "9.9p1", "1.0.2zk", "2.0.0-rc1", "1.3.9b"):
+            self.assertEqual(readable, cve2feed.norm_bound(readable))
+        for unreadable in ("b7653", "r81", "2023.q3.1", "6.x-1.4", "2022-07-24t01-54-52z"):
             self.assertIs(False, cve2feed.norm_bound(unreadable), unreadable)
 
     def test_the_ranges_keep_only_what_can_be_written(self):
