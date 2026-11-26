@@ -172,6 +172,14 @@ counts once, for the newer one.
 generated from it (`python scripts/msrc2feed.py --offline`, CI checks that nothing changes). A rule of your own has another
 key (`org.<source>-<what>`).
 
+## Measuring the feed on a real inventory
+
+`python scripts/coverage.py inventory.json [--os ubuntu --release noble]` takes the software items of one or more devices (a JSON list, or `{"software": [...]}`)
+and says how many a software rule of the feed recognises, how many of those have a CVE that applies to their version (judged like the server,
+`scripts/cves.py`), which names **no rule is about** (most common first: what to alias or to write a rule for) and which rules matched nothing.
+It reads the feed only: the rules bundled in the server (7-Zip, WinRAR, PuTTY, ...) are not in it, so those names are listed as unmatched too.
+`tests/coverage-sample.json` is a small inventory to try it on.
+
 ## Workflow
 
 1. Add or change a rule / parser and a fixture in `tests/fixtures/`.
