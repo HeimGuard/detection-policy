@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """How well the software rules of the feed fit a real inventory: what no rule recognises and which rules never match.
 
-  python scripts/coverage.py inventory.json [more.json ...] [--os ubuntu --release noble] [--top 40] [--json]
+  python scripts/coverage.py inventory.json [more.json ...]   (an export of the Security tab of a device, or a list of items) [--os ubuntu --release noble] [--top 40] [--json]
 
 An inventory is a JSON list of software items ({"Name", "Version", "Source", "SourcePackage", ...} as the agent sends them) or an object
 with such a list under "software" (what an export of the Security tab has); several files are one fleet. Nothing is sent anywhere.
@@ -23,13 +23,18 @@ import cves as cve_judge  # noqa: E402
 import feed  # noqa: E402
 
 
+def load_inventory(path):
+    """(software items, os item or None) of one file: an export of the Security tab ({"inventory": {"software": [...], "os": [...]}}),
+    {"software": [...]} or a plain list of items."""
+    data = json.loads(Path(path).read_text())
+    inventory = data.get("inventory", data) if isinstance(data, dict) else {"software": data}
+    items = [i for i in inventory.get("software", []) if isinstance(i, dict) and i.get("Name")]
+    os_items = inventory.get("os") or []
+    return items, (os_items[0] if os_items else None)
+
+
 def load_items(paths):
-    items = []
-    for path in paths:
-        data = json.loads(Path(path).read_text())
-        data = data.get("software", data) if isinstance(data, dict) else data
-        items += [i for i in data if isinstance(i, dict) and i.get("Name")]
-    return items
+    return [item for path in paths for item in load_inventory(path)[0]]
 
 
 def software_rules():
@@ -67,8 +72,27 @@ def main():
     ap.add_argument("--top", type=int, default=40)
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
-    items = load_items(args.inventory)
-    result = measure(items, software_rules(), args.release, args.os_id)
+    rules = software_rules()
+    # Every file is one device: its own distribution and release (an export says them), the options are for the files that do not.
+    results = []
+    for path in args.inventory:
+        items, os_item = load_inventory(path)
+        os_id = args.os_id or (os_item or {}).get("Id")
+        release = args.release or cve_judge.release(os_item)
+        result = measure(items, rules, release, os_id)
+        result["file"] = Path(path).name
+        results.append(result)
+    result = results[0]
+    if len(results) > 1:
+        merged = Counter()
+        for r in results:
+            merged.update(r["unmatched"])
+        result = {"items": sum(r["items"] for r in results), "recognised": sum(r["recognised"] for r in results),
+                  "vulnerable": sum(r["vulnerable"] for r in results), "rules": results[0]["rules"],
+                  "silent_rules": sorted(set.intersection(*[set(r["silent_rules"]) for r in results])), "unmatched": merged}
+        for r in results:
+            print(f"{r['file']}: {r['items']} items, recognised {r['recognised']}, vulnerable {r['vulnerable']}")
+        print()
     if args.json:
         result["unmatched"] = dict(result["unmatched"].most_common(args.top))
         print(json.dumps(result, indent=1))
