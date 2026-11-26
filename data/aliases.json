@@ -1,0 +1,36 @@
+{
+ "_": "What a product of the NVD (vendor:product of the CPE, as in watchlist.json) is called on a device when its name is not the CPE's: `names` are regular expressions on the Name of any software item, `dpkg` on the Name of a dpkg package (a package that is a source package of the tracker is found by it anyway), `examples` are items a rule of the product must find (the fixture). Used by cve2feed.py; a product without an entry is found by its CPE name.",
+ "nodejs:node.js": {
+  "names": ["^nodejs$"],
+  "dpkg": ["^nodejs$"],
+  "examples": [{"Name": "nodejs", "Source": "dpkg"}, {"Name": "Node.js", "Source": "registry"}]
+ },
+ "apache:http_server": {
+  "names": ["^apache2$", "^httpd$"],
+  "dpkg": ["^apache2(-bin|-utils|-data)?$", "^httpd$"],
+  "examples": [{"Name": "apache2", "Source": "dpkg"}, {"Name": "Apache HTTP Server", "Source": "registry"}]
+ },
+ "pypa:pip": {
+  "names": ["^python3-pip$"],
+  "dpkg": ["^python3-pip$", "^python-pip$"],
+  "examples": [{"Name": "python3-pip", "Source": "dpkg"}, {"Name": "pip", "Source": "pip-global"}]
+ },
+ "python:python": {
+  "dpkg": ["^python3(\\.\\d+)?(-minimal)?$"],
+  "examples": [{"Name": "python3.12", "Source": "dpkg"}, {"Name": "Python 3.12.1 (64-bit)", "Source": "registry"}]
+ },
+ "docker:docker": {
+  "names": ["^docker-ce$", "^docker\\.io$", "^moby-engine$"],
+  "dpkg": ["^docker-ce$", "^docker\\.io$", "^moby-engine$"],
+  "examples": [{"Name": "docker-ce", "Source": "dpkg"}, {"Name": "docker.io", "Source": "dpkg"}]
+ },
+ "docker:desktop": {
+  "names": ["^docker desktop"],
+  "examples": [{"Name": "Docker Desktop", "Source": "registry"}]
+ },
+ "videolan:vlc_media_player": {
+  "names": ["^vlc$"],
+  "dpkg": ["^vlc(-bin|-plugin-base)?$"],
+  "examples": [{"Name": "vlc", "Source": "dpkg"}, {"Name": "VLC media player", "Source": "registry"}]
+ }
+}

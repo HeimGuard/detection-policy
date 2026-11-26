@@ -27,6 +27,17 @@
   "sqlite:sqlite",
   "curl:curl",
   "gitlab:gitlab",
-  "jenkins:jenkins"
+  "jenkins:jenkins",
+  "git-scm:git",
+  "videolan:vlc_media_player",
+  "7-zip:7-zip",
+  "rarlab:winrar",
+  "putty:putty",
+  "simon_tatham:putty",
+  "docker:docker",
+  "docker:desktop",
+  "pypa:pip",
+  "vim:vim",
+  "mozilla:firefox"
  ]
 }

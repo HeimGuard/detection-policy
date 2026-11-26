@@ -91,6 +91,10 @@ differs from `python scripts/cve2feed.py --offline`. A rule of your own has anot
   a date) leaves its range out. The order is the same as the server's `VersionService`; `tests/version-vectors.json` is the same file as
   `tests/fixtures/version-vectors.json` there (change both). A server from before this reads `1.1.1w` as `1.1.1`: it misses what the new bounds find,
   it does not report more. A product whose name says nothing (`tools`, `core`, `server`) is left out.
+- **Aliases** (`data/aliases.json`): what a device calls a product when that is not its CPE name (`nodejs` is `node.js`, `apache2` is `http_server`,
+  `docker-ce` is `docker`): regular expressions for any software item (`names`) and for dpkg packages (`dpkg`), and `examples` the rule of the product must find
+  (a rule that does not is not shipped). A product without an entry is found by its CPE name. Whether a product is recognised at all depends on the feed having
+  CVEs for it: see `data/watchlist.json` (`--watch N`) and `scripts/coverage.py` for what a real inventory lacks.
 - **Distribution packages**: a dpkg package is only the product when its name is (`php8.5-cli`, not `php-enum`,
   `libaccounts-glib0` or the metapackage `php-cli`); the binary packages of a source package come from its name
   (`glib2.0` is `libglib2.0-0t64` and `gir1.2-glib-2.0`); agents 1.24.0+ also send the source package of a binary one

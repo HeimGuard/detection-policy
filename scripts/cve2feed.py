@@ -40,6 +40,8 @@ DEBIAN_API = "https://security-tracker.debian.org/tracker/data/json"
 STATE = ROOT / "data" / "cves.json"
 # Corrections of the NVD ranges by hand (data/overrides.json), see apply_override.
 OVERRIDES = ROOT / "data" / "overrides.json"
+# What a product is called on a device when that is not its CPE name (data/aliases.json), see load_aliases.
+ALIASES = ROOT / "data" / "aliases.json"
 TARGET_SW = {"*", "-", "windows", "linux", "debian", "ubuntu"}
 SEVERITY = {"CRITICAL": "critical", "HIGH": "high", "MEDIUM": "medium", "LOW": "low"}
 RANK = {"critical": 4, "high": 3, "medium": 2, "low": 1}
@@ -263,6 +265,12 @@ def load_overrides():
     return json.loads(OVERRIDES.read_text()) if OVERRIDES.exists() else {}
 
 
+def load_aliases():
+    """data/aliases.json: {"nodejs:node.js": {"names": [regex], "dpkg": [regex], "examples": [{Name, Source}]}}, without its "_" comment."""
+    data = json.loads(ALIASES.read_text()) if ALIASES.exists() else {}
+    return {k: v for k, v in data.items() if not k.startswith("_") and isinstance(v, dict)}
+
+
 def _tuple(version):
     return feed.version_tuple(version)
 
@@ -475,13 +483,24 @@ def by_source(sources, pattern):
                     {"all": [{"field": "SourcePackage", "op": "empty"}, {"field": "Name", "op": "matches", "value": pattern}]}]}
 
 
+def alias_of(product):
+    """The alias entry of a product by its name (the vendor does not matter: the same name is the same program for a device)."""
+    entry = {}
+    for key, value in load_aliases().items():
+        if key.split(":", 1)[1] == product:
+            for field in ("names", "dpkg", "examples"):
+                entry.setdefault(field, []).extend(value.get(field, []))
+    return entry
+
+
 def build_when(product, ranges, info, cids, fixes, select=False):
     """The condition of a rule. With `select` only which packages the rule is about (the name, the source package, not rpm,
     a dpkg package that is the product itself): a server that knows "cves" decides the versions CVE by CVE, see cve_list."""
     ranged = [range_cond(r) for r in ranges]
     sources = [source for source, _ in info["names"]]
-    loose = alternatives([name_pattern(product)] + [p for _, p in info["names"]])
-    dpkg_names = alternatives([p for _, p in info["names"]]) if info["names"] else dpkg_name_pattern(product)
+    alias = alias_of(product)
+    loose = alternatives([name_pattern(product)] + [p for _, p in info["names"]] + alias.get("names", []))
+    dpkg_names = alternatives([p for _, p in info["names"]] + alias.get("dpkg", [])) if info["names"] else alternatives([dpkg_name_pattern(product)] + alias.get("dpkg", []))
     conds = [
         # What a package is the product by its source package when it says (libssl3t64 is openssl, gir1.2-glib-2.0 is
         # gobject-introspection or glib2.0, by the release), else by its name.
@@ -675,6 +694,13 @@ def make_fixture(rule, product, ranges, info, cids, fixes):
         {"Name": f"lib{name.replace(' ', '')}x", "Version": v, "Source": "x"},
         {"Name": name, "Version": v, "Source": "rpm"},
     ]
+    for example in alias_of(product).get("examples", []):
+        # What the alias says a device calls the product: the rule must find it (one that does not is not shipped; a dpkg package may be left out).
+        item = {"Name": example["Name"], "Version": v, "Source": example.get("Source", "x")}
+        if hit(item):
+            positive.append(item)
+        elif item["Source"] != "dpkg":  # a package the tracker says is not affected is no finding, so a dpkg example may stay out
+            return None
     if not packages:  # (what Ubuntu names as binary packages of the product is told apart by its own patterns)
         negative.append({"Name": f"{name.replace(' ', '-')}-enum", "Version": v, "Source": "dpkg"})
     if len(cids) <= MAX_FIXED_CVES:
